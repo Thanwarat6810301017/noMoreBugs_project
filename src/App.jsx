@@ -20,6 +20,7 @@ export default function App() {
   const [tables, setTables] = useState([]);
   const [reservations, setReservations] = useState([]);
   const [reviews, setReviews] = useState([]);
+  const [promotions, setPromotions] = useState([]);
   const [adminStats, setAdminStats] = useState({ totalRevenue: 0, totalBookings: 0, tableOccupancyRate: 0, popularDish: '-' });
   
   // Auth state
@@ -74,13 +75,14 @@ export default function App() {
 
   const loadData = async () => {
     try {
-      const [cats, items, tbls, resv, stats, revs] = await Promise.all([
+      const [cats, items, tbls, resv, stats, revs, promos] = await Promise.all([
         api.fetchCategories(),
         api.fetchMenuItems(),
         api.fetchTables(),
         api.fetchReservations(),
         api.fetchAdminStats(),
-        api.fetchReviews()
+        api.fetchReviews(),
+        api.fetchPromotions()
       ]);
       setCategories(cats);
       setMenuItems(items);
@@ -88,6 +90,7 @@ export default function App() {
       setReservations(resv);
       setAdminStats(stats);
       setReviews(revs || []);
+      setPromotions(promos || []);
       if (tbls.length > 0 && !formData.table_id) {
         setFormData(prev => ({ ...prev, table_id: tbls[0].table_id.toString() }));
       }
@@ -221,6 +224,7 @@ export default function App() {
             selectedDietary={selectedDietary}
             setSelectedDietary={setSelectedDietary}
             onQuickSearchTable={() => setIsBookingOpen(true)}
+            promotions={promotions}
           />
           <MenuGrid 
             menuItems={filteredMenu}

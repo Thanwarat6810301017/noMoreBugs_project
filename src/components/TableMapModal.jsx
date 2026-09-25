@@ -23,11 +23,12 @@ export default function TableMapModal({
     'General Dining 🍽️'
   ];
 
-  const tablesByZone = {
-    'Indoor Main': tables.filter(t => t.zone === 'Indoor Main'),
-    'Garden Terrace': tables.filter(t => t.zone === 'Garden Terrace'),
-    'VIP Lounge': tables.filter(t => t.zone === 'VIP Lounge')
-  };
+  const tablesByZone = tables.reduce((acc, t) => {
+    const z = t.zone || 'Indoor Main Dining';
+    if (!acc[z]) acc[z] = [];
+    acc[z].push(t);
+    return acc;
+  }, {});
 
   const selectedTableObj = tables.find(t => t.table_id.toString() === formData.table_id.toString());
 

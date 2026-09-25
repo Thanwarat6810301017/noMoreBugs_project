@@ -33,44 +33,91 @@ const pool = new Pool(dbConfig);
 
 let isDbConnected = false;
 
-// Mock Memory Users & Data
+// Mock Memory Users & Data v2.0
 let mockUsers = [
-  { user_id: 1, name: 'คุณสมชาย ใจดี (ลูกค้า)', email: 'customer@email.com', password: 'password123', phone: '081-234-5678', role: 'customer', reward_points: 250 },
-  { user_id: 2, name: 'พนักงานแก้ไขข้อมูล (Staff Editor)', email: 'staff@luxedining.com', password: 'admin123', phone: '02-123-4567', role: 'staff', reward_points: 0 },
-  { user_id: 3, name: 'ผู้บริหาร (Admin)', email: 'admin@luxedining.com', password: 'admin123', phone: '02-999-9999', role: 'admin', reward_points: 0 }
+  { user_id: 1, name: 'คุณสมชาย ใจดี (ลูกค้า VIP)', email: 'customer@email.com', password: 'password123', phone: '081-234-5678', role: 'customer', reward_points: 450, membership_tier: 'Gold Membership', avatar_url: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80' },
+  { user_id: 2, name: 'คุณพิมลวรรณ สุขเสริฐ (Diamond VIP)', email: 'pimonwan@luxedining.com', password: 'password123', phone: '089-987-6543', role: 'customer', reward_points: 1850, membership_tier: 'Diamond VIP', avatar_url: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=200&q=80' },
+  { user_id: 3, name: 'พนักงานแก้ไขข้อมูล (Staff Editor)', email: 'staff@luxedining.com', password: 'admin123', phone: '02-123-4567', role: 'staff', reward_points: 0, membership_tier: 'Staff Executive', avatar_url: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=200&q=80' },
+  { user_id: 4, name: 'ผู้บริหารระบบ (Admin)', email: 'admin@luxedining.com', password: 'admin123', phone: '02-999-9999', role: 'admin', reward_points: 0, membership_tier: 'Admin Director', avatar_url: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=200&q=80' }
 ];
 
 let mockCategories = [
-  { category_id: 1, name: 'Appetizers', description: 'อาหารทานเล่นเรียกน้ำย่อย คัดสรรวัตถุดิบชั้นเลิศ', icon_name: 'Salad' },
-  { category_id: 2, name: 'Main Course', description: 'จานหลักรสเลิศจากเชฟระดับพรีเมียม', icon_name: 'Beef' },
-  { category_id: 3, name: 'Desserts', description: 'ของหวานโฮมเมดและเบเกอรี่เนื้อนุ่ม', icon_name: 'Cake' },
-  { category_id: 4, name: 'Beverages', description: 'เครื่องดื่ม สมูทตี้ และไวน์ชั้นดี', icon_name: 'Wine' }
+  { category_id: 1, name: 'Appetizers & Starters', description: 'อาหารทานเล่นเรียกน้ำย่อย คัดสรรวัตถุดิบนำเข้าชั้นเลิศ', icon_name: 'Salad' },
+  { category_id: 2, name: 'Soups & Fresh Salads', description: 'ซุปอุ่นกรุ่นกลิ่นทรัฟเฟิลและสลัดผักออร์แกนิก', icon_name: 'Soup' },
+  { category_id: 3, name: 'Prime Steaks & Grills', description: 'สเต๊กเนื้อวากิวและริบอายเกรดพรีเมียมบ่มแบบ Dry-Aged', icon_name: 'Beef' },
+  { category_id: 4, name: 'Seafood & Raw Bar', description: 'ซูชิ ซาชิมิ แซลมอนนอร์เวย์ และหอยนางรมสดจากฝรั่งเศส', icon_name: 'Fish' },
+  { category_id: 5, name: 'Artisanal Pasta & Risotto', description: 'พาสต้าเส้นสดและรีซอตโต้สูตรต้นตำรับอิตาลี', icon_name: 'Utensils' },
+  { category_id: 6, name: 'Michelin Tasting Sets', description: 'เซ็ตมื้ออาหารพิเศษ 7-Course โดยเชฟมิชลินสตาร์', icon_name: 'Sparkles' },
+  { category_id: 7, name: 'Luxury Desserts & Bakery', description: 'ของหวานฝรั่งเศส ไอศกรีมโฮมเมด และเบเกอรี่สดใหม่', icon_name: 'Cake' },
+  { category_id: 8, name: 'Sommelier Wines & Drinks', description: 'ไวน์นำเข้า ม็อกเทลพรีเมียม และกาแฟคั่วบดพิเศษ', icon_name: 'Wine' }
 ];
 
 let mockMenuItems = [
-  { item_id: 1, category_id: 2, name: 'Prime Ribeye Steak with Truffle Butter', description: 'สเต๊กเนื้อริบอายเกรดพรีเมียม เสิร์ฟพร้อมเนยทรัฟเฟิลและผักย่าง', price: 1290.00, image_url: '/images/steak.jpg', is_popular: true, prep_time_mins: 25, is_available: true, dietary_tag: 'Chef Signature' },
-  { item_id: 2, category_id: 2, name: 'Creamy Truffle Fettuccine Pasta', description: 'พาสต้าเฟตตูชินีซอสทรัฟเฟิลเข้มข้น ท็อปด้วยพาร์เมซานชีส', price: 480.00, image_url: '/images/pasta.jpg', is_popular: true, prep_time_mins: 15, is_available: true, dietary_tag: 'Vegetarian' },
-  { item_id: 3, category_id: 1, name: 'Premium Salmon Sushi Platter', description: 'แซลมอนซูชิและซาชิมิสดส่งตรงจากนอร์เวย์ 8 ชิ้น', price: 650.00, image_url: '/images/sushi.jpg', is_popular: true, prep_time_mins: 12, is_available: true, dietary_tag: 'Gluten-Free' },
-  { item_id: 4, category_id: 3, name: 'Chocolate Lava Cake with Vanilla Ice Cream', description: 'เค้กช็อกโกแลตลาวาอุ่นๆ เสิร์ฟคู่ไอศกรีมวานิลลาและเบอร์รีสด', price: 290.00, image_url: '/images/dessert.jpg', is_popular: true, prep_time_mins: 10, is_available: true, dietary_tag: 'Halal' },
-  { item_id: 5, category_id: 1, name: 'Caesar Salad with Crispy Bacon', description: 'สลัดซีซาร์ผักคอสสดใหม่ เบคอนกรอบ และกรุบกรอบกูร์ตอง', price: 260.00, image_url: '/images/steak.jpg', is_popular: false, prep_time_mins: 10, is_available: true, dietary_tag: 'Vegetarian' },
-  { item_id: 6, category_id: 4, name: 'Signature Berry Mocktail', description: 'ม็อกเทลเบอร์รีรวมผสมโซดา สดชื่นคลายร้อน', price: 180.00, image_url: '/images/dessert.jpg', is_popular: false, prep_time_mins: 5, is_available: true, dietary_tag: 'Halal' }
+  // Steaks (Cat 3)
+  { item_id: 1, category_id: 3, name: 'Prime Ribeye Steak with Truffle Butter', description: 'สเต๊กเนื้อริบอายวากิว A5 บ่ม 45 วัน เสิร์ฟพร้อมเนยทรัฟเฟิลสีทองและเกลือหิมาลายัน', price: 1290.00, image_url: '/images/steak.jpg', is_popular: true, prep_time_mins: 25, is_available: true, dietary_tag: 'Chef Signature', calories: 780, allergens: 'Dairy', wine_pairing: '2019 Bordeaux Cabernet Sauvignon' },
+  { item_id: 2, category_id: 3, name: 'A5 Wagyu Striploin Melt-in-Mouth', description: 'เนื้อวากิว A5 นำเข้าจากคาโกชิมะ ย่างเตาถ่านไม้ชาโคล ลายไขมันแทรกละเอียด', price: 1890.00, image_url: '/images/steak.jpg', is_popular: true, prep_time_mins: 20, is_available: true, dietary_tag: 'Chef Signature', calories: 850, allergens: 'None', wine_pairing: '2018 Shiraz Barossa Valley' },
+  { item_id: 3, category_id: 3, name: 'Grilled Australian Lamb Chops', description: 'ซี่โครงแกะออสเตรเลียย่างสมุนไพรโรสแมรี่ เสิร์ฟคู่ซอสมิ้นท์การ์เดน', price: 1150.00, image_url: '/images/steak.jpg', is_popular: false, prep_time_mins: 22, is_available: true, dietary_tag: 'Gluten-Free', calories: 690, allergens: 'None', wine_pairing: '2020 Pinot Noir Oregon' },
+
+  // Seafood (Cat 4)
+  { item_id: 4, category_id: 4, name: 'Premium Salmon Sushi Platter', description: 'แซลมอนซูชิและซาชิมิเกรดพรีเมียมส่งตรงจากนอร์เวย์ 8 ชิ้น พร้อมไข่ปลาแซลมอน', price: 650.00, image_url: '/images/sushi.jpg', is_popular: true, prep_time_mins: 12, is_available: true, dietary_tag: 'Gluten-Free', calories: 420, allergens: 'Fish, Soy', wine_pairing: 'Chardonnay Reserve 2021' },
+  { item_id: 5, category_id: 4, name: 'French Fine de Claire Oysters (6 pcs)', description: 'หอยนางรมสดฟินเดอแคลร์ นำเข้าจากฝรั่งเศส เสิร์ฟพร้อมซอสเรดไวน์มิโญเนตต์', price: 890.00, image_url: '/images/sushi.jpg', is_popular: true, prep_time_mins: 10, is_available: true, dietary_tag: 'Chef Signature', calories: 180, allergens: 'Shellfish', wine_pairing: 'Champagne Dom Pérignon Vintage' },
+  { item_id: 6, category_id: 4, name: 'Pan-Seared Snow Fish Seabass', description: 'ปลาหิมะย่างกระทะหนังกรอบ เสิร์ฟพร้อมซอสบัตเตอร์เลมอนและหน่อไม้ฝรั่ง', price: 980.00, image_url: '/images/steak.jpg', is_popular: false, prep_time_mins: 18, is_available: true, dietary_tag: 'Gluten-Free', calories: 510, allergens: 'Dairy, Fish', wine_pairing: 'Sauvignon Blanc Marlborough' },
+
+  // Pasta (Cat 5)
+  { item_id: 7, category_id: 5, name: 'Creamy Truffle Fettuccine Pasta', description: 'พาสต้าเฟตตูชินีเส้นสดซอสเห็ดทรัฟเฟิลเข้มข้น ท็อปด้วยพาร์เมซานชีสและทรัฟเฟิลสไลซ์', price: 480.00, image_url: '/images/pasta.jpg', is_popular: true, prep_time_mins: 15, is_available: true, dietary_tag: 'Vegetarian', calories: 620, allergens: 'Dairy, Gluten', wine_pairing: 'Pinot Grigio D.O.C.' },
+  { item_id: 8, category_id: 5, name: 'Lobster Tail Black Ink Spaghetti', description: 'สปาเกตตีหมึกดำผัดซอสมะเขือเทศเชอร์รีสไตล์อิตาเลียน เสิร์ฟพร้อมกุ้งมังกรลอบสเตอร์', price: 950.00, image_url: '/images/pasta.jpg', is_popular: true, prep_time_mins: 20, is_available: true, dietary_tag: 'Chef Signature', calories: 580, allergens: 'Shellfish, Gluten', wine_pairing: 'Chablis Premier Cru' },
+
+  // Appetizers (Cat 1)
+  { item_id: 9, category_id: 1, name: 'Caesar Salad with Crispy Bacon', description: 'สลัดซีซาร์ผักคอสสดใหม่ เบคอนกรอบ ไข่ต้มยางมะตูม และกรุบกรอบกูร์ตอง', price: 260.00, image_url: '/images/steak.jpg', is_popular: false, prep_time_mins: 10, is_available: true, dietary_tag: 'Vegetarian', calories: 310, allergens: 'Dairy, Eggs', wine_pairing: 'Prosecco Superiore' },
+  { item_id: 10, category_id: 1, name: 'Seared Hokkaido Scallops', description: 'หอยเชลล์ฮอกไกโดตัวโตย่างเนย เสิร์ฟบนพูเรถั่วลันเตาหวาน', price: 520.00, image_url: '/images/sushi.jpg', is_popular: true, prep_time_mins: 12, is_available: true, dietary_tag: 'Gluten-Free', calories: 290, allergens: 'Shellfish, Dairy', wine_pairing: 'Sauvignon Blanc' },
+
+  // Michelin Tasting Set (Cat 6)
+  { item_id: 11, category_id: 6, name: '7-Course Michelin Signature Grand Tasting Menu', description: 'คอร์สอาหารสุดพิเศษ 7 จาน รังสรรค์โดยเชฟมิชลินสตาร์ รวมซิกเนเจอร์สเต๊ก ลอบสเตอร์ และทรัฟเฟิล', price: 3500.00, image_url: '/images/steak.jpg', is_popular: true, prep_time_mins: 90, is_available: true, dietary_tag: 'Chef Signature', calories: 1450, allergens: 'Dairy, Shellfish, Gluten', wine_pairing: 'Sommelier Premium Wine Pairing (+1200฿)' },
+  
+  // Desserts (Cat 7)
+  { item_id: 12, category_id: 7, name: 'Chocolate Lava Cake with Vanilla Ice Cream', description: 'เค้กช็อกโกแลตลาวาอุ่นๆ อะเวียร์เข้มข้น 70% เสิร์ฟคู่ไอศกรีมวานิลลาแท้และเบอร์รีสด', price: 290.00, image_url: '/images/dessert.jpg', is_popular: true, prep_time_mins: 10, is_available: true, dietary_tag: 'Gluten-Free', calories: 480, allergens: 'Dairy, Eggs', wine_pairing: 'Moscato d’Asti' },
+
+  // Drinks (Cat 8)
+  { item_id: 13, category_id: 8, name: 'Signature Berry Mocktail', description: 'ม็อกเทลเบอร์รีรวมมิกซ์สปาร์กลิงโซดา น้ำมะนาวสด และใบมิ้นท์คลายร้อน', price: 180.00, image_url: '/images/dessert.jpg', is_popular: false, prep_time_mins: 5, is_available: true, dietary_tag: 'Halal', calories: 120, allergens: 'None', wine_pairing: 'Non-Alcoholic Refresher' },
+  { item_id: 14, category_id: 8, name: 'Bordeaux Grand Cru Red Wine (Glass)', description: 'ไวน์แดงคลาสสิกระดับโบร์โด รสสัมผัสเข้มข้น หอมกลิ่นผลไม้และถังไม้โอ๊ค', price: 450.00, image_url: '/images/dessert.jpg', is_popular: true, prep_time_mins: 3, is_available: true, dietary_tag: 'Chef Signature', calories: 140, allergens: 'Sulfites', wine_pairing: 'Perfect with Prime Steaks' }
 ];
 
 let mockReviews = [
-  { review_id: 1, customer_name: 'คุณณัฐพงษ์ ภักดี', rating: 5, comment: 'อาหารอร่อยระดับมิชลิน บริการดีเยี่ยม บรรยากาศหรูหราประทับใจมากครับ', review_date: '2026-09-20' },
-  { review_id: 2, customer_name: 'คุณพิมลวรรณ สุขเสริฐ', rating: 5, comment: 'สเต๊กเนื้อริบอายเนยทรัฟเฟิลละลายในปาก พาสต้าซอสเข้มข้น แนะนำเลยค่ะ!', review_date: '2026-09-22' },
-  { review_id: 3, customer_name: 'Mr. David Miller', rating: 5, comment: 'World-class dining experience in Bangkok. The salmon sushi was super fresh and service was impeccable.', review_date: '2026-09-24' }
+  { review_id: 1, customer_name: 'คุณภาณุวัฒน์ ก.', rating: 5, comment: 'สเต๊กเนื้อริบอายซอสทรัฟเฟิลและวากิว A5 อร่อยระดับมิชลินจริงๆ ครับ บรรยากาศโซน VIP หรูหราและเป็นส่วนตัวมาก ประทับใจมากครับ', dish_recommendation: 'Prime Ribeye Steak with Truffle Butter' },
+  { review_id: 2, customer_name: 'คุณพิมลวรรณ สุขเสริฐ', rating: 5, comment: 'จองโต๊ะผ่านระบบ LUXE DINING สะดวกมาก ได้รับ E-Voucher บัตรคิวทันที มีการแสดงสถานะการปรุงอาหารแบบเรียลไทม์เหมือน GrabFood เลยค่ะ', dish_recommendation: '7-Course Michelin Signature Grand Tasting Menu' },
+  { review_id: 3, customer_name: 'Mr. David Miller (Food Critic)', rating: 5, comment: 'Exquisite fine dining experience in Bangkok! The truffle fettuccine was divine, scallops perfectly seared, and service was impeccable.', dish_recommendation: 'Creamy Truffle Fettuccine Pasta' },
+  { review_id: 4, customer_name: 'คุณณิชาภา ม.', rating: 5, comment: 'ชอบระบบเลือกโซนผังโต๊ะอาหารมากค่ะ ได้มุม Garden Glasshouse บรรยากาศโรแมนติก เหมาะกับการฉลองวันเกิดมากค่ะ', dish_recommendation: 'French Fine de Claire Oysters' }
+];
+
+let mockPromotions = [
+  { promo_id: 1, code: 'LUXE2026', title: 'ส่วนลดต้อนรับ 10%', discount_percent: 10, min_spend: 500, description: 'รับส่วนลด 10% สำหรับมื้ออาหารและโต๊ะจองทุกประเภท', badge_color: '#e5a853' },
+  { promo_id: 2, code: 'VIPGOLD', title: 'ส่วนลดสมาชิก VIP Gold 15%', discount_percent: 15, min_spend: 1200, description: 'สิทธิพิเศษเฉพาะสมาชิก Gold ขึ้นไป รับส่วนลด 15%', badge_color: '#3b82f6' },
+  { promo_id: 3, code: 'MICHELIN500', title: 'ส่วนลด Michelin Set ฿500', discount_percent: 20, min_spend: 2500, description: 'รับส่วนลด ฿500 เมื่อจองคอร์ส Michelin Tasting Menu', badge_color: '#10b981' }
 ];
 
 let mockTables = [
-  { table_id: 1, table_number: 'T-01', zone: 'Indoor Main', capacity: 2, status: 'available', pos_x: 1, pos_y: 1 },
-  { table_id: 2, table_number: 'T-02', zone: 'Indoor Main', capacity: 4, status: 'reserved', pos_x: 1, pos_y: 2 },
-  { table_id: 3, table_number: 'T-03', zone: 'Indoor Main', capacity: 6, status: 'available', pos_x: 1, pos_y: 3 },
-  { table_id: 4, table_number: 'G-01', zone: 'Garden Terrace', capacity: 4, status: 'available', pos_x: 2, pos_y: 1 },
-  { table_id: 5, table_number: 'G-02', zone: 'Garden Terrace', capacity: 2, status: 'available', pos_x: 2, pos_y: 2 },
-  { table_id: 6, table_number: 'G-03', zone: 'Garden Terrace', capacity: 6, status: 'available', pos_x: 2, pos_y: 3 },
-  { table_id: 7, table_number: 'V-01', zone: 'VIP Lounge', capacity: 8, status: 'available', pos_x: 3, pos_y: 1 },
-  { table_id: 8, table_number: 'V-02', zone: 'VIP Lounge', capacity: 10, status: 'reserved', pos_x: 3, pos_y: 2 }
+  // Zone 1: Indoor Main Dining
+  { table_id: 1, table_number: 'T-01', zone: 'Indoor Main Dining', capacity: 2, status: 'available', pos_x: 1, pos_y: 1 },
+  { table_id: 2, table_number: 'T-02', zone: 'Indoor Main Dining', capacity: 4, status: 'reserved', pos_x: 1, pos_y: 2 },
+  { table_id: 3, table_number: 'T-03', zone: 'Indoor Main Dining', capacity: 6, status: 'available', pos_x: 1, pos_y: 3 },
+  { table_id: 4, table_number: 'T-04', zone: 'Indoor Main Dining', capacity: 4, status: 'available', pos_x: 1, pos_y: 4 },
+
+  // Zone 2: Garden Glasshouse Terrace
+  { table_id: 5, table_number: 'G-01', zone: 'Garden Glasshouse Terrace', capacity: 4, status: 'available', pos_x: 2, pos_y: 1 },
+  { table_id: 6, table_number: 'G-02', zone: 'Garden Glasshouse Terrace', capacity: 2, status: 'available', pos_x: 2, pos_y: 2 },
+  { table_id: 7, table_number: 'G-03', zone: 'Garden Glasshouse Terrace', capacity: 6, status: 'reserved', pos_x: 2, pos_y: 3 },
+
+  // Zone 3: Chef Counter Live Kitchen
+  { table_id: 8, table_number: 'C-01', zone: 'Chef Counter Live Kitchen', capacity: 2, status: 'available', pos_x: 3, pos_y: 1 },
+  { table_id: 9, table_number: 'C-02', zone: 'Chef Counter Live Kitchen', capacity: 2, status: 'available', pos_x: 3, pos_y: 2 },
+
+  // Zone 4: VIP Presidential Suite
+  { table_id: 10, table_number: 'V-01', zone: 'VIP Presidential Suite', capacity: 8, status: 'available', pos_x: 4, pos_y: 1 },
+  { table_id: 11, table_number: 'V-02', zone: 'VIP Presidential Suite', capacity: 10, status: 'reserved', pos_x: 4, pos_y: 2 },
+
+  // Zone 5: Rooftop Sky Bar
+  { table_id: 12, table_number: 'R-01', zone: 'Rooftop Sky Bar', capacity: 2, status: 'available', pos_x: 5, pos_y: 1 },
+  { table_id: 13, table_number: 'R-02', zone: 'Rooftop Sky Bar', capacity: 4, status: 'available', pos_x: 5, pos_y: 2 }
 ];
 
 let mockReservations = [
@@ -295,6 +342,16 @@ app.get('/api/reviews', async (req, res) => {
     } catch (err) { console.error(err); }
   }
   res.json(mockReviews);
+});
+
+app.get('/api/promotions', async (req, res) => {
+  if (isDbConnected) {
+    try {
+      const result = await pool.query('SELECT * FROM promotions WHERE is_active = TRUE ORDER BY promo_id');
+      return res.json(result.rows);
+    } catch (err) { console.error(err); }
+  }
+  res.json(mockPromotions);
 });
 
 app.get('/api/tables', async (req, res) => {

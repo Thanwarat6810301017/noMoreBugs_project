@@ -58,8 +58,25 @@ export default function FoodCustomizerModal({ item, isOpen, onClose, onAddToCart
             <div style={{ color: 'var(--accent-gold)', fontWeight: 'bold', fontSize: '1.1rem' }}>
               ฿{item.price.toLocaleString()}
             </div>
+            {item.allergens && item.allergens !== 'None' && (
+              <span style={{ fontSize: '0.75rem', color: '#f87171', background: 'rgba(248,113,113,0.1)', padding: '0.2rem 0.5rem', borderRadius: '6px', display: 'inline-block', marginTop: '0.3rem' }}>
+                ⚠️ สารก่อภูมิแพ้: {item.allergens}
+              </span>
+            )}
           </div>
         </div>
+
+        {/* Sommelier Wine Pairing Option */}
+        {item.wine_pairing && item.wine_pairing !== 'None' && (
+          <div style={{ background: 'rgba(229,168,83,0.1)', border: '1px solid var(--accent-gold)', borderRadius: 'var(--radius-md)', padding: '0.8rem 1rem', marginBottom: '1rem' }}>
+            <div style={{ fontSize: '0.85rem', fontWeight: 'bold', color: 'var(--accent-gold)', marginBottom: '0.3rem' }}>
+              🍷 Sommelier Wine Pairing Recommendation
+            </div>
+            <div style={{ fontSize: '0.8rem', color: 'var(--text-main)' }}>
+              {item.wine_pairing}
+            </div>
+          </div>
+        )}
 
         {/* Spicy Level Selector */}
         <div className="form-group">

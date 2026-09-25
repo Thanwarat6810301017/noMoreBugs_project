@@ -10,7 +10,8 @@ export default function Hero({
   totalItemsCount,
   selectedDietary,
   setSelectedDietary,
-  onQuickSearchTable
+  onQuickSearchTable,
+  promotions = []
 }) {
   return (
     <section className="hero">
@@ -23,6 +24,18 @@ export default function Hero({
       <p className="hero-subtitle">
         เลือกระบุโต๊ะโปรดบนผังร้านเสมือนจริง เลือกเมนูอาหารจานโปรด และรับ E-Voucher บัตรคิวนัดหมายทันที การันตีบริการระดับพรีเมียม
       </p>
+
+      {/* Active Promotions & Deal Badges */}
+      {promotions.length > 0 && (
+        <div style={{ display: 'flex', justifyContent: 'center', gap: '0.8rem', flexWrap: 'wrap', marginBottom: '1.5rem' }}>
+          {promotions.map(p => (
+            <div key={p.promo_id || p.code} style={{ background: 'rgba(229,168,83,0.12)', border: `1px solid ${p.badge_color || 'var(--accent-gold)'}`, borderRadius: '30px', padding: '0.4rem 1.2rem', fontSize: '0.82rem', color: '#fff', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+              <span style={{ fontWeight: 'bold', color: p.badge_color || 'var(--accent-gold)' }}>🏷️ {p.code}</span>
+              <span>{p.title}</span>
+            </div>
+          ))}
+        </div>
+      )}
 
       {/* OpenTable-Style Instant Reservation Search Bar */}
       <div style={{ background: 'rgba(20,23,31,0.95)', border: '1px solid var(--border-active)', borderRadius: 'var(--radius-lg)', padding: '1rem 1.5rem', margin: '0 auto 2rem auto', maxWidth: '850px', display: 'grid', gridTemplateColumns: '1.2fr 1fr 1fr auto', gap: '0.8rem', alignItems: 'center', boxShadow: '0 10px 30px rgba(0,0,0,0.5)' }}>
