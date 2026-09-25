@@ -1,5 +1,5 @@
 import React from 'react';
-import { Utensils, Calendar, ShieldCheck, User, LogOut, Award, LogIn } from 'lucide-react';
+import { Utensils, Calendar, ShieldCheck, User, LogOut, LogIn } from 'lucide-react';
 
 export default function Navbar({ 
   activeTab, 
