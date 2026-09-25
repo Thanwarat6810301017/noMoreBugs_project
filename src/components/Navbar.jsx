@@ -1,5 +1,5 @@
 import React from 'react';
-import { Utensils, Calendar, ShieldCheck, User, LogOut, LogIn, Lock } from 'lucide-react';
+import { Utensils, Calendar, ShieldCheck, User, LogOut, LogIn } from 'lucide-react';
 
 export default function Navbar({ 
   activeTab, 
@@ -10,16 +10,8 @@ export default function Navbar({
   onOpenAuth, 
   onLogout 
 }) {
+  // Check if current user has Admin or Staff role
   const isAdminOrStaff = currentUser && (currentUser.role === 'admin' || currentUser.role === 'staff');
-
-  const handleAdminTabClick = () => {
-    if (isAdminOrStaff) {
-      setActiveTab('admin');
-    } else {
-      alert('🔒 ส่วนแก้ไขข้อมูลอนุญาตเฉพาะผู้บริหาร/พนักงานที่มีสิทธิ์เท่านั้น กรุณาเข้าสู่ระบบด้วยบัญชีแอดมิน');
-      onOpenAuth();
-    }
-  };
 
   return (
     <nav className="navbar">
@@ -48,15 +40,16 @@ export default function Navbar({
           </button>
         )}
 
-        {/* Protected Admin/Staff Data Editor Tab */}
-        <button 
-          className={`nav-btn ${activeTab === 'admin' ? 'active' : ''}`}
-          onClick={handleAdminTabClick}
-          style={{ border: isAdminOrStaff ? '1px solid rgba(16,185,129,0.3)' : '1px solid rgba(239,68,68,0.3)' }}
-        >
-          {isAdminOrStaff ? <ShieldCheck size={18} color="#34d399" /> : <Lock size={18} color="#f87171" />}
-          {isAdminOrStaff ? 'ผู้จัดการแก้ไขข้อมูล (Admin Authorized)' : 'ผู้จัดการแก้ไขข้อมูล 🔒'}
-        </button>
+        {/* Admin Navigation Button: COMPLETELY HIDDEN for normal users/customers */}
+        {isAdminOrStaff && (
+          <button 
+            className={`nav-btn ${activeTab === 'admin' ? 'active' : ''}`}
+            onClick={() => setActiveTab('admin')}
+            style={{ border: '1px solid rgba(16,185,129,0.3)', color: '#34d399' }}
+          >
+            <ShieldCheck size={18} color="#34d399" /> แผงควบคุมแอดมิน ({currentUser.role.toUpperCase()})
+          </button>
+        )}
 
         {currentUser ? (
           <button 

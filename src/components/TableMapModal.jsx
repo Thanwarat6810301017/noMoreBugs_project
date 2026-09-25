@@ -1,5 +1,5 @@
-import React from 'react';
-import { X, Calendar, Clock, Users, User, Phone, Mail, MapPin } from 'lucide-react';
+import React, { useState } from 'react';
+import { X, Calendar, Clock, Users, User, Phone, Mail, MapPin, Sparkles } from 'lucide-react';
 
 export default function TableMapModal({
   isOpen,
@@ -11,7 +11,17 @@ export default function TableMapModal({
   cartTotal,
   onSubmitBooking
 }) {
+  const [occasion, setOccasion] = useState('Birthday Celebration 🎉');
+
   if (!isOpen) return null;
+
+  const occasionsList = [
+    'Birthday Celebration 🎉',
+    'Anniversary Date Night ❤️',
+    'Business Dinner 💼',
+    'Family Gathering 👨‍👩‍👧‍👦',
+    'General Dining 🍽️'
+  ];
 
   const tablesByZone = {
     'Indoor Main': tables.filter(t => t.zone === 'Indoor Main'),
@@ -32,7 +42,10 @@ export default function TableMapModal({
           <Calendar color="var(--accent-gold)" /> ฟอร์มจองโต๊ะและผังร้านอาหารแบบ Interactive
         </h2>
 
-        <form onSubmit={onSubmitBooking}>
+        <form onSubmit={(e) => {
+          setFormData(prev => ({ ...prev, special_request: `[โอกาสพิเศษ: ${occasion}] ${prev.special_request || ''}` }));
+          onSubmitBooking(e);
+        }}>
           {/* Interactive Floor Map */}
           <div className="floor-map-container">
             <h4 style={{ fontSize: '0.95rem', color: 'var(--accent-gold)', marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
@@ -63,6 +76,24 @@ export default function TableMapModal({
                 </div>
               </div>
             ))}
+          </div>
+
+          {/* SevenRooms Inspired Dining Occasion Selector */}
+          <div className="form-group">
+            <label style={{ color: 'var(--accent-gold)' }}><Sparkles size={14} style={{ display: 'inline', marginRight: '4px' }} /> โอกาสพิเศษในการจอง (SevenRooms Dining Occasion)</label>
+            <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap', marginTop: '0.4rem' }}>
+              {occasionsList.map(occ => (
+                <button
+                  key={occ}
+                  type="button"
+                  className={`category-pill ${occasion === occ ? 'active' : ''}`}
+                  style={{ padding: '0.5rem 1rem', fontSize: '0.85rem' }}
+                  onClick={() => setOccasion(occ)}
+                >
+                  {occ}
+                </button>
+              ))}
+            </div>
           </div>
 
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
@@ -153,9 +184,9 @@ export default function TableMapModal({
               <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>ยังไม่มีรายการอาหารสั่งล่วงหน้า (สามารถกดสั่งจากหน้าเมนูได้)</p>
             ) : (
               <div>
-                {cart.map(item => (
-                  <div key={item.item_id} style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.9rem', marginBottom: '0.4rem' }}>
-                    <span>{item.name} x {item.quantity}</span>
+                {cart.map((item, idx) => (
+                  <div key={idx} style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.9rem', marginBottom: '0.4rem' }}>
+                    <span>{item.name} x {item.quantity} <small style={{ color: 'var(--text-muted)' }}>({item.custom_options || 'ปกติ'})</small></span>
                     <span style={{ color: 'var(--accent-gold)' }}>฿{(item.price * item.quantity).toLocaleString()}</span>
                   </div>
                 ))}

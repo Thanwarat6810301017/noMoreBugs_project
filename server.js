@@ -48,12 +48,18 @@ let mockCategories = [
 ];
 
 let mockMenuItems = [
-  { item_id: 1, category_id: 2, name: 'Prime Ribeye Steak with Truffle Butter', description: 'สเต๊กเนื้อริบอายเกรดพรีเมียม เสิร์ฟพร้อมเนยทรัฟเฟิลและผักย่าง', price: 1290.00, image_url: '/images/steak.jpg', is_popular: true, prep_time_mins: 25, is_available: true },
-  { item_id: 2, category_id: 2, name: 'Creamy Truffle Fettuccine Pasta', description: 'พาสต้าเฟตตูชินีซอสทรัฟเฟิลเข้มข้น ท็อปด้วยพาร์เมซานชีส', price: 480.00, image_url: '/images/pasta.jpg', is_popular: true, prep_time_mins: 15, is_available: true },
-  { item_id: 3, category_id: 1, name: 'Premium Salmon Sushi Platter', description: 'แซลมอนซูชิและซาชิมิสดส่งตรงจากนอร์เวย์ 8 ชิ้น', price: 650.00, image_url: '/images/sushi.jpg', is_popular: true, prep_time_mins: 12, is_available: true },
-  { item_id: 4, category_id: 3, name: 'Chocolate Lava Cake with Vanilla Ice Cream', description: 'เค้กช็อกโกแลตลาวาอุ่นๆ เสิร์ฟคู่ไอศกรีมวานิลลาและเบอร์รีสด', price: 290.00, image_url: '/images/dessert.jpg', is_popular: true, prep_time_mins: 10, is_available: true },
-  { item_id: 5, category_id: 1, name: 'Caesar Salad with Crispy Bacon', description: 'สลัดซีซาร์ผักคอสสดใหม่ เบคอนกรอบ และกรุบกรอบกูร์ตอง', price: 260.00, image_url: '/images/steak.jpg', is_popular: false, prep_time_mins: 10, is_available: true },
-  { item_id: 6, category_id: 4, name: 'Signature Berry Mocktail', description: 'ม็อกเทลเบอร์รีรวมผสมโซดา สดชื่นคลายร้อน', price: 180.00, image_url: '/images/dessert.jpg', is_popular: false, prep_time_mins: 5, is_available: true }
+  { item_id: 1, category_id: 2, name: 'Prime Ribeye Steak with Truffle Butter', description: 'สเต๊กเนื้อริบอายเกรดพรีเมียม เสิร์ฟพร้อมเนยทรัฟเฟิลและผักย่าง', price: 1290.00, image_url: '/images/steak.jpg', is_popular: true, prep_time_mins: 25, is_available: true, dietary_tag: 'Chef Signature' },
+  { item_id: 2, category_id: 2, name: 'Creamy Truffle Fettuccine Pasta', description: 'พาสต้าเฟตตูชินีซอสทรัฟเฟิลเข้มข้น ท็อปด้วยพาร์เมซานชีส', price: 480.00, image_url: '/images/pasta.jpg', is_popular: true, prep_time_mins: 15, is_available: true, dietary_tag: 'Vegetarian' },
+  { item_id: 3, category_id: 1, name: 'Premium Salmon Sushi Platter', description: 'แซลมอนซูชิและซาชิมิสดส่งตรงจากนอร์เวย์ 8 ชิ้น', price: 650.00, image_url: '/images/sushi.jpg', is_popular: true, prep_time_mins: 12, is_available: true, dietary_tag: 'Gluten-Free' },
+  { item_id: 4, category_id: 3, name: 'Chocolate Lava Cake with Vanilla Ice Cream', description: 'เค้กช็อกโกแลตลาวาอุ่นๆ เสิร์ฟคู่ไอศกรีมวานิลลาและเบอร์รีสด', price: 290.00, image_url: '/images/dessert.jpg', is_popular: true, prep_time_mins: 10, is_available: true, dietary_tag: 'Halal' },
+  { item_id: 5, category_id: 1, name: 'Caesar Salad with Crispy Bacon', description: 'สลัดซีซาร์ผักคอสสดใหม่ เบคอนกรอบ และกรุบกรอบกูร์ตอง', price: 260.00, image_url: '/images/steak.jpg', is_popular: false, prep_time_mins: 10, is_available: true, dietary_tag: 'Vegetarian' },
+  { item_id: 6, category_id: 4, name: 'Signature Berry Mocktail', description: 'ม็อกเทลเบอร์รีรวมผสมโซดา สดชื่นคลายร้อน', price: 180.00, image_url: '/images/dessert.jpg', is_popular: false, prep_time_mins: 5, is_available: true, dietary_tag: 'Halal' }
+];
+
+let mockReviews = [
+  { review_id: 1, customer_name: 'คุณณัฐพงษ์ ภักดี', rating: 5, comment: 'อาหารอร่อยระดับมิชลิน บริการดีเยี่ยม บรรยากาศหรูหราประทับใจมากครับ', review_date: '2026-09-20' },
+  { review_id: 2, customer_name: 'คุณพิมลวรรณ สุขเสริฐ', rating: 5, comment: 'สเต๊กเนื้อริบอายเนยทรัฟเฟิลละลายในปาก พาสต้าซอสเข้มข้น แนะนำเลยค่ะ!', review_date: '2026-09-22' },
+  { review_id: 3, customer_name: 'Mr. David Miller', rating: 5, comment: 'World-class dining experience in Bangkok. The salmon sushi was super fresh and service was impeccable.', review_date: '2026-09-24' }
 ];
 
 let mockTables = [
@@ -248,13 +254,22 @@ app.get('/api/categories', async (req, res) => {
 
 app.get('/api/menu', async (req, res) => {
   const categoryId = req.query.category_id;
+  const dietaryTag = req.query.dietary_tag;
   if (isDbConnected) {
     try {
       let query = 'SELECT m.*, c.name as category_name FROM menu_items m LEFT JOIN categories c ON m.category_id = c.category_id';
       let params = [];
+      let conditions = [];
       if (categoryId) {
-        query += ' WHERE m.category_id = $1';
         params.push(categoryId);
+        conditions.push(`m.category_id = $${params.length}`);
+      }
+      if (dietaryTag) {
+        params.push(dietaryTag);
+        conditions.push(`m.dietary_tag = $${params.length}`);
+      }
+      if (conditions.length > 0) {
+        query += ' WHERE ' + conditions.join(' AND ');
       }
       query += ' ORDER BY m.item_id';
       const result = await pool.query(query, params);
@@ -266,7 +281,20 @@ app.get('/api/menu', async (req, res) => {
   if (categoryId) {
     items = items.filter(item => item.category_id === parseInt(categoryId));
   }
+  if (dietaryTag) {
+    items = items.filter(item => item.dietary_tag === dietaryTag);
+  }
   res.json(items);
+});
+
+app.get('/api/reviews', async (req, res) => {
+  if (isDbConnected) {
+    try {
+      const result = await pool.query('SELECT * FROM reviews ORDER BY created_at DESC LIMIT 10');
+      return res.json(result.rows);
+    } catch (err) { console.error(err); }
+  }
+  res.json(mockReviews);
 });
 
 app.get('/api/tables', async (req, res) => {

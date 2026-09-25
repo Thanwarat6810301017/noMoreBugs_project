@@ -107,3 +107,12 @@ export const updateReservationStatus = async (id, status) => {
   });
   return await res.json();
 };
+
+export const fetchReviews = async () => {
+  try {
+    const res = await fetch(`${API_BASE}/reviews`);
+    return await res.json();
+  } catch {
+    return [];
+  }
+};

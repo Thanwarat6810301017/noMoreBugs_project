@@ -7,6 +7,7 @@ import PaymentModal from './components/PaymentModal';
 import EVoucherModal from './components/EVoucherModal';
 import AdminDashboard from './components/AdminDashboard';
 import CustomerProfile from './components/CustomerProfile';
+import CustomerReviews from './components/CustomerReviews';
 import AuthModal from './components/AuthModal';
 import FoodCustomizerModal from './components/FoodCustomizerModal';
 import Footer from './components/Footer';
@@ -18,6 +19,7 @@ export default function App() {
   const [menuItems, setMenuItems] = useState([]);
   const [tables, setTables] = useState([]);
   const [reservations, setReservations] = useState([]);
+  const [reviews, setReviews] = useState([]);
   const [adminStats, setAdminStats] = useState({ totalRevenue: 0, totalBookings: 0, tableOccupancyRate: 0, popularDish: '-' });
   
   // Auth state
@@ -28,6 +30,7 @@ export default function App() {
   const [selectedItemForCustomize, setSelectedItemForCustomize] = useState(null);
 
   const [selectedCategory, setSelectedCategory] = useState(null);
+  const [selectedDietary, setSelectedDietary] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
   
   // Cart & Modal state
@@ -71,18 +74,20 @@ export default function App() {
 
   const loadData = async () => {
     try {
-      const [cats, items, tbls, resv, stats] = await Promise.all([
+      const [cats, items, tbls, resv, stats, revs] = await Promise.all([
         api.fetchCategories(),
         api.fetchMenuItems(),
         api.fetchTables(),
         api.fetchReservations(),
-        api.fetchAdminStats()
+        api.fetchAdminStats(),
+        api.fetchReviews()
       ]);
       setCategories(cats);
       setMenuItems(items);
       setTables(tbls);
       setReservations(resv);
       setAdminStats(stats);
+      setReviews(revs || []);
       if (tbls.length > 0 && !formData.table_id) {
         setFormData(prev => ({ ...prev, table_id: tbls[0].table_id.toString() }));
       }
@@ -186,9 +191,10 @@ export default function App() {
 
   const filteredMenu = menuItems.filter(item => {
     const matchesCategory = selectedCategory ? item.category_id === selectedCategory : true;
+    const matchesDietary = selectedDietary ? item.dietary_tag === selectedDietary : true;
     const matchesSearch = item.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
                           item.description.toLowerCase().includes(searchQuery.toLowerCase());
-    return matchesCategory && matchesSearch;
+    return matchesCategory && matchesDietary && matchesSearch;
   });
 
   return (
@@ -212,11 +218,15 @@ export default function App() {
             selectedCategory={selectedCategory}
             setSelectedCategory={setSelectedCategory}
             totalItemsCount={menuItems.length}
+            selectedDietary={selectedDietary}
+            setSelectedDietary={setSelectedDietary}
+            onQuickSearchTable={() => setIsBookingOpen(true)}
           />
           <MenuGrid 
             menuItems={filteredMenu}
             onAddToCart={handleOpenCustomizer}
           />
+          <CustomerReviews reviews={reviews} />
         </main>
       )}
 
