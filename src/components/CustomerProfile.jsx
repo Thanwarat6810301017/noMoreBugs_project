@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { User, Award, Calendar, CheckCircle, Clock, MapPin, QrCode } from 'lucide-react';
 import { fetchUserReservations } from '../services/api';
+import GrabOrderTracker from './GrabOrderTracker';
 
 export default function CustomerProfile({ user, onSelectVoucher }) {
   const [history, setHistory] = useState([]);
@@ -18,13 +19,15 @@ export default function CustomerProfile({ user, onSelectVoucher }) {
 
   if (!user) return null;
 
+  const activeReservation = history.find(r => r.status === 'confirmed');
+
   return (
     <div style={{ padding: '3rem', maxWidth: '1100px', margin: '0 auto' }}>
       {/* Profile Header Banner */}
       <div style={{ background: 'linear-gradient(135deg, rgba(229,168,83,0.15), rgba(255,94,54,0.1))', border: '1px solid var(--border-active)', borderRadius: 'var(--radius-lg)', padding: '2rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
         <div>
           <span style={{ background: 'var(--accent-gold)', color: '#0b0c10', padding: '0.2rem 0.8rem', borderRadius: '12px', fontSize: '0.75rem', fontWeight: 'bold' }}>
-            {user.role === 'customer' ? 'สมาชิกทรงเกียรติ (VIP Customer)' : 'พนักงานเจ้าหน้าที่ (Staff)'}
+            {user.role === 'customer' ? 'สมาชิกทรงเกียรติ (VIP Customer)' : 'พนักงานเจ้าหน้าที่ (Staff Editor)'}
           </span>
           <h2 style={{ fontSize: '2rem', color: '#fff', marginTop: '0.4rem' }}>{user.name}</h2>
           <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>อีเมล: {user.email} | โทร: {user.phone || '-'}</p>
@@ -40,13 +43,18 @@ export default function CustomerProfile({ user, onSelectVoucher }) {
         </div>
       </div>
 
+      {/* Grab-Style Live Order Tracker Component */}
+      {activeReservation && (
+        <GrabOrderTracker reservation={activeReservation} />
+      )}
+
       {/* Reservation History Section */}
       <h3 style={{ fontSize: '1.4rem', color: '#fff', marginBottom: '1.2rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
         <Calendar color="var(--accent-gold)" /> ประวัติการจองโต๊ะและสั่งอาหารของคุณ ({history.length} รายการ)
       </h3>
 
       {history.length === 0 ? (
-        <div style={{ background: 'var(--bg-card)', border: '1px solid var(--border-color)', borderRadius: 'var(--radius-lg)', padding: '3rem', textAlgin: 'center', color: 'var(--text-muted)' }}>
+        <div style={{ background: 'var(--bg-card)', border: '1px solid var(--border-color)', borderRadius: 'var(--radius-lg)', padding: '3rem', textAlign: 'center', color: 'var(--text-muted)' }}>
           คุณยังไม่มีประวัติการจองโต๊ะ (สามารถคลิกปุ่ม "จองโต๊ะอาหารออนไลน์" ด้านบนเพื่อทำการจอง)
         </div>
       ) : (

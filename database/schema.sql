@@ -1,5 +1,5 @@
 -- ============================================================
--- LUXE DINING ENTERPRISE DATABASE SCHEMA
+-- LUXE DINING ENTERPRISE PRO DATABASE SCHEMA
 -- PostgreSQL Version 12+
 -- ============================================================
 
@@ -10,7 +10,7 @@ DROP TABLE IF EXISTS menu_items CASCADE;
 DROP TABLE IF EXISTS categories CASCADE;
 DROP TABLE IF EXISTS users CASCADE;
 
--- 1. Users Table (บัญชีผู้ใช้: ลูกค้า / พนักงานแก้ไขข้อมูล / ผู้บริหาร)
+-- 1. Users Table (ผู้ใช้งานและแอดมิน)
 CREATE TABLE users (
     user_id SERIAL PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
@@ -22,7 +22,7 @@ CREATE TABLE users (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- 2. Categories Table (หมวดหมู่อาหาร)
+-- 2. Categories Table
 CREATE TABLE categories (
     category_id SERIAL PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
@@ -31,7 +31,7 @@ CREATE TABLE categories (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- 3. Menu Items Table (รายการอาหาร - รองรับการแก้ไขโดยพนักงาน)
+-- 3. Menu Items Table
 CREATE TABLE menu_items (
     item_id SERIAL PRIMARY KEY,
     category_id INT REFERENCES categories(category_id) ON DELETE SET NULL,
@@ -45,19 +45,19 @@ CREATE TABLE menu_items (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- 4. Restaurant Tables (ผังโต๊ะอาหาร)
+-- 4. Restaurant Tables
 CREATE TABLE restaurant_tables (
     table_id SERIAL PRIMARY KEY,
     table_number VARCHAR(20) UNIQUE NOT NULL,
-    zone VARCHAR(50) NOT NULL, -- 'Indoor Main', 'Garden Terrace', 'VIP Lounge'
+    zone VARCHAR(50) NOT NULL,
     capacity INT NOT NULL CHECK (capacity > 0),
     pos_x INT DEFAULT 0,
     pos_y INT DEFAULT 0,
-    status VARCHAR(20) DEFAULT 'available', -- 'available', 'reserved', 'occupied'
+    status VARCHAR(20) DEFAULT 'available',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- 5. Reservations Table (การจองโต๊ะ - เชื่อมกับ User)
+-- 5. Reservations Table (รองรับ Order Stage 4 ขั้นตอนสไตล์ Grab)
 CREATE TABLE reservations (
     reservation_id SERIAL PRIMARY KEY,
     booking_code VARCHAR(20) UNIQUE DEFAULT ('LX-' || LPAD(CAST(FLOOR(RANDOM() * 100000) AS VARCHAR), 5, '0')),
@@ -73,23 +73,25 @@ CREATE TABLE reservations (
     total_amount DECIMAL(10, 2) DEFAULT 0.00,
     discount_amount DECIMAL(10, 2) DEFAULT 0.00,
     earned_points INT DEFAULT 0,
-    payment_status VARCHAR(20) DEFAULT 'paid', -- 'pending', 'paid', 'refunded'
+    payment_status VARCHAR(20) DEFAULT 'paid',
     payment_method VARCHAR(30) DEFAULT 'PromptPay QR',
-    status VARCHAR(20) DEFAULT 'confirmed', -- 'pending', 'confirmed', 'cancelled'
+    order_stage VARCHAR(20) DEFAULT 'confirmed', -- 'confirmed', 'preparing', 'ready', 'completed'
+    status VARCHAR(20) DEFAULT 'confirmed', -- 'confirmed', 'cancelled'
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- 6. Reservation Items Table (รายการอาหารสั่งล่วงหน้า)
+-- 6. Reservation Items Table
 CREATE TABLE reservation_items (
     item_detail_id SERIAL PRIMARY KEY,
     reservation_id INT REFERENCES reservations(reservation_id) ON DELETE CASCADE,
     item_id INT REFERENCES menu_items(item_id) ON DELETE CASCADE,
     quantity INT NOT NULL DEFAULT 1 CHECK (quantity > 0),
-    unit_price DECIMAL(10, 2) NOT NULL
+    unit_price DECIMAL(10, 2) NOT NULL,
+    options TEXT -- 'Spicy: Medium, Add-on: Extra Cheese (+40)'
 );
 
 -- Indexes
 CREATE INDEX idx_users_email ON users(email);
 CREATE INDEX idx_reservations_user ON reservations(user_id);
 CREATE INDEX idx_reservations_date ON reservations(reservation_date);
-CREATE INDEX idx_menu_category ON menu_items(category_id);
+CREATE INDEX idx_reservations_stage ON reservations(order_stage);

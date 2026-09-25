@@ -1,9 +1,17 @@
 import React, { useState } from 'react';
-import { Award, DollarSign, Calendar, PieChart, Flame, Plus, Edit, Trash2, CheckCircle, XCircle } from 'lucide-react';
-import { createMenuItem, updateMenuItem, deleteMenuItem, updateTableStatus } from '../services/api';
+import { Award, DollarSign, Calendar, PieChart, Flame, Plus, Edit, Trash2, ShieldCheck, Lock, Utensils, CheckCircle } from 'lucide-react';
+import { createMenuItem, updateMenuItem, deleteMenuItem, updateTableStatus, updateReservationStatus } from '../services/api';
 
-export default function AdminDashboard({ adminStats, reservations, menuItems, tables, onRefreshData, onStatusUpdate }) {
-  const [activeAdminTab, setActiveAdminTab] = useState('reservations'); // 'reservations' | 'menu_editor' | 'table_editor'
+export default function AdminDashboard({ 
+  currentUser,
+  adminStats, 
+  reservations, 
+  menuItems, 
+  tables, 
+  onRefreshData,
+  onOpenAuth
+}) {
+  const [activeAdminTab, setActiveAdminTab] = useState('reservations');
   
   // Menu Form Modal State
   const [isMenuModalOpen, setIsMenuModalOpen] = useState(false);
@@ -17,6 +25,28 @@ export default function AdminDashboard({ adminStats, reservations, menuItems, ta
     is_popular: false,
     is_available: true
   });
+
+  const isAdminOrStaff = currentUser && (currentUser.role === 'admin' || currentUser.role === 'staff');
+
+  if (!isAdminOrStaff) {
+    return (
+      <div style={{ padding: '4rem 2rem', maxWidth: '600px', margin: '0 auto', textAlgin: 'center' }}>
+        <div style={{ background: 'var(--bg-card)', border: '1px solid rgba(239, 68, 68, 0.4)', borderRadius: 'var(--radius-lg)', padding: '3rem', textAlgin: 'center' }}>
+          <Lock size={60} color="#ef4444" style={{ margin: '0 auto 1rem auto' }} />
+          <h2 style={{ fontSize: '1.8rem', color: '#fff', marginBottom: '0.5rem' }}>ส่วนควบคุมสำหรับแอดมิน (Admin Access Only)</h2>
+          <p style={{ color: 'var(--text-muted)', marginBottom: '1.5rem', lineHeight: 1.6 }}>
+            หน้านี้จำกัดสิทธิ์สำหรับผู้บริหารและพนักงานเจ้าหน้าที่ในการแก้ไขราคาเมนู ลบรายการอาหาร และเปลี่ยนสถานะโต๊ะอาหาร กรุณาเข้าสู่ระบบด้วยบัญชีแอดมิน
+          </p>
+          <div style={{ background: 'rgba(0,0,0,0.3)', padding: '0.8rem', borderRadius: '8px', fontSize: '0.85rem', color: 'var(--text-muted)', marginBottom: '1.5rem' }}>
+            🔑 <strong>บัญชีแอดมินสำหรับทดสอบ:</strong> <code style={{ color: 'var(--accent-gold)' }}>admin@luxedining.com</code> / รหัสผ่าน: <code style={{ color: 'var(--accent-gold)' }}>admin123</code>
+          </div>
+          <button className="submit-btn" onClick={onOpenAuth}>
+            เข้าสู่ระบบบัญชีแอดมิน (Admin Login)
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   const handleOpenAddMenu = () => {
     setEditingItem(null);
@@ -70,11 +100,21 @@ export default function AdminDashboard({ adminStats, reservations, menuItems, ta
     onRefreshData();
   };
 
+  const handleUpdateOrderStage = async (id, stage) => {
+    await updateReservationStatus(id, stage);
+    onRefreshData();
+  };
+
   return (
     <div style={{ padding: '3rem', maxWidth: '1300px', margin: '0 auto' }}>
-      <h2 style={{ fontSize: '2rem', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-        <Award color="var(--accent-gold)" /> ระบบจัดการข้อมูลร้านและผู้บริหาร (Staff & Manager Editor)
-      </h2>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
+        <h2 style={{ fontSize: '2rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+          <ShieldCheck color="#34d399" /> แผงควบคุมสิทธิ์แก้ไขข้อมูลผู้บริหาร (Admin Dashboard)
+        </h2>
+        <span style={{ background: 'rgba(16,185,129,0.2)', color: '#34d399', border: '1px solid #10b981', padding: '0.4rem 1rem', borderRadius: '20px', fontWeight: 'bold', fontSize: '0.85rem' }}>
+          ผู้ใช้งาน: {currentUser.name} ({currentUser.role.toUpperCase()})
+        </span>
+      </div>
 
       {/* Analytics Summary Cards */}
       <div className="stats-grid">
@@ -115,13 +155,13 @@ export default function AdminDashboard({ adminStats, reservations, menuItems, ta
           className={`nav-btn ${activeAdminTab === 'reservations' ? 'active' : ''}`}
           onClick={() => setActiveAdminTab('reservations')}
         >
-          จัดการรายการจอง ({reservations.length})
+          จัดการรายการจอง & ปรุงอาหาร Grab-Style ({reservations.length})
         </button>
         <button 
           className={`nav-btn ${activeAdminTab === 'menu_editor' ? 'active' : ''}`}
           onClick={() => setActiveAdminTab('menu_editor')}
         >
-          จัดการเมนูอาหาร (Menu Editor)
+          จัดการแก้ไขเมนูอาหาร (Menu CRUD)
         </button>
         <button 
           className={`nav-btn ${activeAdminTab === 'table_editor' ? 'active' : ''}`}
@@ -131,7 +171,7 @@ export default function AdminDashboard({ adminStats, reservations, menuItems, ta
         </button>
       </div>
 
-      {/* 1. RESERVATIONS MANAGEMENT */}
+      {/* 1. RESERVATIONS MANAGEMENT & CHEF STAGE CONTROL */}
       {activeAdminTab === 'reservations' && (
         <div style={{ background: 'var(--bg-card)', border: '1px solid var(--border-color)', borderRadius: 'var(--radius-lg)', overflow: 'hidden' }}>
           <table style={{ width: '100%', borderCollapse: 'collapse' }}>
@@ -141,9 +181,8 @@ export default function AdminDashboard({ adminStats, reservations, menuItems, ta
                 <th style={{ padding: '1rem', textAlign: 'left' }}>ชื่อผู้จอง</th>
                 <th style={{ padding: '1rem', textAlign: 'left' }}>วันที่ / เวลา</th>
                 <th style={{ padding: '1rem', textAlign: 'left' }}>โต๊ะ / โซน</th>
-                <th style={{ padding: '1rem', textAlign: 'left' }}>แขก</th>
                 <th style={{ padding: '1rem', textAlign: 'left' }}>ยอดชำระ</th>
-                <th style={{ padding: '1rem', textAlign: 'left' }}>สถานะ</th>
+                <th style={{ padding: '1rem', textAlign: 'left' }}>สถานะการปรุงอาหาร (Grab Stage)</th>
                 <th style={{ padding: '1rem', textAlign: 'left' }}>การจัดการ</th>
               </tr>
             </thead>
@@ -165,33 +204,43 @@ export default function AdminDashboard({ adminStats, reservations, menuItems, ta
                     <span style={{ color: '#34d399', fontWeight: 600 }}>{res.table_number || 'T-01'}</span><br/>
                     <small style={{ color: 'var(--text-muted)' }}>{res.zone || 'Indoor Main'}</small>
                   </td>
-                  <td style={{ padding: '1rem' }}>{res.guest_count} ท่าน</td>
                   <td style={{ padding: '1rem', fontWeight: 'bold', color: 'var(--accent-gold)' }}>
                     ฿{Number(res.total_amount || 0).toLocaleString()}
                   </td>
                   <td style={{ padding: '1rem' }}>
-                    <span style={{
-                      padding: '0.3rem 0.8rem',
-                      borderRadius: '20px',
-                      fontSize: '0.8rem',
-                      fontWeight: 600,
-                      background: res.status === 'confirmed' ? 'rgba(16, 185, 129, 0.2)' : 'rgba(239, 68, 68, 0.2)',
-                      color: res.status === 'confirmed' ? '#34d399' : '#f87171'
-                    }}>
-                      {res.status === 'confirmed' ? 'ยืนยันแล้ว' : res.status}
-                    </span>
+                    {/* Chef Stage Quick Action Buttons */}
+                    <div style={{ display: 'flex', gap: '0.3rem', flexWrap: 'wrap' }}>
+                      <button 
+                        onClick={() => handleUpdateOrderStage(res.reservation_id, 'preparing')}
+                        style={{ background: res.order_stage === 'preparing' ? 'var(--accent-orange)' : 'rgba(255,255,255,0.05)', color: res.order_stage === 'preparing' ? '#000' : 'var(--text-muted)', border: 'none', padding: '0.3rem 0.6rem', borderRadius: '6px', fontSize: '0.75rem', fontWeight: 'bold', cursor: 'pointer' }}
+                      >
+                        🍳 กำลังปรุง
+                      </button>
+                      <button 
+                        onClick={() => handleUpdateOrderStage(res.reservation_id, 'ready')}
+                        style={{ background: res.order_stage === 'ready' ? 'var(--accent-gold)' : 'rgba(255,255,255,0.05)', color: res.order_stage === 'ready' ? '#000' : 'var(--text-muted)', border: 'none', padding: '0.3rem 0.6rem', borderRadius: '6px', fontSize: '0.75rem', fontWeight: 'bold', cursor: 'pointer' }}
+                      >
+                        🍽️ พร้อมเสิร์ฟ
+                      </button>
+                      <button 
+                        onClick={() => handleUpdateOrderStage(res.reservation_id, 'completed')}
+                        style={{ background: res.order_stage === 'completed' ? '#10b981' : 'rgba(255,255,255,0.05)', color: res.order_stage === 'completed' ? '#000' : 'var(--text-muted)', border: 'none', padding: '0.3rem 0.6rem', borderRadius: '6px', fontSize: '0.75rem', fontWeight: 'bold', cursor: 'pointer' }}
+                      >
+                        🏁 สำเร็จ
+                      </button>
+                    </div>
                   </td>
                   <td style={{ padding: '1rem' }}>
                     {res.status === 'confirmed' ? (
                       <button 
-                        onClick={() => onStatusUpdate(res.reservation_id, 'cancelled')}
+                        onClick={() => updateReservationStatus(res.reservation_id, 'cancelled').then(onRefreshData)}
                         style={{ background: 'rgba(239, 68, 68, 0.15)', color: '#ef4444', border: '1px solid #ef4444', padding: '0.4rem 0.8rem', borderRadius: '6px', cursor: 'pointer', fontSize: '0.8rem' }}
                       >
                         ยกเลิก
                       </button>
                     ) : (
                       <button 
-                        onClick={() => onStatusUpdate(res.reservation_id, 'confirmed')}
+                        onClick={() => updateReservationStatus(res.reservation_id, 'confirmed').then(onRefreshData)}
                         style={{ background: 'rgba(16, 185, 129, 0.15)', color: '#10b981', border: '1px solid #10b981', padding: '0.4rem 0.8rem', borderRadius: '6px', cursor: 'pointer', fontSize: '0.8rem' }}
                       >
                         ยืนยัน
@@ -205,7 +254,7 @@ export default function AdminDashboard({ adminStats, reservations, menuItems, ta
         </div>
       )}
 
-      {/* 2. MENU EDITOR (STAFF/MANAGER CAN ADD/EDIT/DELETE DISHES) */}
+      {/* 2. MENU EDITOR */}
       {activeAdminTab === 'menu_editor' && (
         <div>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.2rem' }}>
@@ -272,7 +321,7 @@ export default function AdminDashboard({ adminStats, reservations, menuItems, ta
         </div>
       )}
 
-      {/* 3. TABLE EDITOR (STAFF CAN TOGGLE TABLE AVAILABILITY) */}
+      {/* 3. TABLE EDITOR */}
       {activeAdminTab === 'table_editor' && (
         <div>
           <h3 style={{ fontSize: '1.3rem', color: '#fff', marginBottom: '1.2rem' }}>จัดการสถานะโต๊ะอาหาร (Table Availability)</h3>

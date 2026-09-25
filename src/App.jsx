@@ -8,11 +8,12 @@ import EVoucherModal from './components/EVoucherModal';
 import AdminDashboard from './components/AdminDashboard';
 import CustomerProfile from './components/CustomerProfile';
 import AuthModal from './components/AuthModal';
+import FoodCustomizerModal from './components/FoodCustomizerModal';
 import Footer from './components/Footer';
 import * as api from './services/api';
 
 export default function App() {
-  const [activeTab, setActiveTab] = useState('menu'); // 'menu' | 'admin' | 'profile'
+  const [activeTab, setActiveTab] = useState('menu');
   const [categories, setCategories] = useState([]);
   const [menuItems, setMenuItems] = useState([]);
   const [tables, setTables] = useState([]);
@@ -22,6 +23,9 @@ export default function App() {
   // Auth state
   const [currentUser, setCurrentUser] = useState(null);
   const [isAuthOpen, setIsAuthOpen] = useState(false);
+
+  // Customizer Modal State
+  const [selectedItemForCustomize, setSelectedItemForCustomize] = useState(null);
 
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
@@ -48,7 +52,6 @@ export default function App() {
     special_request: ''
   });
 
-  // Load initial data
   useEffect(() => {
     loadData();
     const savedUser = localStorage.getItem('luxe_user');
@@ -105,21 +108,24 @@ export default function App() {
     setActiveTab('menu');
   };
 
-  // Cart operations
-  const handleAddToCart = (item) => {
+  // Open Customizer
+  const handleOpenCustomizer = (item) => {
+    setSelectedItemForCustomize(item);
+  };
+
+  const handleAddToCartWithOptions = (customizedItem) => {
     setCart(prev => {
-      const existing = prev.find(i => i.item_id === item.item_id);
+      const existing = prev.find(i => i.item_id === customizedItem.item_id && i.custom_options === customizedItem.custom_options);
       if (existing) {
-        return prev.map(i => i.item_id === item.item_id ? { ...i, quantity: i.quantity + 1 } : i);
+        return prev.map(i => (i.item_id === customizedItem.item_id && i.custom_options === customizedItem.custom_options) ? { ...i, quantity: i.quantity + 1 } : i);
       }
-      return [...prev, { ...item, quantity: 1 }];
+      return [...prev, { ...customizedItem, quantity: 1 }];
     });
   };
 
   const rawCartTotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
   const finalTotal = Math.max(0, rawCartTotal - discountAmount);
 
-  // Coupon handling
   const handleApplyCoupon = () => {
     if (couponCode.trim().toUpperCase() === 'LUXE2026') {
       const disc = Math.round(rawCartTotal * 0.1);
@@ -130,7 +136,6 @@ export default function App() {
     }
   };
 
-  // Booking Flow
   const handleOpenPayment = (e) => {
     e.preventDefault();
     if (!formData.customer_name || !formData.customer_phone || !formData.customer_email) {
@@ -210,7 +215,7 @@ export default function App() {
           />
           <MenuGrid 
             menuItems={filteredMenu}
-            onAddToCart={handleAddToCart}
+            onAddToCart={handleOpenCustomizer}
           />
         </main>
       )}
@@ -224,12 +229,14 @@ export default function App() {
 
       {activeTab === 'admin' && (
         <AdminDashboard 
+          currentUser={currentUser}
           adminStats={adminStats}
           reservations={reservations}
           menuItems={menuItems}
           tables={tables}
           onRefreshData={loadData}
           onStatusUpdate={handleStatusUpdate}
+          onOpenAuth={() => setIsAuthOpen(true)}
         />
       )}
 
@@ -265,6 +272,13 @@ export default function App() {
         isOpen={isAuthOpen}
         onClose={() => setIsAuthOpen(false)}
         onLoginSuccess={handleLoginSuccess}
+      />
+
+      <FoodCustomizerModal 
+        item={selectedItemForCustomize}
+        isOpen={!!selectedItemForCustomize}
+        onClose={() => setSelectedItemForCustomize(null)}
+        onAddToCartWithOptions={handleAddToCartWithOptions}
       />
 
       <Footer />
