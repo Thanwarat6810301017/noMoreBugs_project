@@ -1,13 +1,21 @@
 -- ============================================================
--- LUXE DINING INITIAL SEED DATA
+-- LUXE DINING INITIAL SEED DATA WITH USER ACCOUNTS
 -- ============================================================
 
+-- Insert Accounts (Customers, Staff Editors, Admin)
+INSERT INTO users (name, email, password, phone, role, reward_points) VALUES
+('คุณสมชาย ใจดี (ลูกค้า)', 'customer@email.com', 'password123', '081-234-5678', 'customer', 250),
+('พนักงานจัดการข้อมูล (Staff Editor)', 'staff@luxedining.com', 'admin123', '02-123-4567', 'staff', 0),
+('ผู้บริหารระบบ (Admin)', 'admin@luxedining.com', 'admin123', '02-999-9999', 'admin', 0);
+
+-- Insert Categories
 INSERT INTO categories (name, description, icon_name) VALUES
 ('Appetizers', 'อาหารทานเล่นเรียกน้ำย่อย คัดสรรวัตถุดิบชั้นเลิศ', 'Salad'),
 ('Main Course', 'จานหลักรสเลิศจากเชฟระดับพรีเมียม', 'Beef'),
 ('Desserts', 'ของหวานโฮมเมดและเบเกอรี่เนื้อนุ่ม', 'Cake'),
 ('Beverages', 'เครื่องดื่ม สมูทตี้ และไวน์ชั้นดี', 'Wine');
 
+-- Insert Menu Items
 INSERT INTO menu_items (category_id, name, description, price, image_url, is_popular, prep_time_mins) VALUES
 (2, 'Prime Ribeye Steak with Truffle Butter', 'สเต๊กเนื้อริบอายเกรดพรีเมียม เสิร์ฟพร้อมเนยทรัฟเฟิลและผักย่าง', 1290.00, '/images/steak.jpg', TRUE, 25),
 (2, 'Creamy Truffle Fettuccine Pasta', 'พาสต้าเฟตตูชินีซอสทรัฟเฟิลเข้มข้น ท็อปด้วยพาร์เมซานชีส', 480.00, '/images/pasta.jpg', TRUE, 15),
@@ -16,6 +24,7 @@ INSERT INTO menu_items (category_id, name, description, price, image_url, is_pop
 (1, 'Caesar Salad with Crispy Bacon', 'สลัดซีซาร์ผักคอสสดใหม่ เบคอนกรอบ และกรุบกรอบกูร์ตอง', 260.00, '/images/steak.jpg', FALSE, 10),
 (4, 'Signature Berry Mocktail', 'ม็อกเทลเบอร์รีรวมผสมโซดา สดชื่นคลายร้อน', 180.00, '/images/dessert.jpg', FALSE, 5);
 
+-- Insert Tables
 INSERT INTO restaurant_tables (table_number, zone, capacity, pos_x, pos_y, status) VALUES
 ('T-01', 'Indoor Main', 2, 1, 1, 'available'),
 ('T-02', 'Indoor Main', 4, 1, 2, 'reserved'),
@@ -26,8 +35,9 @@ INSERT INTO restaurant_tables (table_number, zone, capacity, pos_x, pos_y, statu
 ('V-01', 'VIP Lounge', 8, 3, 1, 'available'),
 ('V-02', 'VIP Lounge', 10, 3, 2, 'reserved');
 
-INSERT INTO reservations (customer_name, customer_email, customer_phone, reservation_date, reservation_time, guest_count, table_id, special_request, total_amount, payment_status, status) VALUES
-('คุณสมชาย ใจดี', 'somchai@email.com', '081-234-5678', CURRENT_DATE + INTERVAL '1 day', '19:00:00', 2, 1, 'ขอโต๊ะติดริมกระจก ฉลองวันเกิด', 1770.00, 'paid', 'confirmed');
+-- Insert Reservation
+INSERT INTO reservations (booking_code, user_id, customer_name, customer_email, customer_phone, reservation_date, reservation_time, guest_count, table_id, special_request, total_amount, earned_points, payment_status, status) VALUES
+('LX-84920', 1, 'คุณสมชาย ใจดี (ลูกค้า)', 'customer@email.com', '081-234-5678', CURRENT_DATE + INTERVAL '1 day', '19:00:00', 2, 1, 'ขอโต๊ะติดริมกระจก ฉลองวันเกิด', 1770.00, 177, 'paid', 'confirmed');
 
 INSERT INTO reservation_items (reservation_id, item_id, quantity, unit_price) VALUES
 (1, 1, 1, 1290.00),

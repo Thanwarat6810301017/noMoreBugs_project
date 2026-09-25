@@ -6,17 +6,23 @@ import TableMapModal from './components/TableMapModal';
 import PaymentModal from './components/PaymentModal';
 import EVoucherModal from './components/EVoucherModal';
 import AdminDashboard from './components/AdminDashboard';
+import CustomerProfile from './components/CustomerProfile';
+import AuthModal from './components/AuthModal';
 import Footer from './components/Footer';
 import * as api from './services/api';
 
 export default function App() {
-  const [activeTab, setActiveTab] = useState('menu'); // 'menu' | 'admin' | 'about'
+  const [activeTab, setActiveTab] = useState('menu'); // 'menu' | 'admin' | 'profile'
   const [categories, setCategories] = useState([]);
   const [menuItems, setMenuItems] = useState([]);
   const [tables, setTables] = useState([]);
   const [reservations, setReservations] = useState([]);
   const [adminStats, setAdminStats] = useState({ totalRevenue: 0, totalBookings: 0, tableOccupancyRate: 0, popularDish: '-' });
   
+  // Auth state
+  const [currentUser, setCurrentUser] = useState(null);
+  const [isAuthOpen, setIsAuthOpen] = useState(false);
+
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
   
@@ -45,6 +51,19 @@ export default function App() {
   // Load initial data
   useEffect(() => {
     loadData();
+    const savedUser = localStorage.getItem('luxe_user');
+    if (savedUser) {
+      try {
+        const u = JSON.parse(savedUser);
+        setCurrentUser(u);
+        setFormData(prev => ({
+          ...prev,
+          customer_name: u.name || '',
+          customer_email: u.email || '',
+          customer_phone: u.phone || ''
+        }));
+      } catch (e) {}
+    }
   }, []);
 
   const loadData = async () => {
@@ -61,12 +80,29 @@ export default function App() {
       setTables(tbls);
       setReservations(resv);
       setAdminStats(stats);
-      if (tbls.length > 0) {
+      if (tbls.length > 0 && !formData.table_id) {
         setFormData(prev => ({ ...prev, table_id: tbls[0].table_id.toString() }));
       }
     } catch (err) {
       console.error('Failed to load application data:', err);
     }
+  };
+
+  const handleLoginSuccess = (user) => {
+    setCurrentUser(user);
+    localStorage.setItem('luxe_user', JSON.stringify(user));
+    setFormData(prev => ({
+      ...prev,
+      customer_name: user.name || '',
+      customer_email: user.email || '',
+      customer_phone: user.phone || ''
+    }));
+  };
+
+  const handleLogout = () => {
+    setCurrentUser(null);
+    localStorage.removeItem('luxe_user');
+    setActiveTab('menu');
   };
 
   // Cart operations
@@ -109,6 +145,7 @@ export default function App() {
     try {
       const result = await api.createReservation({
         ...formData,
+        user_id: currentUser ? currentUser.user_id : null,
         items: cart,
         discount_amount: discountAmount
       });
@@ -119,6 +156,13 @@ export default function App() {
         setCart([]);
         setDiscountAmount(0);
         setCouponCode('');
+        
+        if (currentUser && result.earned_points) {
+          const updatedUser = { ...currentUser, reward_points: (currentUser.reward_points || 0) + result.earned_points };
+          setCurrentUser(updatedUser);
+          localStorage.setItem('luxe_user', JSON.stringify(updatedUser));
+        }
+
         loadData();
       }
     } catch (err) {
@@ -135,7 +179,6 @@ export default function App() {
     }
   };
 
-  // Menu filtering
   const filteredMenu = menuItems.filter(item => {
     const matchesCategory = selectedCategory ? item.category_id === selectedCategory : true;
     const matchesSearch = item.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
@@ -150,6 +193,9 @@ export default function App() {
         setActiveTab={setActiveTab} 
         cartCount={cart.reduce((a, c) => a + c.quantity, 0)}
         onOpenBooking={() => setIsBookingOpen(true)}
+        currentUser={currentUser}
+        onOpenAuth={() => setIsAuthOpen(true)}
+        onLogout={handleLogout}
       />
 
       {activeTab === 'menu' && (
@@ -169,19 +215,20 @@ export default function App() {
         </main>
       )}
 
-      {activeTab === 'about' && (
-        <div style={{ padding: '4rem 3rem', maxWidth: '900px', margin: '0 auto', textAlgin: 'center' }}>
-          <h2 style={{ fontSize: '2.5rem', color: 'var(--accent-gold)', marginBottom: '1.5rem' }}>เกี่ยวกับ LUXE DINING</h2>
-          <p style={{ color: 'var(--text-muted)', fontSize: '1.1rem', lineHeight: 1.8, marginBottom: '2rem' }}>
-            ร้านอาหาร LUXE DINING มุ่งมั่นที่จะมอบประสบการณ์ Fine Dining ระดับพรีเมียมแก่ลูกค้าทุกคน ทุกจานผ่านการรังสรรค์ด้วยความพิถีพิถันจากวัตถุดิบชั้นเลิศนำเข้าจากทั่วโลก พร้อมระบบจองโต๊ะอาหารและสั่งอาหารล่วงหน้าออนไลน์ที่ทันสมัยที่สุด
-          </p>
-        </div>
+      {activeTab === 'profile' && currentUser && (
+        <CustomerProfile 
+          user={currentUser}
+          onSelectVoucher={(reservation) => setBookingSuccess(reservation)}
+        />
       )}
 
       {activeTab === 'admin' && (
         <AdminDashboard 
           adminStats={adminStats}
           reservations={reservations}
+          menuItems={menuItems}
+          tables={tables}
+          onRefreshData={loadData}
           onStatusUpdate={handleStatusUpdate}
         />
       )}
@@ -212,6 +259,12 @@ export default function App() {
       <EVoucherModal 
         bookingSuccess={bookingSuccess}
         onClose={() => setBookingSuccess(null)}
+      />
+
+      <AuthModal 
+        isOpen={isAuthOpen}
+        onClose={() => setIsAuthOpen(false)}
+        onLoginSuccess={handleLoginSuccess}
       />
 
       <Footer />
