@@ -12,6 +12,7 @@ export default function TableMapModal({
   onSubmitBooking
 }) {
   const [occasion, setOccasion] = useState('Birthday Celebration 🎉');
+  const [selectedZoneFilter, setSelectedZoneFilter] = useState('all');
 
   if (!isOpen) return null;
 
@@ -49,11 +50,36 @@ export default function TableMapModal({
         }}>
           {/* Interactive Floor Map */}
           <div className="floor-map-container">
-            <h4 style={{ fontSize: '0.95rem', color: 'var(--accent-gold)', marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+            <h4 style={{ fontSize: '0.95rem', color: 'var(--accent-gold)', marginBottom: '0.8rem', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
               <MapPin size={16} /> คลิกเลือกตำแหน่งโต๊ะบนผังร้าน (Selected: {selectedTableObj ? `${selectedTableObj.table_number} (${selectedTableObj.zone})` : 'ไม่ได้เลือก'})
             </h4>
 
-            {Object.entries(tablesByZone).map(([zoneName, zoneTables]) => (
+            {/* Zone Filter Tabs inside Modal */}
+            <div style={{ display: 'flex', gap: '0.4rem', flexWrap: 'wrap', marginBottom: '1rem' }}>
+              <button
+                type="button"
+                className={`category-pill ${selectedZoneFilter === 'all' ? 'active' : ''}`}
+                style={{ padding: '0.35rem 0.8rem', fontSize: '0.8rem' }}
+                onClick={() => setSelectedZoneFilter('all')}
+              >
+                ทุกโซน ({tables.length})
+              </button>
+              {Object.keys(tablesByZone).map(z => (
+                <button
+                  key={z}
+                  type="button"
+                  className={`category-pill ${selectedZoneFilter === z ? 'active' : ''}`}
+                  style={{ padding: '0.35rem 0.8rem', fontSize: '0.8rem' }}
+                  onClick={() => setSelectedZoneFilter(z)}
+                >
+                  {z} ({tablesByZone[z].length})
+                </button>
+              ))}
+            </div>
+
+            {Object.entries(tablesByZone)
+              .filter(([zoneName]) => selectedZoneFilter === 'all' || selectedZoneFilter === zoneName)
+              .map(([zoneName, zoneTables]) => (
               <div key={zoneName} className="zone-section">
                 <div className="zone-header">📍 โซน {zoneName}</div>
                 <div className="tables-grid">

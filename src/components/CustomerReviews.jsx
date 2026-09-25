@@ -3,7 +3,7 @@ import { Star, MessageSquareQuote, ShieldCheck } from 'lucide-react';
 
 export default function CustomerReviews({ reviews }) {
   return (
-    <section style={{ padding: '4rem 3rem', maxWidth: '1300px', margin: '0 auto' }}>
+    <section id="customer-reviews" style={{ padding: '4rem 3rem', maxWidth: '1300px', margin: '0 auto' }}>
       <div style={{ textAlign: 'center', marginBottom: '2.5rem' }}>
         <span style={{ background: 'rgba(229,168,83,0.12)', border: '1px solid var(--border-active)', color: 'var(--accent-gold)', padding: '0.4rem 1.2rem', borderRadius: '30px', fontSize: '0.85rem', fontWeight: 'bold' }}>
           ⭐ ความประทับใจจากลูกค้าจริง (Verified Reviews)

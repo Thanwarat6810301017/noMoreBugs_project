@@ -2,12 +2,17 @@ import React, { useState, useEffect } from 'react';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import MenuGrid from './components/MenuGrid';
+import ZoneShowcase from './components/ZoneShowcase';
+import ChefStory from './components/ChefStory';
+import CustomerReviews from './components/CustomerReviews';
+import DiningPolicies from './components/DiningPolicies';
+import VipClubBanner from './components/VipClubBanner';
+import StickyCartBar from './components/StickyCartBar';
 import TableMapModal from './components/TableMapModal';
 import PaymentModal from './components/PaymentModal';
 import EVoucherModal from './components/EVoucherModal';
 import AdminDashboard from './components/AdminDashboard';
 import CustomerProfile from './components/CustomerProfile';
-import CustomerReviews from './components/CustomerReviews';
 import AuthModal from './components/AuthModal';
 import FoodCustomizerModal from './components/FoodCustomizerModal';
 import Footer from './components/Footer';
@@ -33,6 +38,7 @@ export default function App() {
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [selectedDietary, setSelectedDietary] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
+  const [sortBy, setSortBy] = useState('popular');
   
   // Cart & Modal state
   const [cart, setCart] = useState([]);
@@ -135,12 +141,21 @@ export default function App() {
   const finalTotal = Math.max(0, rawCartTotal - discountAmount);
 
   const handleApplyCoupon = () => {
-    if (couponCode.trim().toUpperCase() === 'LUXE2026') {
+    const code = couponCode.trim().toUpperCase();
+    if (code === 'LUXE2026') {
       const disc = Math.round(rawCartTotal * 0.1);
       setDiscountAmount(disc);
-      alert('🎉 ใช้คูปองสำเร็จ! ได้รับส่วนลด 10%');
+      alert('🎉 ใช้คูปอง LUXE2026 สำเร็จ! ได้รับส่วนลด 10%');
+    } else if (code === 'VIPGOLD') {
+      const disc = Math.round(rawCartTotal * 0.15);
+      setDiscountAmount(disc);
+      alert('🎉 ใช้คูปองสมาชิก VIPGOLD สำเร็จ! ได้รับส่วนลด 15%');
+    } else if (code === 'MICHELIN500') {
+      const disc = Math.min(rawCartTotal, 500);
+      setDiscountAmount(disc);
+      alert('🎉 ใช้คูปอง MICHELIN500 สำเร็จ! ได้รับส่วนลด ฿500');
     } else {
-      alert('❌ โค้ดส่วนลดไม่ถูกต้อง (ลองใช้โค้ด: LUXE2026)');
+      alert('❌ โค้ดส่วนลดไม่ถูกต้อง (ลองใช้: LUXE2026, VIPGOLD, MICHELIN500)');
     }
   };
 
@@ -192,13 +207,29 @@ export default function App() {
     }
   };
 
-  const filteredMenu = menuItems.filter(item => {
-    const matchesCategory = selectedCategory ? item.category_id === selectedCategory : true;
-    const matchesDietary = selectedDietary ? item.dietary_tag === selectedDietary : true;
-    const matchesSearch = item.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
-                          item.description.toLowerCase().includes(searchQuery.toLowerCase());
-    return matchesCategory && matchesDietary && matchesSearch;
-  });
+  const handleSelectZone = (zoneName) => {
+    const tableInZone = tables.find(t => t.zone === zoneName && t.status !== 'reserved');
+    if (tableInZone) {
+      setFormData(prev => ({ ...prev, table_id: tableInZone.table_id.toString() }));
+    }
+    setIsBookingOpen(true);
+  };
+
+  const sortedMenu = [...menuItems]
+    .filter(item => {
+      const matchesCategory = selectedCategory ? item.category_id === selectedCategory : true;
+      const matchesDietary = selectedDietary ? item.dietary_tag === selectedDietary : true;
+      const matchesSearch = item.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
+                            item.description.toLowerCase().includes(searchQuery.toLowerCase());
+      return matchesCategory && matchesDietary && matchesSearch;
+    })
+    .sort((a, b) => {
+      if (sortBy === 'price_asc') return a.price - b.price;
+      if (sortBy === 'price_desc') return b.price - a.price;
+      if (sortBy === 'prep_time') return (a.prep_time_mins || 15) - (b.prep_time_mins || 15);
+      if (sortBy === 'calories') return (a.calories || 500) - (b.calories || 500);
+      return (b.is_popular ? 1 : 0) - (a.is_popular ? 1 : 0);
+    });
 
   return (
     <div>
@@ -225,12 +256,18 @@ export default function App() {
             setSelectedDietary={setSelectedDietary}
             onQuickSearchTable={() => setIsBookingOpen(true)}
             promotions={promotions}
+            sortBy={sortBy}
+            setSortBy={setSortBy}
           />
           <MenuGrid 
-            menuItems={filteredMenu}
+            menuItems={sortedMenu}
             onAddToCart={handleOpenCustomizer}
           />
+          <ZoneShowcase onSelectZone={handleSelectZone} />
+          <ChefStory />
           <CustomerReviews reviews={reviews} />
+          <DiningPolicies />
+          <VipClubBanner />
         </main>
       )}
 
@@ -293,6 +330,13 @@ export default function App() {
         isOpen={!!selectedItemForCustomize}
         onClose={() => setSelectedItemForCustomize(null)}
         onAddToCartWithOptions={handleAddToCartWithOptions}
+      />
+
+      {/* Floating Sticky Cart Bar */}
+      <StickyCartBar 
+        cart={cart}
+        cartTotal={rawCartTotal}
+        onOpenBooking={() => setIsBookingOpen(true)}
       />
 
       <Footer />

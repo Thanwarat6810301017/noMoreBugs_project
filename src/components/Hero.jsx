@@ -11,10 +11,12 @@ export default function Hero({
   selectedDietary,
   setSelectedDietary,
   onQuickSearchTable,
-  promotions = []
+  promotions = [],
+  sortBy = 'popular',
+  setSortBy
 }) {
   return (
-    <section className="hero">
+    <section id="menu-section" className="hero">
       <div className="hero-tag">
         <Sparkles size={16} /> ประสบการณ์มื้ออาหาร Fine Dining สไตล์ Michelin Guide
       </div>
@@ -69,17 +71,32 @@ export default function Hero({
         </button>
       </div>
 
-      {/* Menu Search Input */}
-      <div className="search-container">
-        <div className="search-input-wrapper">
-          <Search className="search-icon" size={20} />
-          <input 
-            type="text" 
-            placeholder="ค้นหาชื่อเมนู เช่น สเต๊ก, พาสต้า, ซูชิ..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-          />
+      {/* Search & Sort Row */}
+      <div style={{ maxWidth: '680px', margin: '0 auto 1.5rem auto', display: 'flex', gap: '0.8rem', alignItems: 'center' }}>
+        <div className="search-container" style={{ margin: 0, flex: 1 }}>
+          <div className="search-input-wrapper">
+            <Search className="search-icon" size={20} />
+            <input 
+              type="text" 
+              placeholder="ค้นหาชื่อเมนู เช่น สเต๊ก, วากิว, ทรัฟเฟิล, ซูชิ..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+          </div>
         </div>
+
+        <select 
+          className="form-select"
+          value={sortBy}
+          onChange={(e) => setSortBy(e.target.value)}
+          style={{ width: 'auto', background: 'rgba(20,23,31,0.9)', border: '1px solid var(--border-color)', color: 'var(--accent-gold)', borderRadius: '30px', padding: '0.75rem 1.2rem', fontSize: '0.85rem', cursor: 'pointer', fontWeight: 'bold' }}
+        >
+          <option value="popular">🔥 แนะนำ (Popular)</option>
+          <option value="price_asc">💰 ราคา: ต่ำ ➜ สูง</option>
+          <option value="price_desc">💎 ราคา: สูง ➜ ต่ำ</option>
+          <option value="prep_time">⏱️ เวลาปรุงเร็วสุด</option>
+          <option value="calories">🥗 แคลอรีต่ำสุด</option>
+        </select>
       </div>
 
       {/* Michelin Guide Dietary Filter Pills */}
