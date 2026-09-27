@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { Award, DollarSign, Calendar, PieChart, Flame, Plus, Edit, Trash2, ShieldCheck, Lock, Utensils, CheckCircle } from 'lucide-react';
-import { createMenuItem, updateMenuItem, deleteMenuItem, updateTableStatus, updateReservationStatus } from '../services/api';
+import { Award, DollarSign, Calendar, PieChart, Flame, Plus, Edit, Trash2, ShieldCheck, Lock, Utensils, CheckCircle, AlertTriangle, Package } from 'lucide-react';
+import { createMenuItem, updateMenuItem, deleteMenuItem, updateTableStatus, updateReservationStatus, updateMenuItemStock } from '../services/api';
 
 export default function AdminDashboard({ 
   currentUser,
@@ -58,7 +58,8 @@ export default function AdminDashboard({
       category_id: 1,
       image_url: '/images/steak.jpg',
       is_popular: false,
-      is_available: true
+      is_available: true,
+      stock_quantity: 20
     });
     setIsMenuModalOpen(true);
   };
@@ -72,9 +73,19 @@ export default function AdminDashboard({
       category_id: item.category_id || 1,
       image_url: item.image_url || '/images/steak.jpg',
       is_popular: !!item.is_popular,
-      is_available: item.is_available !== false
+      is_available: item.is_available !== false,
+      stock_quantity: item.stock_quantity ?? 20
     });
     setIsMenuModalOpen(true);
+  };
+
+  const handleQuickStockUpdate = async (id, newStock) => {
+    try {
+      await updateMenuItemStock(id, newStock);
+      onRefreshData();
+    } catch (err) {
+      console.error('Failed to update stock:', err);
+    }
   };
 
   const handleSaveMenu = async (e) => {
@@ -318,27 +329,121 @@ export default function AdminDashboard({
                   <th style={{ padding: '1rem', textAlign: 'left' }}>ชื่อเมนูอาหาร</th>
                   <th style={{ padding: '1rem', textAlign: 'left' }}>รายละเอียด</th>
                   <th style={{ padding: '1rem', textAlign: 'left' }}>ราคา (฿)</th>
-                  <th style={{ padding: '1rem', textAlign: 'left' }}>สถานะ</th>
+                  <th style={{ padding: '1rem', textAlign: 'left' }}>สถานะสต็อกคงเหลือ</th>
                   <th style={{ padding: '1rem', textAlign: 'left' }}>จัดการ</th>
                 </tr>
               </thead>
               <tbody>
-                {menuItems.map(item => (
-                  <tr key={item.item_id} style={{ borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
-                    <td style={{ padding: '1rem' }}>
-                      <img src={item.image_url} alt={item.name} style={{ width: '50px', height: '40px', objectFit: 'cover', borderRadius: '6px' }} />
-                    </td>
-                    <td style={{ padding: '1rem', fontWeight: 'bold', color: '#fff' }}>
-                      {item.name}
-                      {item.is_popular && <span style={{ background: 'rgba(255,94,54,0.2)', color: 'var(--accent-orange)', fontSize: '0.7rem', padding: '0.1rem 0.5rem', borderRadius: '10px', marginLeft: '6px' }}>ยอดนิยม</span>}
-                    </td>
-                    <td style={{ padding: '1rem', color: 'var(--text-muted)', fontSize: '0.85rem', maxWidth: '300px' }}>{item.description}</td>
-                    <td style={{ padding: '1rem', fontWeight: 'bold', color: 'var(--accent-gold)' }}>฿{Number(item.price).toLocaleString()}</td>
-                    <td style={{ padding: '1rem' }}>
-                      <span style={{ color: item.is_available !== false ? '#34d399' : '#f87171', fontWeight: 'bold', fontSize: '0.85rem' }}>
-                        {item.is_available !== false ? 'พร้อมขาย' : 'หมด/ซ่อน'}
-                      </span>
-                    </td>
+                {menuItems.map(item => {
+                  const stock = item.stock_quantity ?? 0;
+                  const isSoldOut = stock <= 0 || item.is_available === false;
+                  const isLowStock = !isSoldOut && stock <= 5;
+
+                  return (
+                    <tr key={item.item_id} style={{ borderBottom: '1px solid rgba(255,255,255,0.05)', background: isSoldOut ? 'rgba(239,68,68,0.03)' : 'transparent' }}>
+                      <td style={{ padding: '1rem' }}>
+                        <img src={item.image_url} alt={item.name} style={{ width: '50px', height: '40px', objectFit: 'cover', borderRadius: '6px', filter: isSoldOut ? 'grayscale(70%)' : 'none' }} />
+                      </td>
+                      <td style={{ padding: '1rem', fontWeight: 'bold', color: '#fff' }}>
+                        {item.name}
+                        {item.is_popular && <span style={{ background: 'rgba(255,94,54,0.2)', color: 'var(--accent-orange)', fontSize: '0.7rem', padding: '0.1rem 0.5rem', borderRadius: '10px', marginLeft: '6px' }}>ยอดนิยม</span>}
+                      </td>
+                      <td style={{ padding: '1rem', color: 'var(--text-muted)', fontSize: '0.85rem', maxWidth: '300px' }}>{item.description}</td>
+                      <td style={{ padding: '1rem', fontWeight: 'bold', color: 'var(--accent-gold)' }}>฿{Number(item.price).toLocaleString()}</td>
+                      <td style={{ padding: '1rem' }}>
+                        {/* Stock Status Badge */}
+                        <div style={{ marginBottom: '0.4rem' }}>
+                          {isSoldOut ? (
+                            <span style={{ 
+                              background: 'rgba(239, 68, 68, 0.2)', 
+                              color: '#f87171', 
+                              border: '1px solid rgba(239, 68, 68, 0.4)',
+                              fontWeight: 'bold', 
+                              fontSize: '0.8rem',
+                              padding: '0.25rem 0.7rem',
+                              borderRadius: '20px',
+                              display: 'inline-flex',
+                              alignItems: 'center',
+                              gap: '0.3rem'
+                            }}>
+                              <AlertTriangle size={13} /> หมดสต็อก (0 จาน)
+                            </span>
+                          ) : isLowStock ? (
+                            <span style={{ 
+                              background: 'rgba(251, 146, 60, 0.2)', 
+                              color: '#fb923c', 
+                              border: '1px solid rgba(251, 146, 60, 0.4)',
+                              fontWeight: 'bold', 
+                              fontSize: '0.8rem',
+                              padding: '0.25rem 0.7rem',
+                              borderRadius: '20px',
+                              display: 'inline-flex',
+                              alignItems: 'center',
+                              gap: '0.3rem'
+                            }}>
+                              🔥 ใกล้หมด ({stock} จาน)
+                            </span>
+                          ) : (
+                            <span style={{ 
+                              background: 'rgba(52, 211, 153, 0.15)', 
+                              color: '#34d399', 
+                              border: '1px solid rgba(52, 211, 153, 0.3)',
+                              fontWeight: 'bold', 
+                              fontSize: '0.8rem',
+                              padding: '0.25rem 0.7rem',
+                              borderRadius: '20px',
+                              display: 'inline-flex',
+                              alignItems: 'center',
+                              gap: '0.3rem'
+                            }}>
+                              <CheckCircle size={13} /> พร้อมเสิร์ฟ ({stock} จาน)
+                            </span>
+                          )}
+                        </div>
+
+                        {/* Quick Inline Adjustment Controls */}
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
+                          <button
+                            type="button"
+                            title="ลดสต็อก 1 จาน"
+                            onClick={() => handleQuickStockUpdate(item.item_id, Math.max(0, stock - 1))}
+                            style={{
+                              background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.15)',
+                              color: '#fff', width: '26px', height: '24px', borderRadius: '4px', cursor: 'pointer',
+                              fontSize: '0.9rem', display: 'flex', alignItems: 'center', justifyContent: 'center'
+                            }}
+                          >
+                            −1
+                          </button>
+                          <span style={{ fontSize: '0.78rem', color: 'var(--text-muted)', minWidth: '46px', textAlign: 'center' }}>
+                            <strong style={{ color: stock > 0 ? '#fff' : '#f87171' }}>{stock}</strong> จาน
+                          </span>
+                          <button
+                            type="button"
+                            title="เพิ่มสต็อก 5 จาน"
+                            onClick={() => handleQuickStockUpdate(item.item_id, stock + 5)}
+                            style={{
+                              background: 'rgba(229,168,83,0.15)', border: '1px solid var(--accent-gold)',
+                              color: 'var(--accent-gold)', height: '24px', padding: '0 6px', borderRadius: '4px', cursor: 'pointer',
+                              fontSize: '0.75rem', fontWeight: 'bold', display: 'flex', alignItems: 'center', justifyContent: 'center'
+                            }}
+                          >
+                            +5
+                          </button>
+                          <button
+                            type="button"
+                            title="เพิ่มสต็อก 10 จาน"
+                            onClick={() => handleQuickStockUpdate(item.item_id, stock + 10)}
+                            style={{
+                              background: 'rgba(52,211,153,0.15)', border: '1px solid #34d399',
+                              color: '#34d399', height: '24px', padding: '0 6px', borderRadius: '4px', cursor: 'pointer',
+                              fontSize: '0.75rem', fontWeight: 'bold', display: 'flex', alignItems: 'center', justifyContent: 'center'
+                            }}
+                          >
+                            +10
+                          </button>
+                        </div>
+                      </td>
                     <td style={{ padding: '1rem' }}>
                       <div style={{ display: 'flex', gap: '0.5rem' }}>
                         <button 
@@ -356,7 +461,8 @@ export default function AdminDashboard({
                       </div>
                     </td>
                   </tr>
-                ))}
+                );
+              })}
               </tbody>
             </table>
           </div>
@@ -419,7 +525,7 @@ export default function AdminDashboard({
                 ></textarea>
               </div>
 
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '1rem' }}>
                 <div className="form-group">
                   <label>ราคา (บาท ฿) *</label>
                   <input 
@@ -432,16 +538,28 @@ export default function AdminDashboard({
                 </div>
 
                 <div className="form-group">
+                  <label>จำนวนสต็อกคงเหลือ (จาน) *</label>
+                  <input 
+                    type="number" 
+                    min="0"
+                    className="form-input" 
+                    required 
+                    value={menuFormData.stock_quantity ?? 20}
+                    onChange={(e) => setMenuFormData({...menuFormData, stock_quantity: e.target.value})}
+                  />
+                </div>
+
+                <div className="form-group">
                   <label>หมวดหมู่</label>
                   <select 
                     className="form-select"
                     value={menuFormData.category_id}
                     onChange={(e) => setMenuFormData({...menuFormData, category_id: e.target.value})}
                   >
-                    <option value={1}>Appetizers</option>
-                    <option value={2}>Main Course</option>
-                    <option value={3}>Desserts</option>
-                    <option value={4}>Beverages</option>
+                    <option value={1}>🍲 ต้ม & แกง</option>
+                    <option value={2}>🔥 ผัด & ทอด</option>
+                    <option value={3}>🥘 นึ่ง & ตุ๋น</option>
+                    <option value={4}>🌶️ เครื่องเคียง & น้ำพริก</option>
                   </select>
                 </div>
               </div>

@@ -61,6 +61,15 @@ export const deleteMenuItem = async (id) => {
   return await res.json();
 };
 
+export const updateMenuItemStock = async (id, stock_quantity) => {
+  const res = await fetch(`${API_BASE}/menu/${id}/stock`, {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ stock_quantity })
+  });
+  return await res.json();
+};
+
 export const fetchTables = async () => {
   const res = await fetch(`${API_BASE}/tables`);
   return await res.json();

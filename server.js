@@ -709,12 +709,14 @@ app.post('/api/auth/register', async (req, res) => {
 
 // MENU MANAGEMENT ENDPOINTS (STAFF / MANAGER EDITING)
 app.post('/api/menu', async (req, res) => {
-  const { category_id, name, description, price, image_url, is_popular } = req.body;
+  const { category_id, name, description, price, image_url, is_popular, stock_quantity } = req.body;
+  const parsedStock = parseInt(stock_quantity ?? 20);
+
   if (isDbConnected) {
     try {
       const result = await pool.query(
-        'INSERT INTO menu_items (category_id, name, description, price, image_url, is_popular) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *',
-        [category_id || 1, name, description, price, image_url || '/images/steak.jpg', is_popular || false]
+        'INSERT INTO menu_items (category_id, name, description, price, image_url, is_popular, stock_quantity) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *',
+        [category_id || 1, name, description, price, image_url || '/images/steak.jpg', is_popular || false, parsedStock]
       );
       return res.status(201).json(result.rows[0]);
     } catch (err) { console.error(err); }
@@ -728,7 +730,8 @@ app.post('/api/menu', async (req, res) => {
     price: parseFloat(price),
     image_url: image_url || '/images/steak.jpg',
     is_popular: !!is_popular,
-    is_available: true
+    is_available: true,
+    stock_quantity: parsedStock
   };
   mockMenuItems.push(newItem);
   res.status(201).json(newItem);
@@ -736,13 +739,14 @@ app.post('/api/menu', async (req, res) => {
 
 app.put('/api/menu/:id', async (req, res) => {
   const { id } = req.params;
-  const { name, description, price, image_url, is_popular, is_available } = req.body;
+  const { name, description, price, image_url, is_popular, is_available, stock_quantity } = req.body;
+  const parsedStock = stock_quantity !== undefined ? parseInt(stock_quantity) : undefined;
 
   if (isDbConnected) {
     try {
       const result = await pool.query(
-        'UPDATE menu_items SET name = $1, description = $2, price = $3, image_url = $4, is_popular = $5, is_available = $6 WHERE item_id = $7 RETURNING *',
-        [name, description, price, image_url, is_popular, is_available, id]
+        'UPDATE menu_items SET name = $1, description = $2, price = $3, image_url = $4, is_popular = $5, is_available = $6, stock_quantity = COALESCE($7, stock_quantity) WHERE item_id = $8 RETURNING *',
+        [name, description, price, image_url, is_popular, is_available, parsedStock, id]
       );
       return res.json(result.rows[0]);
     } catch (err) { console.error(err); }
@@ -750,8 +754,41 @@ app.put('/api/menu/:id', async (req, res) => {
 
   const itemIndex = mockMenuItems.findIndex(i => i.item_id === parseInt(id));
   if (itemIndex !== -1) {
-    mockMenuItems[itemIndex] = { ...mockMenuItems[itemIndex], name, description, price: parseFloat(price), image_url, is_popular, is_available };
+    mockMenuItems[itemIndex] = { 
+      ...mockMenuItems[itemIndex], 
+      name, 
+      description, 
+      price: parseFloat(price), 
+      image_url, 
+      is_popular, 
+      is_available,
+      stock_quantity: parsedStock !== undefined ? parsedStock : mockMenuItems[itemIndex].stock_quantity
+    };
     return res.json(mockMenuItems[itemIndex]);
+  }
+  res.status(404).json({ error: 'Item not found' });
+});
+
+// Quick Stock Adjustment Endpoint
+app.patch('/api/menu/:id/stock', async (req, res) => {
+  const { id } = req.params;
+  const { stock_quantity } = req.body;
+  const parsedStock = Math.max(0, parseInt(stock_quantity || 0));
+
+  if (isDbConnected) {
+    try {
+      const result = await pool.query(
+        'UPDATE menu_items SET stock_quantity = $1 WHERE item_id = $2 RETURNING *',
+        [parsedStock, id]
+      );
+      return res.json({ success: true, item: result.rows[0] });
+    } catch (err) { console.error(err); }
+  }
+
+  const item = mockMenuItems.find(i => i.item_id === parseInt(id));
+  if (item) {
+    item.stock_quantity = parsedStock;
+    return res.json({ success: true, item });
   }
   res.status(404).json({ error: 'Item not found' });
 });
