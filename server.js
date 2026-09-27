@@ -35,10 +35,13 @@ let isDbConnected = false;
 
 // Mock Memory Users & Data v2.0
 let mockUsers = [
-  { user_id: 1, name: 'คุณสมชาย ใจดี (ลูกค้า VIP)', email: 'customer@email.com', password: 'password123', phone: '081-234-5678', role: 'customer', reward_points: 450, membership_tier: 'Gold Membership', avatar_url: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80' },
-  { user_id: 2, name: 'คุณพิมลวรรณ สุขเสริฐ (Diamond VIP)', email: 'pimonwan@luxedining.com', password: 'password123', phone: '089-987-6543', role: 'customer', reward_points: 1850, membership_tier: 'Diamond VIP', avatar_url: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=200&q=80' },
-  { user_id: 3, name: 'พนักงานแก้ไขข้อมูล (Staff Editor)', email: 'staff@luxedining.com', password: 'admin123', phone: '02-123-4567', role: 'staff', reward_points: 0, membership_tier: 'Staff Executive', avatar_url: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=200&q=80' },
-  { user_id: 4, name: 'ผู้บริหารระบบ (Admin)', email: 'admin@luxedining.com', password: 'admin123', phone: '02-999-9999', role: 'admin', reward_points: 0, membership_tier: 'Admin Director', avatar_url: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=200&q=80' }
+  { user_id: 1, name: 'คุณสมชาย ใจดี', email: 'customer@email.com', password: 'password123', phone: '081-234-5678', role: 'customer', reward_points: 450, membership_tier: 'Gold VIP', avatar_url: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80' },
+  { user_id: 2, name: 'คุณพิมลวรรณ สุขเสริฐ', email: 'pimonwan@luxedining.com', password: 'password123', phone: '089-987-6543', role: 'customer', reward_points: 1850, membership_tier: 'Diamond VIP', avatar_url: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=200&q=80' },
+  { user_id: 3, name: 'คุณกิตติศักดิ์ ช่างปรุง (เชฟ/พนักงาน)', email: 'staff@luxedining.com', password: 'admin123', phone: '02-123-4567', role: 'staff', reward_points: 0, membership_tier: 'Staff Executive', avatar_url: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=200&q=80' },
+  { user_id: 4, name: 'ผู้บริหารระบบสูงสุด (Admin)', email: 'admin@luxedining.com', password: 'admin123', phone: '02-999-9999', role: 'admin', reward_points: 0, membership_tier: 'Admin Director', avatar_url: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=200&q=80' },
+  { user_id: 5, name: 'คุณอานนท์ ภักดีไพศาล', email: 'arnon@gmail.com', password: 'password123', phone: '085-111-2233', role: 'customer', reward_points: 80, membership_tier: 'ลูกค้าทั่วไป (General Member)', avatar_url: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=200&q=80' },
+  { user_id: 6, name: 'คุณมณีรัตน์ วงศ์สว่าง (พนักงานแคชเชียร์)', email: 'manirat@luxedining.com', password: 'staff123', phone: '082-333-4455', role: 'staff', reward_points: 0, membership_tier: 'Staff Executive', avatar_url: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=200&q=80' },
+  { user_id: 7, name: 'คุณธนกร เลิศวิจิตร', email: 'thanakorn@hotmail.com', password: 'password123', phone: '086-777-8899', role: 'customer', reward_points: 320, membership_tier: 'Silver Member', avatar_url: 'https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?auto=format&fit=crop&w=200&q=80' }
 ];
 
 let mockCategories = [
@@ -705,6 +708,63 @@ app.post('/api/auth/register', async (req, res) => {
   };
   mockUsers.push(newUser);
   res.json({ success: true, user: newUser });
+});
+
+// USER & ROLE MANAGEMENT ENDPOINTS (ADMIN ONLY)
+app.get('/api/users', async (req, res) => {
+  if (isDbConnected) {
+    try {
+      const result = await pool.query('SELECT user_id, name, email, phone, role, reward_points, membership_tier, avatar_url, created_at FROM users ORDER BY user_id ASC');
+      return res.json(result.rows);
+    } catch (err) { console.error(err); }
+  }
+  // Return mock users without exposing password
+  const safeUsers = mockUsers.map(({ password, ...u }) => u);
+  res.json(safeUsers);
+});
+
+app.patch('/api/users/:id/role', async (req, res) => {
+  const { id } = req.params;
+  const { role, membership_tier, reward_points } = req.body;
+
+  if (isDbConnected) {
+    try {
+      const result = await pool.query(
+        'UPDATE users SET role = COALESCE($1, role), membership_tier = COALESCE($2, membership_tier), reward_points = COALESCE($3, reward_points) WHERE user_id = $4 RETURNING user_id, name, email, phone, role, reward_points, membership_tier, avatar_url',
+        [role, membership_tier, reward_points !== undefined ? parseInt(reward_points) : null, id]
+      );
+      return res.json({ success: true, user: result.rows[0] });
+    } catch (err) { console.error(err); }
+  }
+
+  const user = mockUsers.find(u => u.user_id === parseInt(id));
+  if (user) {
+    if (role !== undefined) user.role = role;
+    if (membership_tier !== undefined) user.membership_tier = membership_tier;
+    if (reward_points !== undefined) user.reward_points = parseInt(reward_points);
+    const { password, ...safeUser } = user;
+    return res.json({ success: true, user: safeUser });
+  }
+  res.status(404).json({ error: 'User not found' });
+});
+
+app.delete('/api/users/:id', async (req, res) => {
+  const { id } = req.params;
+  const userId = parseInt(id);
+  // Protect primary admin
+  if (userId === 4) {
+    return res.status(400).json({ error: 'ไม่สามารถลบบัญชีแอดมินหลักของระบบได้' });
+  }
+
+  if (isDbConnected) {
+    try {
+      await pool.query('DELETE FROM users WHERE user_id = $1', [userId]);
+      return res.json({ success: true });
+    } catch (err) { console.error(err); }
+  }
+
+  mockUsers = mockUsers.filter(u => u.user_id !== userId);
+  res.json({ success: true });
 });
 
 // MENU MANAGEMENT ENDPOINTS (STAFF / MANAGER EDITING)

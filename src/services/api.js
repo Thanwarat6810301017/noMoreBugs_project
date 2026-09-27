@@ -134,3 +134,26 @@ export const fetchPromotions = async () => {
     return [];
   }
 };
+
+export const fetchUsers = async () => {
+  try {
+    const res = await fetch(`${API_BASE}/users`);
+    return await res.json();
+  } catch {
+    return [];
+  }
+};
+
+export const updateUserRole = async (userId, data) => {
+  const res = await fetch(`${API_BASE}/users/${userId}/role`, {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data)
+  });
+  return await res.json();
+};
+
+export const deleteUser = async (userId) => {
+  const res = await fetch(`${API_BASE}/users/${userId}`, { method: 'DELETE' });
+  return await res.json();
+};

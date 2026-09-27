@@ -25,6 +25,7 @@ export default function App() {
   const [reservations, setReservations] = useState([]);
   const [reviews, setReviews] = useState([]);
   const [promotions, setPromotions] = useState([]);
+  const [users, setUsers] = useState([]);
   const [adminStats, setAdminStats] = useState({ totalRevenue: 0, totalBookings: 0, tableOccupancyRate: 0, popularDish: '-' });
 
   // Auth state
@@ -99,14 +100,15 @@ export default function App() {
 
   const loadData = async () => {
     try {
-      const [cats, items, tbls, resv, stats, revs, promos] = await Promise.all([
+      const [cats, items, tbls, resv, stats, revs, promos, userList] = await Promise.all([
         api.fetchCategories(),
         api.fetchMenuItems(),
         api.fetchTables(),
         api.fetchReservations(),
         api.fetchAdminStats(),
         api.fetchReviews(),
-        api.fetchPromotions()
+        api.fetchPromotions(),
+        api.fetchUsers()
       ]);
       setCategories(cats);
       setMenuItems(items);
@@ -115,6 +117,7 @@ export default function App() {
       setAdminStats(stats);
       setReviews(revs || []);
       setPromotions(promos || []);
+      setUsers(userList || []);
     } catch (err) {
       console.error('Failed to load application data:', err);
     }
@@ -346,6 +349,7 @@ export default function App() {
           reservations={reservations}
           menuItems={menuItems}
           tables={tables}
+          users={users}
           onRefreshData={loadData}
           onStatusUpdate={handleStatusUpdate}
           onOpenAuth={() => setIsAuthOpen(true)}
