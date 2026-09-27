@@ -38,53 +38,87 @@ export default function MenuGrid({ menuItems, onAddToCart }) {
             </div>
             <div className="card-content">
               {item.dietary_tag && (
-                <span style={{ fontSize: '0.75rem', fontWeight: 'bold', color: 'var(--accent-gold)', background: 'rgba(229,168,83,0.1)', padding: '0.2rem 0.6rem', borderRadius: '12px', display: 'inline-block', marginBottom: '0.4rem' }}>
-                  {item.dietary_tag === 'Gluten-Free' && '🌾 Gluten-Free'}
-                  {item.dietary_tag === 'Halal' && '🌙 ฮาลาล'}
-                  {!['Chef Signature', 'Vegetarian', 'Gluten-Free', 'Halal'].includes(item.dietary_tag) && item.dietary_tag}
-                </span>
+                <div style={{ marginBottom: '0.6rem' }}>
+                  <span style={{ 
+                    fontSize: '0.75rem', 
+                    fontWeight: 'bold', 
+                    color: '#f6ad55', 
+                    background: 'rgba(255,255,255,0.06)', 
+                    border: '1px solid rgba(255,255,255,0.08)',
+                    padding: '0.25rem 0.75rem', 
+                    borderRadius: '20px', 
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '0.3rem'
+                  }}>
+                    {item.dietary_tag === 'Gluten-Free' && '🌾 Gluten-Free'}
+                    {item.dietary_tag === 'Halal' && '🌙 ฮาลาล'}
+                    {!['Chef Signature', 'Vegetarian', 'Gluten-Free', 'Halal'].includes(item.dietary_tag) && item.dietary_tag}
+                  </span>
+                </div>
               )}
               <h3 className="card-title">{item.name}</h3>
-              <p className="card-desc">{item.description}</p>
+              <p className="card-desc" style={{ marginBottom: '1rem' }}>{item.description}</p>
               
-              {/* Stock Status Badge */}
-              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.4rem', margin: '0.5rem 0', fontSize: '0.75rem', color: 'var(--text-muted)' }}>
+              {/* Calories & Prep Time Pills */}
+              <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center', marginTop: 'auto', marginBottom: '1.2rem', flexWrap: 'wrap' }}>
+                {item.calories && (
+                  <span style={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '0.35rem',
+                    background: 'rgba(255,255,255,0.05)',
+                    border: '1px solid rgba(255,255,255,0.08)',
+                    padding: '0.25rem 0.65rem',
+                    borderRadius: '8px',
+                    fontSize: '0.8rem',
+                    color: '#94a3b8'
+                  }}>
+                    🔥 {item.calories} kcal
+                  </span>
+                )}
+                {item.prep_time_mins && (
+                  <span style={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '0.35rem',
+                    background: 'rgba(255,255,255,0.05)',
+                    border: '1px solid rgba(255,255,255,0.08)',
+                    padding: '0.25rem 0.65rem',
+                    borderRadius: '8px',
+                    fontSize: '0.8rem',
+                    color: '#94a3b8'
+                  }}>
+                    ⏱️ {item.prep_time_mins} นาที
+                  </span>
+                )}
                 {isSoldOut && (
                   <span style={{
-                    background: 'rgba(239,68,68,0.15)', color: '#f87171', padding: '0.2rem 0.7rem',
-                    borderRadius: '12px', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '0.3rem'
+                    background: 'rgba(239,68,68,0.15)', color: '#f87171', padding: '0.2rem 0.6rem',
+                    borderRadius: '8px', fontWeight: 'bold', fontSize: '0.75rem', display: 'flex', alignItems: 'center', gap: '0.3rem'
                   }}>
-                    <AlertTriangle size={12} /> หมดแล้ววันนี้
+                    <AlertTriangle size={12} /> หมดแล้ว
                   </span>
                 )}
                 {isLowStock && (
                   <span style={{
-                    background: 'rgba(251,146,60,0.15)', color: '#fb923c', padding: '0.2rem 0.7rem',
-                    borderRadius: '12px', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '0.3rem',
-                    animation: 'pulse 2s infinite'
+                    background: 'rgba(251,146,60,0.15)', color: '#fb923c', padding: '0.2rem 0.6rem',
+                    borderRadius: '8px', fontWeight: 'bold', fontSize: '0.75rem', display: 'flex', alignItems: 'center', gap: '0.3rem'
                   }}>
                     🔥 เหลือ {stock} จาน
-                  </span>
-                )}
-                {!isSoldOut && !isLowStock && (
-                  <span style={{
-                    background: 'rgba(52,211,153,0.1)', color: '#34d399', padding: '0.2rem 0.7rem',
-                    borderRadius: '12px', fontWeight: 'bold'
-                  }}>
-                    ✅ พร้อมเสิร์ฟ ({stock} จาน)
                   </span>
                 )}
               </div>
 
               <div className="card-footer">
+                <span className="price">฿{item.price}</span>
                 <button
                   className="add-btn"
                   onClick={() => !isSoldOut && onAddToCart(item)}
                   disabled={isSoldOut}
                   style={{
                     opacity: isSoldOut ? 0.4 : 1,
-                    cursor: isSoldOut ? 'not-allowed' : 'pointer',
-                    width: '100%'
+                    cursor: isSoldOut ? 'not-allowed' : 'pointer'
                   }}
                 >
                   {isSoldOut ? '❌ สินค้าหมด' : '🍱 สั่งข้าวกล่อง'}

@@ -158,9 +158,6 @@ export default function Hero({
           style={{ width: 'auto', background: 'rgba(20,23,31,0.9)', border: '1px solid var(--border-color)', color: 'var(--accent-gold)', borderRadius: '30px', padding: '0.75rem 1.2rem', fontSize: '0.85rem', cursor: 'pointer', fontWeight: 'bold' }}
         >
           <option value="popular">🔥 แนะนำ (Popular)</option>
-          <option value="price_asc">💰 ราคา: ต่ำ ➜ สูง</option>
-          <option value="price_desc">💎 ราคา: สูง ➜ ต่ำ</option>
-          <option value="prep_time">⏱️ พร้อมเสิร์ฟเร็วสุด</option>
           <option value="calories">🥗 แคลอรีต่ำสุด</option>
         </select>
       </div>
