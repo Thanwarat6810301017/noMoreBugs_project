@@ -4,9 +4,6 @@ import Hero from './components/Hero';
 import MenuGrid from './components/MenuGrid';
 import PickupStepsGuide from './components/PickupStepsGuide';
 import CustomerReviews from './components/CustomerReviews';
-import DiningPolicies from './components/DiningPolicies';
-import VipClubBanner from './components/VipClubBanner';
-import StickyCartBar from './components/StickyCartBar';
 import TakeawayOrderModal from './components/TakeawayOrderModal';
 import PaymentModal from './components/PaymentModal';
 import EVoucherModal from './components/EVoucherModal';
@@ -330,7 +327,6 @@ export default function App() {
           }} />
           <CustomerReviews reviews={reviews} />
           <DiningPolicies />
-          <VipClubBanner />
         </main>
       )}
 
