@@ -40,14 +40,14 @@ export default function MenuGrid({ menuItems, onAddToCart }) {
             <div className="card-content">
               {item.dietary_tag && (
                 <div style={{ marginBottom: '0.6rem' }}>
-                  <span style={{ 
-                    fontSize: '0.75rem', 
-                    fontWeight: 'bold', 
-                    color: '#f6ad55', 
-                    background: 'rgba(255,255,255,0.06)', 
+                  <span style={{
+                    fontSize: '0.75rem',
+                    fontWeight: 'bold',
+                    color: '#f6ad55',
+                    background: 'rgba(255,255,255,0.06)',
                     border: '1px solid rgba(255,255,255,0.08)',
-                    padding: '0.25rem 0.75rem', 
-                    borderRadius: '20px', 
+                    padding: '0.25rem 0.75rem',
+                    borderRadius: '20px',
                     display: 'inline-flex',
                     alignItems: 'center',
                     gap: '0.3rem'
@@ -60,7 +60,7 @@ export default function MenuGrid({ menuItems, onAddToCart }) {
               )}
               <h3 className="card-title">{item.name}</h3>
               <p className="card-desc" style={{ marginBottom: '1rem' }}>{item.description}</p>
-              
+
               {/* Calories & Prep Time Pills */}
               <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center', marginTop: 'auto', marginBottom: '1.2rem', flexWrap: 'wrap' }}>
                 {item.calories && (
@@ -112,7 +112,7 @@ export default function MenuGrid({ menuItems, onAddToCart }) {
               </div>
 
               <div className="card-footer">
-                <span className="price">฿{item.price}</span>
+                {/* <span className="price">฿{item.price}</span> */}
                 <div style={{ display: 'flex', gap: '0.4rem', alignItems: 'center' }}>
                   <button
                     type="button"
@@ -156,8 +156,8 @@ export default function MenuGrid({ menuItems, onAddToCart }) {
       {/* Important Ingredients & Allergen Modal */}
       {allergenModalItem && (
         <div className="modal-overlay" onClick={() => setAllergenModalItem(null)}>
-          <div 
-            className="modal-card" 
+          <div
+            className="modal-card"
             onClick={(e) => e.stopPropagation()}
             style={{ maxWidth: '440px', padding: '1.8rem', position: 'relative' }}
           >
