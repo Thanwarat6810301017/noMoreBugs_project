@@ -2,13 +2,12 @@ import React, { useState, useEffect } from 'react';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import MenuGrid from './components/MenuGrid';
-import ZoneShowcase from './components/ZoneShowcase';
-import ChefStory from './components/ChefStory';
+import PickupStepsGuide from './components/PickupStepsGuide';
 import CustomerReviews from './components/CustomerReviews';
 import DiningPolicies from './components/DiningPolicies';
 import VipClubBanner from './components/VipClubBanner';
 import StickyCartBar from './components/StickyCartBar';
-import TableMapModal from './components/TableMapModal';
+import TakeawayOrderModal from './components/TakeawayOrderModal';
 import PaymentModal from './components/PaymentModal';
 import EVoucherModal from './components/EVoucherModal';
 import AdminDashboard from './components/AdminDashboard';
@@ -27,39 +26,38 @@ export default function App() {
   const [reviews, setReviews] = useState([]);
   const [promotions, setPromotions] = useState([]);
   const [adminStats, setAdminStats] = useState({ totalRevenue: 0, totalBookings: 0, tableOccupancyRate: 0, popularDish: '-' });
-  
+
   // Auth state
   const [currentUser, setCurrentUser] = useState(null);
   const [isAuthOpen, setIsAuthOpen] = useState(false);
 
-  // Customizer Modal State
-  const [selectedItemForCustomize, setSelectedItemForCustomize] = useState(null);
+  // Box Set Builder Modal State
+  const [isBoxBuilderOpen, setIsBoxBuilderOpen] = useState(false);
 
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [selectedDietary, setSelectedDietary] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [sortBy, setSortBy] = useState('popular');
-  
+
   // Cart & Modal state
   const [cart, setCart] = useState([]);
   const [isBookingOpen, setIsBookingOpen] = useState(false);
   const [isPaymentOpen, setIsPaymentOpen] = useState(false);
   const [bookingSuccess, setBookingSuccess] = useState(null);
-  
+
   // Coupon State
   const [couponCode, setCouponCode] = useState('');
   const [discountAmount, setDiscountAmount] = useState(0);
 
-  // Form State
+  // Form State for Takeaway Pre-order
   const [formData, setFormData] = useState({
     customer_name: '',
     customer_email: '',
     customer_phone: '',
-    reservation_date: new Date(Date.now() + 86400000).toISOString().split('T')[0],
-    reservation_time: '19:00',
-    guest_count: 2,
-    table_id: '1',
-    special_request: ''
+    reservation_date: new Date().toISOString().split('T')[0],
+    reservation_time: '12:00',
+    special_request: '',
+    pickup_type: 'takeaway'
   });
 
   useEffect(() => {
@@ -75,7 +73,7 @@ export default function App() {
           customer_email: u.email || '',
           customer_phone: u.phone || ''
         }));
-      } catch (e) {}
+      } catch (e) { }
     }
   }, []);
 
@@ -97,9 +95,6 @@ export default function App() {
       setAdminStats(stats);
       setReviews(revs || []);
       setPromotions(promos || []);
-      if (tbls.length > 0 && !formData.table_id) {
-        setFormData(prev => ({ ...prev, table_id: tbls[0].table_id.toString() }));
-      }
     } catch (err) {
       console.error('Failed to load application data:', err);
     }
@@ -122,17 +117,14 @@ export default function App() {
     setActiveTab('menu');
   };
 
-  // Open Customizer
-  const handleOpenCustomizer = (item) => {
-    setSelectedItemForCustomize(item);
+  // Open Box Set Builder (item-agnostic — user picks dishes inside the modal)
+  const handleOpenCustomizer = () => {
+    setIsBoxBuilderOpen(true);
   };
 
   const handleAddToCartWithOptions = (customizedItem) => {
     setCart(prev => {
-      const existing = prev.find(i => i.item_id === customizedItem.item_id && i.custom_options === customizedItem.custom_options);
-      if (existing) {
-        return prev.map(i => (i.item_id === customizedItem.item_id && i.custom_options === customizedItem.custom_options) ? { ...i, quantity: i.quantity + 1 } : i);
-      }
+      // Box sets are always unique per order (keyed by item_id timestamp), just append
       return [...prev, { ...customizedItem, quantity: 1 }];
     });
   };
@@ -153,16 +145,24 @@ export default function App() {
     } else if (code === 'MICHELIN500') {
       const disc = Math.min(rawCartTotal, 500);
       setDiscountAmount(disc);
-      alert('🎉 ใช้คูปอง MICHELIN500 สำเร็จ! ได้รับส่วนลด ฿500');
+      alert('🎉 ใช้คูปองส่วนลดพิเศษ สำเร็จ! ได้รับส่วนลด ฿500');
     } else {
-      alert('❌ โค้ดส่วนลดไม่ถูกต้อง (ลองใช้: LUXE2026, VIPGOLD, MICHELIN500)');
+      alert('❌ โค้ดส่วนลดไม่ถูกต้อง (ลองใช้: LUXE2026, VIPGOLD)');
     }
   };
 
   const handleOpenPayment = (e) => {
     e.preventDefault();
     if (!formData.customer_name || !formData.customer_phone || !formData.customer_email) {
-      alert('กรุณากรอกข้อมูลผู้จองให้ครบถ้วน');
+      alert('กรุณากรอกข้อมูลผู้สั่งซื้อให้ครบถ้วน');
+      return;
+    }
+    if (!formData.reservation_date || !formData.reservation_time) {
+      alert('กรุณาระบุวันและเวลาที่จะมารับอาหารที่หน้าร้าน');
+      return;
+    }
+    if (cart.length === 0) {
+      alert('กรุณาเลือกเมนูข้าวแกงลงตะกร้าก่อนดำเนินการชำระเงิน');
       return;
     }
     setIsBookingOpen(false);
@@ -173,6 +173,9 @@ export default function App() {
     try {
       const result = await api.createReservation({
         ...formData,
+        pickup_type: 'takeaway',
+        guest_count: 1,
+        table_id: null,
         user_id: currentUser ? currentUser.user_id : null,
         items: cart,
         discount_amount: discountAmount
@@ -184,7 +187,7 @@ export default function App() {
         setCart([]);
         setDiscountAmount(0);
         setCouponCode('');
-        
+
         if (currentUser && result.earned_points) {
           const updatedUser = { ...currentUser, reward_points: (currentUser.reward_points || 0) + result.earned_points };
           setCurrentUser(updatedUser);
@@ -194,7 +197,7 @@ export default function App() {
         loadData();
       }
     } catch (err) {
-      alert('เกิดข้อผิดพลาดในการบันทึกการจอง');
+      alert('เกิดข้อผิดพลาดในการบันทึกออเดอร์');
     }
   };
 
@@ -207,20 +210,12 @@ export default function App() {
     }
   };
 
-  const handleSelectZone = (zoneName) => {
-    const tableInZone = tables.find(t => t.zone === zoneName && t.status !== 'reserved');
-    if (tableInZone) {
-      setFormData(prev => ({ ...prev, table_id: tableInZone.table_id.toString() }));
-    }
-    setIsBookingOpen(true);
-  };
-
   const sortedMenu = [...menuItems]
     .filter(item => {
       const matchesCategory = selectedCategory ? item.category_id === selectedCategory : true;
       const matchesDietary = selectedDietary ? item.dietary_tag === selectedDietary : true;
-      const matchesSearch = item.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
-                            item.description.toLowerCase().includes(searchQuery.toLowerCase());
+      const matchesSearch = item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        item.description.toLowerCase().includes(searchQuery.toLowerCase());
       return matchesCategory && matchesDietary && matchesSearch;
     })
     .sort((a, b) => {
@@ -233,9 +228,9 @@ export default function App() {
 
   return (
     <div>
-      <Navbar 
-        activeTab={activeTab} 
-        setActiveTab={setActiveTab} 
+      <Navbar
+        activeTab={activeTab}
+        setActiveTab={setActiveTab}
         cartCount={cart.reduce((a, c) => a + c.quantity, 0)}
         onOpenBooking={() => setIsBookingOpen(true)}
         currentUser={currentUser}
@@ -245,7 +240,7 @@ export default function App() {
 
       {activeTab === 'menu' && (
         <main>
-          <Hero 
+          <Hero
             searchQuery={searchQuery}
             setSearchQuery={setSearchQuery}
             categories={categories}
@@ -254,17 +249,19 @@ export default function App() {
             totalItemsCount={menuItems.length}
             selectedDietary={selectedDietary}
             setSelectedDietary={setSelectedDietary}
-            onQuickSearchTable={() => setIsBookingOpen(true)}
+            onQuickOrder={() => setIsBookingOpen(true)}
             promotions={promotions}
             sortBy={sortBy}
             setSortBy={setSortBy}
           />
-          <MenuGrid 
+          <MenuGrid
             menuItems={sortedMenu}
             onAddToCart={handleOpenCustomizer}
           />
-          <ZoneShowcase onSelectZone={handleSelectZone} />
-          <ChefStory />
+          <PickupStepsGuide onScrollToMenu={() => {
+            const el = document.getElementById('menu-section');
+            if (el) el.scrollIntoView({ behavior: 'smooth' });
+          }} />
           <CustomerReviews reviews={reviews} />
           <DiningPolicies />
           <VipClubBanner />
@@ -272,14 +269,14 @@ export default function App() {
       )}
 
       {activeTab === 'profile' && currentUser && (
-        <CustomerProfile 
+        <CustomerProfile
           user={currentUser}
           onSelectVoucher={(reservation) => setBookingSuccess(reservation)}
         />
       )}
 
       {activeTab === 'admin' && (
-        <AdminDashboard 
+        <AdminDashboard
           currentUser={currentUser}
           adminStats={adminStats}
           reservations={reservations}
@@ -291,18 +288,19 @@ export default function App() {
         />
       )}
 
-      <TableMapModal 
+      {/* Takeaway Order & Pickup Time Selection Modal */}
+      <TakeawayOrderModal
         isOpen={isBookingOpen}
         onClose={() => setIsBookingOpen(false)}
         formData={formData}
         setFormData={setFormData}
-        tables={tables}
         cart={cart}
         cartTotal={rawCartTotal}
         onSubmitBooking={handleOpenPayment}
       />
 
-      <PaymentModal 
+      {/* Payment Modal */}
+      <PaymentModal
         isOpen={isPaymentOpen}
         onClose={() => setIsPaymentOpen(false)}
         couponCode={couponCode}
@@ -312,28 +310,32 @@ export default function App() {
         discountAmount={discountAmount}
         finalTotal={finalTotal}
         onConfirmPayment={handleConfirmPayment}
+        formData={formData}
       />
 
-      <EVoucherModal 
+      {/* E-Voucher Modal */}
+      <EVoucherModal
         bookingSuccess={bookingSuccess}
         onClose={() => setBookingSuccess(null)}
       />
 
-      <AuthModal 
+      {/* Auth Modal */}
+      <AuthModal
         isOpen={isAuthOpen}
         onClose={() => setIsAuthOpen(false)}
         onLoginSuccess={handleLoginSuccess}
       />
 
-      <FoodCustomizerModal 
-        item={selectedItemForCustomize}
-        isOpen={!!selectedItemForCustomize}
-        onClose={() => setSelectedItemForCustomize(null)}
+      {/* Box Set Builder Modal */}
+      <FoodCustomizerModal
+        isOpen={isBoxBuilderOpen}
+        onClose={() => setIsBoxBuilderOpen(false)}
         onAddToCartWithOptions={handleAddToCartWithOptions}
+        menuItems={menuItems}
       />
 
       {/* Floating Sticky Cart Bar */}
-      <StickyCartBar 
+      <StickyCartBar
         cart={cart}
         cartTotal={rawCartTotal}
         onOpenBooking={() => setIsBookingOpen(true)}

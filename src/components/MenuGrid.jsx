@@ -42,8 +42,8 @@ export default function MenuGrid({ menuItems, onAddToCart }) {
               <div className="price">
                 ฿{Number(item.price).toLocaleString()}
               </div>
-              <button className="add-btn" onClick={() => onAddToCart(item)}>
-                + สั่งล่วงหน้า
+              <button className="add-btn" onClick={() => onAddToCart()}>
+                🍱 สั่งข้าวกล่อง
               </button>
             </div>
           </div>

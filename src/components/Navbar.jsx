@@ -1,5 +1,5 @@
 import React from 'react';
-import { Utensils, Calendar, ShieldCheck, User, LogOut, LogIn, Phone, Sparkles } from 'lucide-react';
+import { Utensils, ShoppingBag, ShieldCheck, User, LogOut, LogIn, Phone, Sparkles } from 'lucide-react';
 
 export default function Navbar({ 
   activeTab, 
@@ -27,9 +27,9 @@ export default function Navbar({
       {/* Top Announcement Bar */}
       <div style={{ background: 'linear-gradient(90deg, #12151e 0%, #1c1810 50%, #12151e 100%)', borderBottom: '1px solid rgba(229,168,83,0.3)', padding: '0.45rem 2rem', fontSize: '0.78rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', color: '#e5e7eb' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
-          <span style={{ color: 'var(--accent-gold)', fontWeight: 'bold' }}>⭐ MICHELIN SELECTED 2026</span>
+          <span style={{ color: 'var(--accent-gold)', fontWeight: 'bold' }}>⭐ ข้าวแกงระดับพรีเมียม</span>
           <span style={{ color: 'var(--border-color)' }}>|</span>
-          <span style={{ color: 'var(--text-muted)' }}>สัมผัสรสชาติอันวิจิตรและผังโต๊ะอาหารเสมือนจริง</span>
+          <span style={{ color: 'var(--text-muted)' }}>สั่งอาหารล่วงหน้า แวะรับที่หน้าร้านได้ทันที สะดวกรวดเร็ว ไม่ต้องยืนรอคิว</span>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: '1.2rem' }}>
           <span style={{ color: 'var(--accent-gold)', background: 'rgba(229,168,83,0.15)', padding: '0.15rem 0.6rem', borderRadius: '10px', fontWeight: 'bold' }}>
@@ -45,26 +45,26 @@ export default function Navbar({
       <nav className="navbar" style={{ position: 'static' }}>
         <a href="#" className="brand-logo" onClick={() => setActiveTab('menu')}>
           <Utensils color="var(--accent-gold)" size={28} />
-          LUXE <span>DINING</span>
+          ข้าวแกง <span>LUXE DINING</span>
         </a>
 
         {/* In-page Anchor Links (Visible when in menu tab) */}
         {activeTab === 'menu' && (
           <div style={{ display: 'flex', gap: '0.4rem', alignItems: 'center' }}>
             <button className="nav-btn" onClick={() => scrollToSection('menu-section')}>
-              🍽️ เมนูกูร์เมต์
+              🍲 เมนูข้าวแกง
             </button>
-            <button className="nav-btn" onClick={() => scrollToSection('dining-zones')}>
-              🏛️ 5 โซนบรรยากาศ
+            <button className="nav-btn" onClick={() => scrollToSection('pickup-guide')}>
+              🛍️ วิธีสั่งรับหน้าร้าน
             </button>
             <button className="nav-btn" onClick={() => scrollToSection('chef-story')}>
-              👨‍🍳 เชฟมิชลิน
+              👨‍🍳 สูตรเด็ดต้นตำรับ
             </button>
             <button className="nav-btn" onClick={() => scrollToSection('customer-reviews')}>
-              ⭐ รีวิว 5 ดาว
+              ⭐ รีวิวจากลูกค้า
             </button>
             <button className="nav-btn" onClick={() => scrollToSection('dining-policies')}>
-              📋 นโยบายห้องอาหาร
+              📋 ข้อมูลการรับอาหาร
             </button>
           </div>
         )}
@@ -82,7 +82,7 @@ export default function Navbar({
             </button>
           )}
 
-          {/* Admin Navigation Button: COMPLETELY HIDDEN for normal users/customers */}
+          {/* Admin Navigation Button: COMPUTED for staff/admin */}
           {isAdminOrStaff && (
             <button 
               className={`nav-btn ${activeTab === 'admin' ? 'active' : ''}`}
@@ -115,7 +115,7 @@ export default function Navbar({
             className="nav-badge-btn"
             onClick={onOpenBooking}
           >
-            <Calendar size={18} /> จองโต๊ะอาหารออนไลน์
+            <ShoppingBag size={18} /> ตะกร้าสั่งซื้อ / นัดรับอาหาร
             {cartCount > 0 && <span className="cart-count">{cartCount}</span>}
           </button>
         </div>

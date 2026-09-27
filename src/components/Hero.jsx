@@ -1,33 +1,35 @@
 import React from 'react';
-import { Sparkles, Search, Calendar, Clock, Users, ArrowRight } from 'lucide-react';
+import { Sparkles, Search, Clock, ShoppingBag, Zap, ShieldCheck, ArrowRight, Flame } from 'lucide-react';
 
 export default function Hero({ 
   searchQuery, 
   setSearchQuery, 
   categories, 
   selectedCategory, 
-  setSelectedCategory,
-  totalItemsCount,
-  selectedDietary,
-  setSelectedDietary,
-  onQuickSearchTable,
-  promotions = [],
-  sortBy = 'popular',
-  setSortBy
+  setSelectedCategory, 
+  totalItemsCount, 
+  selectedDietary, 
+  setSelectedDietary, 
+  onQuickOrder,
+  promotions = [], 
+  sortBy = 'popular', 
+  setSortBy 
 }) {
   return (
     <section id="menu-section" className="hero">
       <div className="hero-tag">
-        <Sparkles size={16} /> ประสบการณ์มื้ออาหาร Fine Dining สไตล์ Michelin Guide
+        <Sparkles size={16} /> 🍲 ข้าวแกงสูตรโบราณพรีเมียม • สั่งล่วงหน้าเพื่อรับที่หน้าร้าน (Takeaway Pre-Order)
       </div>
+
       <h1 className="hero-title">
-        จองโต๊ะอาหารออนไลน์ <span>พร้อมเลือกสั่งอาหารล่วงหน้า</span>
+        สั่งข้าวแกงล่วงหน้า <span>แวะรับหน้าร้านได้ทันที ไม่ต้องรอคิว</span>
       </h1>
+
       <p className="hero-subtitle">
-        เลือกระบุโต๊ะโปรดบนผังร้านเสมือนจริง เลือกเมนูอาหารจานโปรด และรับ E-Voucher บัตรคิวนัดหมายทันที การันตีบริการระดับพรีเมียม
+        เลือกเมนูกับข้าวสูตรเด็ด ปรุงสดใหม่จากหม้อทุกเช้า กดสั่งและระบุเวลานัดรับล่วงหน้า อาหารแพ็คกล่องร้อนๆ พร้อมรับทันทีที่จุดบริการ Express Pickup หน้าร้าน สะดวก รวดเร็ว ประหยัดเวลา
       </p>
 
-      {/* Active Promotions & Deal Badges */}
+      {/* Active Promotions & Discount Badges */}
       {promotions.length > 0 && (
         <div style={{ display: 'flex', justifyContent: 'center', gap: '0.8rem', flexWrap: 'wrap', marginBottom: '1.5rem' }}>
           {promotions.map(p => (
@@ -39,46 +41,69 @@ export default function Hero({
         </div>
       )}
 
-      {/* OpenTable-Style Instant Reservation Search Bar */}
-      <div style={{ background: 'rgba(20,23,31,0.95)', border: '1px solid var(--border-active)', borderRadius: 'var(--radius-lg)', padding: '1rem 1.5rem', margin: '0 auto 2rem auto', maxWidth: '850px', display: 'grid', gridTemplateColumns: '1.2fr 1fr 1fr auto', gap: '0.8rem', alignItems: 'center', boxShadow: '0 10px 30px rgba(0,0,0,0.5)' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', background: 'rgba(255,255,255,0.05)', padding: '0.6rem 1rem', borderRadius: 'var(--radius-md)' }}>
-          <Calendar size={18} color="var(--accent-gold)" />
-          <input type="date" className="form-input" style={{ background: 'none', border: 'none', padding: 0, fontSize: '0.9rem' }} defaultValue={new Date(Date.now() + 86400000).toISOString().split('T')[0]} />
+      {/* Takeaway Pre-order Core Highlights Bar */}
+      <div style={{
+        background: 'rgba(20,23,31,0.92)',
+        border: '1px solid var(--border-active)',
+        borderRadius: 'var(--radius-lg)',
+        padding: '1.2rem 1.6rem',
+        margin: '0 auto 2rem auto',
+        maxWidth: '920px',
+        display: 'grid',
+        gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
+        gap: '1rem',
+        alignItems: 'center',
+        boxShadow: '0 10px 30px rgba(0,0,0,0.5)'
+      }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.7rem' }}>
+          <div style={{ background: 'rgba(229,168,83,0.15)', color: 'var(--accent-gold)', width: '38px', height: '38px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <Zap size={20} />
+          </div>
+          <div>
+            <div style={{ fontWeight: 'bold', fontSize: '0.85rem', color: '#fff' }}>ไม่ต้องรอคิว</div>
+            <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>สั่งล่วงหน้า มารับได้ทันที</div>
+          </div>
         </div>
 
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', background: 'rgba(255,255,255,0.05)', padding: '0.6rem 1rem', borderRadius: 'var(--radius-md)' }}>
-          <Clock size={18} color="var(--accent-gold)" />
-          <select className="form-select" style={{ background: 'none', border: 'none', padding: 0, fontSize: '0.9rem' }} defaultValue="19:00">
-            <option value="17:00">17:00 น.</option>
-            <option value="18:00">18:00 น.</option>
-            <option value="19:00">19:00 น.</option>
-            <option value="20:00">20:00 น.</option>
-          </select>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.7rem' }}>
+          <div style={{ background: 'rgba(239,68,68,0.15)', color: '#f87171', width: '38px', height: '38px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <Flame size={20} />
+          </div>
+          <div>
+            <div style={{ fontWeight: 'bold', fontSize: '0.85rem', color: '#fff' }}>ปรุงสดใหม่ทุกเช้า</div>
+            <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>ร้อนๆ หอมกรุ่นจากหม้อ</div>
+          </div>
         </div>
 
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', background: 'rgba(255,255,255,0.05)', padding: '0.6rem 1rem', borderRadius: 'var(--radius-md)' }}>
-          <Users size={18} color="var(--accent-gold)" />
-          <select className="form-select" style={{ background: 'none', border: 'none', padding: 0, fontSize: '0.9rem' }} defaultValue={2}>
-            <option value={2}>2 ท่าน</option>
-            <option value={4}>4 ท่าน</option>
-            <option value={6}>6 ท่าน</option>
-            <option value={8}>8 ท่าน (VIP)</option>
-          </select>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.7rem' }}>
+          <div style={{ background: 'rgba(52,211,153,0.15)', color: '#34d399', width: '38px', height: '38px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <Clock size={20} />
+          </div>
+          <div>
+            <div style={{ fontWeight: 'bold', fontSize: '0.85rem', color: '#fff' }}>ระบุเวลารับตามใจ</div>
+            <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>เช้า / เที่ยง / บ่าย / เย็น</div>
+          </div>
         </div>
 
-        <button className="nav-badge-btn" style={{ padding: '0.8rem 1.4rem' }} onClick={onQuickSearchTable}>
-          ค้นหาโต๊ะว่าง <ArrowRight size={16} />
-        </button>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.7rem' }}>
+          <div style={{ background: 'rgba(59,130,246,0.15)', color: '#60a5fa', width: '38px', height: '38px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <ShoppingBag size={20} />
+          </div>
+          <div>
+            <div style={{ fontWeight: 'bold', fontSize: '0.85rem', color: '#fff' }}>รับอาหารที่หน้าร้าน</div>
+            <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>จุด Express Pickup หน้าร้าน</div>
+          </div>
+        </div>
       </div>
 
       {/* Search & Sort Row */}
-      <div style={{ maxWidth: '680px', margin: '0 auto 1.5rem auto', display: 'flex', gap: '0.8rem', alignItems: 'center' }}>
+      <div style={{ maxWidth: '720px', margin: '0 auto 1.5rem auto', display: 'flex', gap: '0.8rem', alignItems: 'center' }}>
         <div className="search-container" style={{ margin: 0, flex: 1 }}>
           <div className="search-input-wrapper">
             <Search className="search-icon" size={20} />
             <input 
               type="text" 
-              placeholder="ค้นหาชื่อเมนู เช่น สเต๊ก, วากิว, ทรัฟเฟิล, ซูชิ..."
+              placeholder="ค้นหาเมนูข้าวแกง เช่น แกงเขียวหวาน, พะแนง, ผัดกะเพรา, ไข่พะโล้, แกงส้ม..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
@@ -94,19 +119,19 @@ export default function Hero({
           <option value="popular">🔥 แนะนำ (Popular)</option>
           <option value="price_asc">💰 ราคา: ต่ำ ➜ สูง</option>
           <option value="price_desc">💎 ราคา: สูง ➜ ต่ำ</option>
-          <option value="prep_time">⏱️ เวลาปรุงเร็วสุด</option>
+          <option value="prep_time">⏱️ พร้อมเสิร์ฟเร็วสุด</option>
           <option value="calories">🥗 แคลอรีต่ำสุด</option>
         </select>
       </div>
 
-      {/* Michelin Guide Dietary Filter Pills */}
+      {/* Dietary & Recipe Filter Pills */}
       <div style={{ display: 'flex', justifyContent: 'center', gap: '0.6rem', marginBottom: '1rem', flexWrap: 'wrap' }}>
         {[
-          { key: 'all', label: 'ทั้งหมด' },
-          { key: 'Chef Signature', label: '🌟 Chef Signature' },
-          { key: 'Vegetarian', label: '🌱 มังสวิรัติ (Vegetarian)' },
-          { key: 'Gluten-Free', label: '🌾 Gluten-Free' },
-          { key: 'Halal', label: '🌙 ฮาลาล (Halal)' }
+          { key: 'all', label: 'เมนูทั้งหมด' },
+          { key: 'Halal', label: '🌙 ฮาลาล (Halal)' },
+          { key: '❌ ไม่ฮาลาล', label: '🥩 เมนูหมู (ไม่ฮาลาล)' },
+          { key: 'Chef Signature', label: '🌟 เมนูเด็ดประจำร้าน' },
+          { key: 'Vegetarian', label: '🌱 มังสวิรัติ' }
         ].map(tag => (
           <button 
             key={tag.key}
@@ -115,7 +140,8 @@ export default function Hero({
               background: (selectedDietary === tag.key || (tag.key === 'all' && !selectedDietary)) ? 'rgba(229,168,83,0.2)' : 'rgba(255,255,255,0.03)',
               border: `1px solid ${(selectedDietary === tag.key || (tag.key === 'all' && !selectedDietary)) ? 'var(--accent-gold)' : 'var(--border-color)'}`,
               color: (selectedDietary === tag.key || (tag.key === 'all' && !selectedDietary)) ? 'var(--accent-gold)' : 'var(--text-muted)',
-              padding: '0.4rem 1rem', borderRadius: '20px', fontSize: '0.82rem', fontWeight: 'bold', cursor: 'pointer'
+              padding: '0.4rem 1rem', borderRadius: '20px', fontSize: '0.82rem', fontWeight: 'bold', cursor: 'pointer',
+              transition: 'all 0.2s ease'
             }}
           >
             {tag.label}

@@ -43,7 +43,7 @@ export default function StickyCartBar({ cart, cartTotal, onOpenBooking }) {
         </div>
         <div>
           <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>
-            สั่งอาหารล่วงหน้าแล้ว {totalQuantity} จาน
+            สั่งข้าวกล่อง {totalQuantity} กล่อง
           </div>
           <div style={{ fontSize: '1.2rem', fontWeight: 'bold', color: 'var(--accent-gold)' }}>
             ฿{cartTotal.toLocaleString()}
@@ -68,7 +68,7 @@ export default function StickyCartBar({ cart, cartTotal, onOpenBooking }) {
           boxShadow: '0 4px 15px rgba(229, 168, 83, 0.4)'
         }}
       >
-        จองโต๊ะและสั่งอาหารทันที <ArrowRight size={18} />
+        ระบุเวลารับ & สั่งอาหารหน้าร้าน <ArrowRight size={18} />
       </button>
     </div>
   );

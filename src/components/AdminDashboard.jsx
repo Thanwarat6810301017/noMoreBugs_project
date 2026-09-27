@@ -35,7 +35,7 @@ export default function AdminDashboard({
           <Lock size={60} color="#ef4444" style={{ margin: '0 auto 1rem auto' }} />
           <h2 style={{ fontSize: '1.8rem', color: '#fff', marginBottom: '0.5rem' }}>ส่วนควบคุมสำหรับแอดมิน (Admin Access Only)</h2>
           <p style={{ color: 'var(--text-muted)', marginBottom: '1.5rem', lineHeight: 1.6 }}>
-            หน้านี้จำกัดสิทธิ์สำหรับผู้บริหารและพนักงานเจ้าหน้าที่ในการแก้ไขราคาเมนู ลบรายการอาหาร และเปลี่ยนสถานะโต๊ะอาหาร กรุณาเข้าสู่ระบบด้วยบัญชีแอดมิน
+            หน้านี้จำกัดสิทธิ์สำหรับผู้บริหารและพนักงานเจ้าหน้าที่ในการแก้ไขราคาเมนู จัดการรายการอาหาร และควบคุมสถานะออเดอร์ กรุณาเข้าสู่ระบบด้วยบัญชีแอดมิน
           </p>
           <div style={{ background: 'rgba(0,0,0,0.3)', padding: '0.8rem', borderRadius: '8px', fontSize: '0.85rem', color: 'var(--text-muted)', marginBottom: '1.5rem' }}>
             🔑 <strong>บัญชีแอดมินสำหรับทดสอบ:</strong> <code style={{ color: 'var(--accent-gold)' }}>admin@luxedining.com</code> / รหัสผ่าน: <code style={{ color: 'var(--accent-gold)' }}>admin123</code>
@@ -127,14 +127,14 @@ export default function AdminDashboard({
 
         <div className="stat-card">
           <span className="stat-label" style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-            <Calendar size={16} color="#34d399" /> จำนวนการจองทั้งหมด
+            <Calendar size={16} color="#34d399" /> ออเดอร์สั่งล่วงหน้าทั้งหมด
           </span>
           <span className="stat-value" style={{ color: '#34d399' }}>{adminStats.totalBookings} รายการ</span>
         </div>
 
         <div className="stat-card">
           <span className="stat-label" style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-            <PieChart size={16} color="var(--accent-orange)" /> อัตราการถูกจองโต๊ะ (Occupancy)
+            <PieChart size={16} color="var(--accent-orange)" /> อัตราพร้อมรับหน้าร้าน
           </span>
           <span className="stat-value" style={{ color: 'var(--accent-orange)' }}>{adminStats.tableOccupancyRate}%</span>
         </div>
@@ -155,7 +155,7 @@ export default function AdminDashboard({
           className={`nav-btn ${activeAdminTab === 'reservations' ? 'active' : ''}`}
           onClick={() => setActiveAdminTab('reservations')}
         >
-          จัดการรายการจอง & ปรุงอาหาร Grab-Style ({reservations.length})
+          จัดการออเดอร์สั่งล่วงหน้า ({reservations.length})
         </button>
         <button 
           className={`nav-btn ${activeAdminTab === 'menu_editor' ? 'active' : ''}`}
@@ -167,7 +167,7 @@ export default function AdminDashboard({
           className={`nav-btn ${activeAdminTab === 'table_editor' ? 'active' : ''}`}
           onClick={() => setActiveAdminTab('table_editor')}
         >
-          จัดการผังโต๊ะ (Table Editor)
+          จุดบริการรับอาหารหน้าร้าน (Pickup Counters)
         </button>
       </div>
 
@@ -178,11 +178,11 @@ export default function AdminDashboard({
             <thead>
               <tr style={{ background: 'rgba(255,255,255,0.03)', borderBottom: '1px solid var(--border-color)', color: 'var(--text-muted)' }}>
                 <th style={{ padding: '1rem', textAlign: 'left' }}>รหัสคิว</th>
-                <th style={{ padding: '1rem', textAlign: 'left' }}>ชื่อผู้จอง</th>
-                <th style={{ padding: '1rem', textAlign: 'left' }}>วันที่ / เวลา</th>
-                <th style={{ padding: '1rem', textAlign: 'left' }}>โต๊ะ / โซน</th>
+                <th style={{ padding: '1rem', textAlign: 'left' }}>ชื่อผู้สั่งซื้อ</th>
+                <th style={{ padding: '1rem', textAlign: 'left' }}>วัน / เวลานัดรับหน้าร้าน</th>
+                <th style={{ padding: '1rem', textAlign: 'left' }}>รูปแบบ</th>
                 <th style={{ padding: '1rem', textAlign: 'left' }}>ยอดชำระ</th>
-                <th style={{ padding: '1rem', textAlign: 'left' }}>สถานะการปรุงอาหาร (Grab Stage)</th>
+                <th style={{ padding: '1rem', textAlign: 'left' }}>สถานะเตรียมอาหาร</th>
                 <th style={{ padding: '1rem', textAlign: 'left' }}>การจัดการ</th>
               </tr>
             </thead>
@@ -201,8 +201,8 @@ export default function AdminDashboard({
                     <small style={{ color: 'var(--accent-gold)' }}>{res.reservation_time} น.</small>
                   </td>
                   <td style={{ padding: '1rem' }}>
-                    <span style={{ color: '#34d399', fontWeight: 600 }}>{res.table_number || 'T-01'}</span><br/>
-                    <small style={{ color: 'var(--text-muted)' }}>{res.zone || 'Indoor Main'}</small>
+                    <span style={{ color: '#34d399', fontWeight: 600 }}>🛍️ รับหน้าร้าน</span><br/>
+                    <small style={{ color: 'var(--text-muted)' }}>Express Pickup</small>
                   </td>
                   <td style={{ padding: '1rem', fontWeight: 'bold', color: 'var(--accent-gold)' }}>
                     ฿{Number(res.total_amount || 0).toLocaleString()}
@@ -220,13 +220,13 @@ export default function AdminDashboard({
                         onClick={() => handleUpdateOrderStage(res.reservation_id, 'ready')}
                         style={{ background: res.order_stage === 'ready' ? 'var(--accent-gold)' : 'rgba(255,255,255,0.05)', color: res.order_stage === 'ready' ? '#000' : 'var(--text-muted)', border: 'none', padding: '0.3rem 0.6rem', borderRadius: '6px', fontSize: '0.75rem', fontWeight: 'bold', cursor: 'pointer' }}
                       >
-                        🍽️ พร้อมเสิร์ฟ
+                        🛍️ พร้อมรับหน้าร้าน
                       </button>
                       <button 
                         onClick={() => handleUpdateOrderStage(res.reservation_id, 'completed')}
                         style={{ background: res.order_stage === 'completed' ? '#10b981' : 'rgba(255,255,255,0.05)', color: res.order_stage === 'completed' ? '#000' : 'var(--text-muted)', border: 'none', padding: '0.3rem 0.6rem', borderRadius: '6px', fontSize: '0.75rem', fontWeight: 'bold', cursor: 'pointer' }}
                       >
-                        🏁 สำเร็จ
+                        🏁 รับแล้ว
                       </button>
                     </div>
                   </td>
@@ -321,25 +321,25 @@ export default function AdminDashboard({
         </div>
       )}
 
-      {/* 3. TABLE EDITOR */}
+      {/* 3. PICKUP COUNTER EDITOR */}
       {activeAdminTab === 'table_editor' && (
         <div>
-          <h3 style={{ fontSize: '1.3rem', color: '#fff', marginBottom: '1.2rem' }}>จัดการสถานะโต๊ะอาหาร (Table Availability)</h3>
+          <h3 style={{ fontSize: '1.3rem', color: '#fff', marginBottom: '1.2rem' }}>สถานะเคาน์เตอร์จุดบริการรับอาหารหน้าร้าน (Pickup Counters)</h3>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: '1rem' }}>
             {tables.map(tbl => (
               <div key={tbl.table_id} style={{ background: 'var(--bg-card)', border: '1px solid var(--border-color)', borderRadius: 'var(--radius-md)', padding: '1.2rem', textAlign: 'center' }}>
-                <h4 style={{ fontSize: '1.2rem', color: '#fff' }}>{tbl.table_number}</h4>
-                <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>{tbl.zone} (รองรับ {tbl.capacity} ท่าน)</p>
+                <h4 style={{ fontSize: '1.2rem', color: '#fff' }}>เคาน์เตอร์ {tbl.table_number}</h4>
+                <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>ช่องบริการด่วน Express Pickup</p>
                 <div style={{ margin: '0.8rem 0' }}>
                   <span style={{ padding: '0.2rem 0.8rem', borderRadius: '12px', fontSize: '0.8rem', fontWeight: 'bold', background: tbl.status === 'available' ? 'rgba(16,185,129,0.2)' : 'rgba(239,68,68,0.2)', color: tbl.status === 'available' ? '#34d399' : '#f87171' }}>
-                    {tbl.status === 'available' ? 'ว่าง' : 'ถูกจองแล้ว'}
+                    {tbl.status === 'available' ? 'พร้อมให้บริการ' : 'ปิดชั่วคราว'}
                   </span>
                 </div>
                 <button 
                   onClick={() => handleToggleTableStatus(tbl.table_id, tbl.status)}
                   style={{ width: '100%', background: 'var(--bg-glass)', border: '1px solid var(--border-color)', color: '#fff', padding: '0.4rem', borderRadius: '6px', fontSize: '0.8rem', cursor: 'pointer' }}
                 >
-                  สลับสถานะโต๊ะ
+                  สลับสถานะเคาน์เตอร์
                 </button>
               </div>
             ))}

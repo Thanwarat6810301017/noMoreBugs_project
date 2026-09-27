@@ -1,43 +1,43 @@
 import React from 'react';
-import { Clock, ShieldCheck, Shirt, Car, Wine, HelpCircle, Phone, MapPin } from 'lucide-react';
+import { Clock, ShieldCheck, ShoppingBag, Car, PackageCheck, Phone, MapPin, Sparkles } from 'lucide-react';
 
 export default function DiningPolicies() {
   const policies = [
     {
-      icon: Shirt,
-      title: 'การแต่งกาย (Dress Code)',
-      highlight: 'Smart Casual / Elegant',
-      desc: 'ขอความกรุณางดสวมเสื้อกล้าม กางเกงขาสั้นชาย และรองเท้าแตะ เพื่อรักษาบรรยากาศอันงดงามของห้องอาหาร'
+      icon: ShoppingBag,
+      title: 'จุดรับอาหารหน้าร้าน (Express Pickup)',
+      highlight: 'ช่องรับอาหารด่วนพิเศษ ไม่ต้องรอคิว',
+      desc: 'แสดงรหัสคิวหรือ QR Code บนหน้าจอ E-Voucher ต่อพนักงานที่เคาน์เตอร์ Express Pickup เพื่อรับอาหารร้อนๆ ได้ทันที'
     },
     {
       icon: Clock,
-      title: 'เวลาเปิดให้บริการ (Opening Hours)',
-      highlight: 'เปิดบริการทุกวัน (Lunch & Dinner)',
-      desc: 'มื้อกลางวัน: 11:30 - 14:30 น. (Last Order 14:00) | มื้อค่ำ: 17:30 - 23:30 น. (Last Order 22:30)'
+      title: 'เวลาเปิดรับอาหาร (Pickup Operating Hours)',
+      highlight: 'เปิดบริการทุกวัน 07:00 - 20:00 น.',
+      desc: 'สามารถสั่งอาหารล่วงหน้าผ่านระบบได้ตลอด 24 ชั่วโมง และเลือกเวลานัดรับได้ตั้งแต่ช่วงเช้า มื้อเที่ยง ถึงมื้อค่ำ'
+    },
+    {
+      icon: PackageCheck,
+      title: 'บรรจุภัณฑ์คุณภาพ (Food Grade Packaging)',
+      highlight: 'ซีลกล่องปิดสนิท เก็บความร้อน',
+      desc: 'บรรจุภัณฑ์เกรดพรีเมียม ปลอดภัย ซีลฝามิดชิด แยกน้ำแกงและกับข้าวอย่างเรียบร้อย คงความสดใหม่และรสชาติต้นตำรับ'
+    },
+    {
+      icon: Sparkles,
+      title: 'ปรุงสดใหม่ตามเวลานัด (Hot & Fresh Guarantee)',
+      highlight: 'อาหารร้อนพร้อมรับตามเวลาที่คุณระบุ',
+      desc: 'ทางร้านจะจัดเตรียมอาหารเสร็จพอดีกับเวลาที่คุณนัดรับ แนะนำให้มารับตามเวลาที่กำหนดเพื่อรสชาติที่ดีที่สุดจากเตา'
     },
     {
       icon: Car,
-      title: 'บริการที่จอดรถ (Valet Parking)',
-      highlight: 'บริการรับจอดรถฟรี & EV Charger',
-      desc: 'มีจุดบริการ Valet Parking ฟรีบริเวณหน้าทางเข้าหลัก พร้อมสถานีชาร์จรถยนต์ไฟฟ้าความเร็วสูง'
+      title: 'ที่จอดรถชั่วคราว (Quick 15-Min Parking)',
+      highlight: 'ช่องจอดด่วนรับอาหารหน้าร้านฟรี',
+      desc: 'มีช่องจอดรถชั่วคราวบริเวณหน้าร้านสำหรับลูกค้าที่แวะมารับอาหารโดยเฉพาะ สะดวก รวดเร็ว ไม่เสียเวลาหาที่จอด'
     },
     {
-      icon: Wine,
-      title: 'นโยบายการนำไวน์มาเอง (Corkage Fee)',
-      highlight: '฿1,000 / ขวด หรือฟรีแบบ 1-for-1',
-      desc: 'ค่าบริการเปิดขวดไวน์ ฿1,000 ต่อขวด 750ml หรือยกเว้นค่าบริการเปิดขวดเมื่อสั่งไวน์จากรายการของร้าน 1 ขวด'
-    },
-    {
-      icon: ShieldCheck,
-      title: 'นโยบายการสำรองที่นั่ง (Cancellation)',
-      highlight: 'แจ้งล่วงหน้าอย่างน้อย 24 ชั่วโมง',
-      desc: 'สามารถเปลี่ยนแปลงหรือยกเลิกการจองได้โดยไม่มีค่าธรรมเนียม เมื่อแจ้งล่วงหน้าอย่างน้อย 24 ชั่วโมงก่อนเวลานัด'
-    },
-    {
-      icon: MapPin,
-      title: 'การเดินทางและพิกัด (Location)',
-      highlight: 'ถนนวิทยุ (Wireless Rd), ลุมพินี, กทม.',
-      desc: 'เดินทางสะดวกด้วย BTS สถานีเพลินจิต (ทางออก 2) หรือ MRT สถานีลุมพินี มีรถลีมูซีนรับ-ส่งบริการ'
+      icon: Phone,
+      title: 'การติดต่อหรือแจ้งเลื่อนเวลา (Customer Support)',
+      highlight: 'โทร 02-999-9999 หรือ 081-234-5678',
+      desc: 'หากต้องการเปลี่ยนแปลงเวลานัดรับอาหาร กรุณาติดต่อทางร้านล่วงหน้าอย่างน้อย 20 นาที เพื่อการจัดเตรียมที่สมบูรณ์'
     }
   ];
 
@@ -45,13 +45,13 @@ export default function DiningPolicies() {
     <section id="dining-policies" style={{ padding: '4.5rem 3rem', maxWidth: '1300px', margin: '0 auto' }}>
       <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
         <span style={{ background: 'rgba(229,168,83,0.12)', border: '1px solid var(--border-active)', color: 'var(--accent-gold)', padding: '0.4rem 1.2rem', borderRadius: '30px', fontSize: '0.85rem', fontWeight: 'bold' }}>
-          📋 ข้อมูลสำคัญและนโยบายห้องอาหาร (Dining Etiquette & Guide)
+          📋 ข้อกำหนดและข้อมูลการรับอาหารหน้าร้าน (Store Pickup Guide)
         </span>
         <h2 style={{ fontSize: '2.4rem', color: '#fff', marginTop: '0.8rem' }}>
-          ข้อมูลสำหรับการเตรียมตัวก่อนมาเยือน LUXE DINING
+          ข้อมูลสำหรับการแวะรับอาหารหน้าร้าน ข้าวแกง LUXE DINING
         </h2>
         <p style={{ color: 'var(--text-muted)', maxWidth: '650px', margin: '0.6rem auto 0 auto', fontSize: '0.95rem' }}>
-          เพื่อความสะดวกสบายและประสบการณ์มื้ออาหารที่ไร้รอยต่อ กรุณาตรวจสอบข้อมูลนโยบายการให้บริการ
+          เพื่อความสะดวกรวดเร็วและประสบการณ์สั่งอาหารกลับบ้านที่ราบรื่น กรุณาตรวจสอบข้อมูลการให้บริการ
         </p>
       </div>
 

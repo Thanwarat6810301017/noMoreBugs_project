@@ -42,44 +42,397 @@ let mockUsers = [
 ];
 
 let mockCategories = [
-  { category_id: 1, name: 'Appetizers & Starters', description: 'อาหารทานเล่นเรียกน้ำย่อย คัดสรรวัตถุดิบนำเข้าชั้นเลิศ', icon_name: 'Salad' },
-  { category_id: 2, name: 'Soups & Fresh Salads', description: 'ซุปอุ่นกรุ่นกลิ่นทรัฟเฟิลและสลัดผักออร์แกนิก', icon_name: 'Soup' },
-  { category_id: 3, name: 'Prime Steaks & Grills', description: 'สเต๊กเนื้อวากิวและริบอายเกรดพรีเมียมบ่มแบบ Dry-Aged', icon_name: 'Beef' },
-  { category_id: 4, name: 'Seafood & Raw Bar', description: 'ซูชิ ซาชิมิ แซลมอนนอร์เวย์ และหอยนางรมสดจากฝรั่งเศส', icon_name: 'Fish' },
-  { category_id: 5, name: 'Artisanal Pasta & Risotto', description: 'พาสต้าเส้นสดและรีซอตโต้สูตรต้นตำรับอิตาลี', icon_name: 'Utensils' },
-  { category_id: 6, name: 'Michelin Tasting Sets', description: 'เซ็ตมื้ออาหารพิเศษ 7-Course โดยเชฟมิชลินสตาร์', icon_name: 'Sparkles' },
-  { category_id: 7, name: 'Luxury Desserts & Bakery', description: 'ของหวานฝรั่งเศส ไอศกรีมโฮมเมด และเบเกอรี่สดใหม่', icon_name: 'Cake' },
-  { category_id: 8, name: 'Sommelier Wines & Drinks', description: 'ไวน์นำเข้า ม็อกเทลพรีเมียม และกาแฟคั่วบดพิเศษ', icon_name: 'Wine' }
+  { category_id: 1, name: '🍲 ต้ม & แกง', description: 'แกงเขียวหวาน พะแนง มัสมั่น ต้มยำ ต้มข่า แกงจืด แกงส้ม แกงไตปลา', icon_name: 'Soup' },
+  { category_id: 2, name: '🔥 ผัด & ทอด', description: 'ผัดกะเพรา คั่วกลิ้ง ผัดเผ็ด ผัดผัก หมูทอดกระเทียม ไก่ผัดเม็ดมะม่วง', icon_name: 'Flame' },
+  { category_id: 3, name: '🥘 นึ่ง & ตุ๋น', description: 'ไข่พะโล้ หมูตุ๋น ปลานึ่ง เนื้อตุ๋นพะโล้ อาหารนึ่งรสนุ่มลึก', icon_name: 'ChefHat' },
+  { category_id: 4, name: '🌶️ เครื่องเคียง & น้ำพริก', description: 'น้ำพริกกะปิ น้ำพริกอ่อง ลาบ ผักสด ไข่เจียว เครื่องเคียงครบ', icon_name: 'Salad' }
 ];
 
 let mockMenuItems = [
-  // Steaks (Cat 3)
-  { item_id: 1, category_id: 3, name: 'Prime Ribeye Steak with Truffle Butter', description: 'สเต๊กเนื้อริบอายวากิว A5 บ่ม 45 วัน เสิร์ฟพร้อมเนยทรัฟเฟิลสีทองและเกลือหิมาลายัน', price: 1290.00, image_url: '/images/steak.jpg', is_popular: true, prep_time_mins: 25, is_available: true, dietary_tag: 'Chef Signature', calories: 780, allergens: 'Dairy', wine_pairing: '2019 Bordeaux Cabernet Sauvignon' },
-  { item_id: 2, category_id: 3, name: 'A5 Wagyu Striploin Melt-in-Mouth', description: 'เนื้อวากิว A5 นำเข้าจากคาโกชิมะ ย่างเตาถ่านไม้ชาโคล ลายไขมันแทรกละเอียด', price: 1890.00, image_url: '/images/steak.jpg', is_popular: true, prep_time_mins: 20, is_available: true, dietary_tag: 'Chef Signature', calories: 850, allergens: 'None', wine_pairing: '2018 Shiraz Barossa Valley' },
-  { item_id: 3, category_id: 3, name: 'Grilled Australian Lamb Chops', description: 'ซี่โครงแกะออสเตรเลียย่างสมุนไพรโรสแมรี่ เสิร์ฟคู่ซอสมิ้นท์การ์เดน', price: 1150.00, image_url: '/images/steak.jpg', is_popular: false, prep_time_mins: 22, is_available: true, dietary_tag: 'Gluten-Free', calories: 690, allergens: 'None', wine_pairing: '2020 Pinot Noir Oregon' },
-
-  // Seafood (Cat 4)
-  { item_id: 4, category_id: 4, name: 'Premium Salmon Sushi Platter', description: 'แซลมอนซูชิและซาชิมิเกรดพรีเมียมส่งตรงจากนอร์เวย์ 8 ชิ้น พร้อมไข่ปลาแซลมอน', price: 650.00, image_url: '/images/sushi.jpg', is_popular: true, prep_time_mins: 12, is_available: true, dietary_tag: 'Gluten-Free', calories: 420, allergens: 'Fish, Soy', wine_pairing: 'Chardonnay Reserve 2021' },
-  { item_id: 5, category_id: 4, name: 'French Fine de Claire Oysters (6 pcs)', description: 'หอยนางรมสดฟินเดอแคลร์ นำเข้าจากฝรั่งเศส เสิร์ฟพร้อมซอสเรดไวน์มิโญเนตต์', price: 890.00, image_url: '/images/sushi.jpg', is_popular: true, prep_time_mins: 10, is_available: true, dietary_tag: 'Chef Signature', calories: 180, allergens: 'Shellfish', wine_pairing: 'Champagne Dom Pérignon Vintage' },
-  { item_id: 6, category_id: 4, name: 'Pan-Seared Snow Fish Seabass', description: 'ปลาหิมะย่างกระทะหนังกรอบ เสิร์ฟพร้อมซอสบัตเตอร์เลมอนและหน่อไม้ฝรั่ง', price: 980.00, image_url: '/images/steak.jpg', is_popular: false, prep_time_mins: 18, is_available: true, dietary_tag: 'Gluten-Free', calories: 510, allergens: 'Dairy, Fish', wine_pairing: 'Sauvignon Blanc Marlborough' },
-
-  // Pasta (Cat 5)
-  { item_id: 7, category_id: 5, name: 'Creamy Truffle Fettuccine Pasta', description: 'พาสต้าเฟตตูชินีเส้นสดซอสเห็ดทรัฟเฟิลเข้มข้น ท็อปด้วยพาร์เมซานชีสและทรัฟเฟิลสไลซ์', price: 480.00, image_url: '/images/pasta.jpg', is_popular: true, prep_time_mins: 15, is_available: true, dietary_tag: 'Vegetarian', calories: 620, allergens: 'Dairy, Gluten', wine_pairing: 'Pinot Grigio D.O.C.' },
-  { item_id: 8, category_id: 5, name: 'Lobster Tail Black Ink Spaghetti', description: 'สปาเกตตีหมึกดำผัดซอสมะเขือเทศเชอร์รีสไตล์อิตาเลียน เสิร์ฟพร้อมกุ้งมังกรลอบสเตอร์', price: 950.00, image_url: '/images/pasta.jpg', is_popular: true, prep_time_mins: 20, is_available: true, dietary_tag: 'Chef Signature', calories: 580, allergens: 'Shellfish, Gluten', wine_pairing: 'Chablis Premier Cru' },
-
-  // Appetizers (Cat 1)
-  { item_id: 9, category_id: 1, name: 'Caesar Salad with Crispy Bacon', description: 'สลัดซีซาร์ผักคอสสดใหม่ เบคอนกรอบ ไข่ต้มยางมะตูม และกรุบกรอบกูร์ตอง', price: 260.00, image_url: '/images/steak.jpg', is_popular: false, prep_time_mins: 10, is_available: true, dietary_tag: 'Vegetarian', calories: 310, allergens: 'Dairy, Eggs', wine_pairing: 'Prosecco Superiore' },
-  { item_id: 10, category_id: 1, name: 'Seared Hokkaido Scallops', description: 'หอยเชลล์ฮอกไกโดตัวโตย่างเนย เสิร์ฟบนพูเรถั่วลันเตาหวาน', price: 520.00, image_url: '/images/sushi.jpg', is_popular: true, prep_time_mins: 12, is_available: true, dietary_tag: 'Gluten-Free', calories: 290, allergens: 'Shellfish, Dairy', wine_pairing: 'Sauvignon Blanc' },
-
-  // Michelin Tasting Set (Cat 6)
-  { item_id: 11, category_id: 6, name: '7-Course Michelin Signature Grand Tasting Menu', description: 'คอร์สอาหารสุดพิเศษ 7 จาน รังสรรค์โดยเชฟมิชลินสตาร์ รวมซิกเนเจอร์สเต๊ก ลอบสเตอร์ และทรัฟเฟิล', price: 3500.00, image_url: '/images/steak.jpg', is_popular: true, prep_time_mins: 90, is_available: true, dietary_tag: 'Chef Signature', calories: 1450, allergens: 'Dairy, Shellfish, Gluten', wine_pairing: 'Sommelier Premium Wine Pairing (+1200฿)' },
-  
-  // Desserts (Cat 7)
-  { item_id: 12, category_id: 7, name: 'Chocolate Lava Cake with Vanilla Ice Cream', description: 'เค้กช็อกโกแลตลาวาอุ่นๆ อะเวียร์เข้มข้น 70% เสิร์ฟคู่ไอศกรีมวานิลลาแท้และเบอร์รีสด', price: 290.00, image_url: '/images/dessert.jpg', is_popular: true, prep_time_mins: 10, is_available: true, dietary_tag: 'Gluten-Free', calories: 480, allergens: 'Dairy, Eggs', wine_pairing: 'Moscato d’Asti' },
-
-  // Drinks (Cat 8)
-  { item_id: 13, category_id: 8, name: 'Signature Berry Mocktail', description: 'ม็อกเทลเบอร์รีรวมมิกซ์สปาร์กลิงโซดา น้ำมะนาวสด และใบมิ้นท์คลายร้อน', price: 180.00, image_url: '/images/dessert.jpg', is_popular: false, prep_time_mins: 5, is_available: true, dietary_tag: 'Halal', calories: 120, allergens: 'None', wine_pairing: 'Non-Alcoholic Refresher' },
-  { item_id: 14, category_id: 8, name: 'Bordeaux Grand Cru Red Wine (Glass)', description: 'ไวน์แดงคลาสสิกระดับโบร์โด รสสัมผัสเข้มข้น หอมกลิ่นผลไม้และถังไม้โอ๊ค', price: 450.00, image_url: '/images/dessert.jpg', is_popular: true, prep_time_mins: 3, is_available: true, dietary_tag: 'Chef Signature', calories: 140, allergens: 'Sulfites', wine_pairing: 'Perfect with Prime Steaks' }
+  {
+    item_id: 1,
+    category_id: 1,
+    name: 'แกงเขียวหวานไก่',
+    description: 'แกงเขียวหวานไก่เข้มข้นกะทิสด มะเขือเปราะ พริกชี้ฟ้า และใบโหระพาหอมกรุ่น',
+    price: 60.00,
+    image_url: '/images/steak.jpg',
+    is_popular: true,
+    prep_time_mins: 10,
+    is_available: true,
+    dietary_tag: 'Halal',
+    is_halal: true,
+    calories: 180,
+    allergens: 'กะปิ/กุ้ง, น้ำปลา/ปลา',
+    wine_pairing: 'None'
+  },
+  {
+    item_id: 2,
+    category_id: 1,
+    name: 'พะแนงหมู',
+    description: 'พะแนงหมูนุ่มเคี่ยวกะทิเข้มข้น รสชาติกลมกล่อม หอมกลิ่นถั่วลิสงคั่วและใบมะกรูด',
+    price: 65.00,
+    image_url: '/images/steak.jpg',
+    is_popular: true,
+    prep_time_mins: 10,
+    is_available: true,
+    dietary_tag: '❌ ไม่ฮาลาล',
+    is_halal: false,
+    calories: 220,
+    allergens: 'กะปิ/กุ้ง, น้ำปลา/ปลา, ถั่วลิสง',
+    wine_pairing: 'None'
+  },
+  {
+    item_id: 3,
+    category_id: 1,
+    name: 'มัสมั่นเนื้อ',
+    description: 'มัสมั่นเนื้อตุ๋นเนื้อนุ่มละลายในปาก หอมเครื่องเทศและถั่วลิสงคั่วสูตรโบราณ',
+    price: 85.00,
+    image_url: '/images/steak.jpg',
+    is_popular: true,
+    prep_time_mins: 15,
+    is_available: true,
+    dietary_tag: 'Halal',
+    is_halal: true,
+    calories: 260,
+    allergens: 'ถั่วลิสง, กะปิ/กุ้ง, น้ำปลา/ปลา',
+    wine_pairing: 'None'
+  },
+  {
+    item_id: 4,
+    category_id: 1,
+    name: 'ต้มยำกุ้ง (น้ำข้น)',
+    description: 'ต้มยำกุ้งแม่น้ำน้ำข้นรสจัดจ้าน เปรี้ยวเค็มเผ็ดครบรส สมุนไพรไทยสดใหม่',
+    price: 95.00,
+    image_url: '/images/sushi.jpg',
+    is_popular: true,
+    prep_time_mins: 12,
+    is_available: true,
+    dietary_tag: 'Halal',
+    is_halal: true,
+    calories: 140,
+    allergens: 'กุ้ง, นม, น้ำพริกเผา (กุ้ง/กะปิ), น้ำปลา',
+    wine_pairing: 'None'
+  },
+  {
+    item_id: 5,
+    category_id: 2,
+    name: 'ผัดกะเพราไก่ / เนื้อ',
+    description: 'ผัดกะเพราสูตรโบราณคั่วพริกแห้งและใบกะเพราป่า กลิ่นหอมฟุ้งจัดจ้าน',
+    price: 60.00,
+    image_url: '/images/steak.jpg',
+    is_popular: true,
+    prep_time_mins: 8,
+    is_available: true,
+    dietary_tag: 'Halal',
+    is_halal: true,
+    calories: 150,
+    allergens: 'ถั่วเหลือง, แป้งสาลี/กลูเตน',
+    wine_pairing: 'None'
+  },
+  {
+    item_id: 6,
+    category_id: 2,
+    name: 'ผัดเผ็ดปลาดุก',
+    description: 'ปลาดุกทอดกรอบผัดพริกแกงเผ็ดเข้มข้น ใบกะเพรากรอบและกระชายซอยหอมเตะจมูก',
+    price: 65.00,
+    image_url: '/images/sushi.jpg',
+    is_popular: false,
+    prep_time_mins: 10,
+    is_available: true,
+    dietary_tag: 'Halal',
+    is_halal: true,
+    calories: 170,
+    allergens: 'ปลา, กะปิ/กุ้ง, ถั่วเหลือง',
+    wine_pairing: 'None'
+  },
+  {
+    item_id: 7,
+    category_id: 1,
+    name: 'แกงจืดเต้าหู้หมูสับ',
+    description: 'แกงจืดเต้าหู้ไข่เนื้อนุ่มใส่หมูสับหมักและผักกาดขาว ซุปร้อนๆ รสชาติกลมกล่อม',
+    price: 50.00,
+    image_url: '/images/pasta.jpg',
+    is_popular: false,
+    prep_time_mins: 8,
+    is_available: true,
+    dietary_tag: '❌ ไม่ฮาลาล',
+    is_halal: false,
+    calories: 90,
+    allergens: 'ถั่วเหลือง, ขึ้นฉ่าย',
+    wine_pairing: 'None'
+  },
+  {
+    item_id: 8,
+    category_id: 3,
+    name: 'ไข่พะโล้หมู',
+    description: 'ไข่พะโล้ต้มเคี่ยวจนเข้าเนื้อ หมูสามชั้นนุ่มละมุน น้ำพะโล้หอมเครื่องเทศยาจีน',
+    price: 60.00,
+    image_url: '/images/pasta.jpg',
+    is_popular: true,
+    prep_time_mins: 10,
+    is_available: true,
+    dietary_tag: '❌ ไม่ฮาลาล',
+    is_halal: false,
+    calories: 250,
+    allergens: 'ไข่, ถั่วเหลือง, แป้งสาลี/กลูเตน, ผักชี/ขึ้นฉ่าย',
+    wine_pairing: 'None'
+  },
+  {
+    item_id: 9,
+    category_id: 1,
+    name: 'แกงเทโพหมูสามชั้น',
+    description: 'แกงกะทิผักบุ้งไทยใส่หมูสามชั้น รสชาติหวานอมเปรี้ยวมะกรูดสดชื่น',
+    price: 65.00,
+    image_url: '/images/steak.jpg',
+    is_popular: false,
+    prep_time_mins: 10,
+    is_available: true,
+    dietary_tag: '❌ ไม่ฮาลาล',
+    is_halal: false,
+    calories: 220,
+    allergens: 'กะปิ/กุ้ง, น้ำปลา/ปลา',
+    wine_pairing: 'None'
+  },
+  {
+    item_id: 10,
+    category_id: 1,
+    name: 'แกงไตปลา',
+    description: 'แกงไตปลาปักษ์ใต้แท้ รสชาติเผ็ดร้อนจัดจ้าน ใส่เนื้อปลาและเม็ดมะม่วงหิมพานต์',
+    price: 70.00,
+    image_url: '/images/sushi.jpg',
+    is_popular: true,
+    prep_time_mins: 10,
+    is_available: true,
+    dietary_tag: 'Halal',
+    is_halal: true,
+    calories: 90,
+    allergens: 'ปลา (ไตปลา), กะปิ/กุ้ง, เม็ดมะม่วงหิมพานต์',
+    wine_pairing: 'None'
+  },
+  {
+    item_id: 11,
+    category_id: 2,
+    name: 'ผัดเผ็ดหมูกระด้าง/หมูชิ้น',
+    description: 'หมูผัดพริกแกงใต้รสเด็ด เผ็ดร้อนถึงใจ ผัดแห้งหอมกลิ่นพริกแกงและใบมะกรูด',
+    price: 65.00,
+    image_url: '/images/steak.jpg',
+    is_popular: false,
+    prep_time_mins: 10,
+    is_available: true,
+    dietary_tag: '❌ ไม่ฮาลาล',
+    is_halal: false,
+    calories: 190,
+    allergens: 'กะปิ/กุ้ง, ถั่วเหลือง, แป้งสาลี/กลูเตน',
+    wine_pairing: 'None'
+  },
+  {
+    item_id: 12,
+    category_id: 2,
+    name: 'ผัดบล็อกโคลี่กุ้ง',
+    description: 'บล็อกโคลี่กรอบหวานผัดน้ำมันหอยใส่กุ้งสดตัวโต รสชาติกลมกล่อมดีต่อสุขภาพ',
+    price: 75.00,
+    image_url: '/images/sushi.jpg',
+    is_popular: false,
+    prep_time_mins: 8,
+    is_available: true,
+    dietary_tag: 'Halal',
+    is_halal: true,
+    calories: 120,
+    allergens: 'กุ้ง, ถั่วเหลือง, แป้งสาลี/กลูเตน',
+    wine_pairing: 'None'
+  },
+  {
+    item_id: 13,
+    category_id: 2,
+    name: 'ผัดผักบุ้งไฟแดง',
+    description: 'ผักบุ้งสดผัดไฟแดง เต้าเจี้ยว กระเทียม พริกสด กรุบกรอบหอมควันกระทะ',
+    price: 50.00,
+    image_url: '/images/pasta.jpg',
+    is_popular: false,
+    prep_time_mins: 5,
+    is_available: true,
+    dietary_tag: 'Halal',
+    is_halal: true,
+    calories: 130,
+    allergens: 'ถั่วเหลือง, แป้งสาลี/กลูเตน',
+    wine_pairing: 'None'
+  },
+  {
+    item_id: 14,
+    category_id: 2,
+    name: 'คั่วกลิ้งไก่ / เนื้อ',
+    description: 'คั่วกลิ้งเนื้อสับผัดคั่วแห้งๆ เผ็ดร้อนหอมพริกแกงใต้และใบมะกรูดซอยละเอียด',
+    price: 70.00,
+    image_url: '/images/steak.jpg',
+    is_popular: true,
+    prep_time_mins: 10,
+    is_available: true,
+    dietary_tag: 'Halal',
+    is_halal: true,
+    calories: 140,
+    allergens: 'กะปิ/กุ้ง, น้ำปลา/ปลา',
+    wine_pairing: 'None'
+  },
+  {
+    item_id: 15,
+    category_id: 1,
+    name: 'ต้มข่าไก่',
+    description: 'ต้มข่าไก่กะทินุ่มละมุน หอมกลิ่นข่าอ่อน ตะไคร้ ใบมะกรูด และเห็ดฟาง',
+    price: 65.00,
+    image_url: '/images/pasta.jpg',
+    is_popular: false,
+    prep_time_mins: 10,
+    is_available: true,
+    dietary_tag: 'Halal',
+    is_halal: true,
+    calories: 160,
+    allergens: 'น้ำปลา/ปลา',
+    wine_pairing: 'None'
+  },
+  {
+    item_id: 16,
+    category_id: 4,
+    name: 'ลาบหมู',
+    description: 'ลาบหมูสับรสนัวคลุกเคล้าข้าวคั่วหอมใหม่ พริกป่น มะนาวแท้ และสะระแหน่สด',
+    price: 60.00,
+    image_url: '/images/steak.jpg',
+    is_popular: true,
+    prep_time_mins: 8,
+    is_available: true,
+    dietary_tag: '❌ ไม่ฮาลาล',
+    is_halal: false,
+    calories: 130,
+    allergens: 'น้ำปลา/ปลา',
+    wine_pairing: 'None'
+  },
+  {
+    item_id: 17,
+    category_id: 2,
+    name: 'ไก่ผัดเม็ดมะม่วง',
+    description: 'เนื้อไก่ทอดคลุกซอสเข้มข้น ผัดกับเม็ดมะม่วงหิมพานต์กรุบกรอบ พริกแห้ง และต้นหอม',
+    price: 75.00,
+    image_url: '/images/steak.jpg',
+    is_popular: true,
+    prep_time_mins: 10,
+    is_available: true,
+    dietary_tag: 'Halal',
+    is_halal: true,
+    calories: 190,
+    allergens: 'เม็ดมะม่วงหิมพานต์, ถั่วเหลือง, แป้งสาลี/กลูเตน',
+    wine_pairing: 'None'
+  },
+  {
+    item_id: 18,
+    category_id: 2,
+    name: 'หมูทอดกระเทียม',
+    description: 'หมูหมักซอสกระเทียมพริกไทยทอดจนเหลืองทอง กรอบนอกนุ่มใน กระเทียมเจียวแน่นๆ',
+    price: 65.00,
+    image_url: '/images/steak.jpg',
+    is_popular: true,
+    prep_time_mins: 8,
+    is_available: true,
+    dietary_tag: '❌ ไม่ฮาลาล',
+    is_halal: false,
+    calories: 230,
+    allergens: 'ถั่วเหลือง, แป้งสาลี/กลูเตน',
+    wine_pairing: 'None'
+  },
+  {
+    item_id: 19,
+    category_id: 1,
+    name: 'แกงส้มชะอมกุ้ง',
+    description: 'แกงส้มรสเข้มข้นจัดจ้าน น้ำแกงข้นใส่ไข่เจียวชะอมทอดชิ้นโตและกุ้งสดเด้ง',
+    price: 85.00,
+    image_url: '/images/sushi.jpg',
+    is_popular: true,
+    prep_time_mins: 12,
+    is_available: true,
+    dietary_tag: 'Halal',
+    is_halal: true,
+    calories: 140,
+    allergens: 'กุ้ง, ไข่, กะปิ/กุ้ง, น้ำปลา/ปลา',
+    wine_pairing: 'None'
+  },
+  {
+    item_id: 20,
+    category_id: 2,
+    name: 'ผัดพริกแกงถั่วยาวหมู',
+    description: 'หมูผัดพริกแกงถั่วฝักยาวกรอบๆ รสเผ็ดหวานกลมกล่อม หอมกลิ่นใบมะกรูด',
+    price: 60.00,
+    image_url: '/images/steak.jpg',
+    is_popular: false,
+    prep_time_mins: 8,
+    is_available: true,
+    dietary_tag: '❌ ไม่ฮาลาล',
+    is_halal: false,
+    calories: 190,
+    allergens: 'กะปิ/กุ้ง, น้ำปลา/ปลา, ถั่วเหลือง',
+    wine_pairing: 'None'
+  },
+  {
+    item_id: 21,
+    category_id: 3,
+    name: 'หมูสามชั้นตุ๋นพะโล้',
+    description: 'หมูสามชั้นตุ๋นเคี่ยวซีอิ๊วดำเครื่องเทศจีนจนเข้าเนื้อ นุ่มละลายในปาก หอมสมุนไพรยาจีน',
+    price: 75.00,
+    image_url: '/images/steak.jpg',
+    is_popular: true,
+    prep_time_mins: 12,
+    is_available: true,
+    dietary_tag: '❌ ไม่ฮาลาล',
+    is_halal: false,
+    calories: 280,
+    allergens: 'ถั่วเหลือง, ไข่',
+    wine_pairing: 'None'
+  },
+  {
+    item_id: 22,
+    category_id: 3,
+    name: 'ปลากะพงนึ่งมะนาว',
+    description: 'ปลากะพงขาวนึ่งร้อนๆ รดซอสมะนาวพริกกระเทียมรสจัดจ้าน หอมกลิ่นสมุนไพรสดชื่น',
+    price: 120.00,
+    image_url: '/images/sushi.jpg',
+    is_popular: true,
+    prep_time_mins: 15,
+    is_available: true,
+    dietary_tag: 'Halal',
+    is_halal: true,
+    calories: 150,
+    allergens: 'ปลา, น้ำปลา/ปลา',
+    wine_pairing: 'None'
+  },
+  {
+    item_id: 23,
+    category_id: 4,
+    name: 'น้ำพริกกะปิ + ผักสด',
+    description: 'น้ำพริกกะปิสูตรโบราณหอมกะปิ รสเผ็ดเค็มสมดุล เสิร์ฟพร้อมผักสดนานาชนิดและผักลวก',
+    price: 45.00,
+    image_url: '/images/pasta.jpg',
+    is_popular: true,
+    prep_time_mins: 5,
+    is_available: true,
+    dietary_tag: 'Halal',
+    is_halal: true,
+    calories: 60,
+    allergens: 'กะปิ/กุ้ง, น้ำปลา/ปลา',
+    wine_pairing: 'None'
+  },
+  {
+    item_id: 24,
+    category_id: 4,
+    name: 'ไข่เจียวหมูสับ',
+    description: 'ไข่เจียวหมูสับฟูนุ่ม ทอดน้ำมันร้อนๆ กลิ่นหอมน้ำปลา เสิร์ฟร้อนๆ กินกับข้าวสุดอร่อย',
+    price: 40.00,
+    image_url: '/images/steak.jpg',
+    is_popular: false,
+    prep_time_mins: 5,
+    is_available: true,
+    dietary_tag: '❌ ไม่ฮาลาล',
+    is_halal: false,
+    calories: 160,
+    allergens: 'ไข่, น้ำปลา/ปลา',
+    wine_pairing: 'None'
+  }
 ];
 
 let mockReviews = [
@@ -128,22 +481,24 @@ let mockReservations = [
     customer_name: 'คุณสมชาย ใจดี (ลูกค้า)',
     customer_email: 'customer@email.com',
     customer_phone: '081-234-5678',
-    reservation_date: '2026-09-26',
-    reservation_time: '19:00',
-    guest_count: 2,
-    table_id: 1,
-    table_number: 'T-01',
-    zone: 'Indoor Main',
-    special_request: 'ขอโต๊ะติดริมกระจก ฉลองวันเกิด',
-    total_amount: 1770.00,
-    earned_points: 177,
+    reservation_date: '2026-09-27',
+    reservation_time: '12:00',
+    guest_count: 1,
+    table_id: null,
+    table_number: 'หน้าร้าน',
+    zone: 'เคาน์เตอร์ Express Pickup หน้าร้าน',
+    special_request: 'แยกน้ำแกงใส่ถุง ขอพริกน้ำปลาเพิ่ม',
+    total_amount: 185.00,
+    earned_points: 18,
     payment_status: 'paid',
     payment_method: 'PromptPay QR',
     status: 'confirmed',
+    order_stage: 'ready',
     created_at: new Date().toISOString(),
     items: [
-      { name: 'Prime Ribeye Steak with Truffle Butter', quantity: 1, unit_price: 1290.00 },
-      { name: 'Creamy Truffle Fettuccine Pasta', quantity: 1, unit_price: 480.00 }
+      { name: 'แกงเขียวหวานไก่', quantity: 1, unit_price: 60.00 },
+      { name: 'พะแนงหมู', quantity: 1, unit_price: 65.00 },
+      { name: 'หมูทอดกระเทียม', quantity: 1, unit_price: 60.00 }
     ]
   }
 ];
@@ -488,16 +843,17 @@ app.post('/api/reservations', async (req, res) => {
     customer_phone,
     reservation_date,
     reservation_time,
-    guest_count,
-    table_id,
-    table_number: foundTable ? foundTable.table_number : 'Unassigned',
-    zone: foundTable ? foundTable.zone : 'General',
+    guest_count: guest_count || 1,
+    table_id: table_id || null,
+    table_number: foundTable ? foundTable.table_number : 'หน้าร้าน (Takeaway)',
+    zone: foundTable ? foundTable.zone : 'เคาน์เตอร์ Express Pickup หน้าร้าน',
     special_request,
     total_amount,
     earned_points,
     payment_status: 'paid',
     payment_method: 'PromptPay QR',
     status: 'confirmed',
+    order_stage: 'confirmed',
     created_at: new Date().toISOString(),
     items: items || []
   };
@@ -512,14 +868,22 @@ app.patch('/api/reservations/:id/status', async (req, res) => {
 
   if (isDbConnected) {
     try {
-      const result = await pool.query('UPDATE reservations SET status = $1 WHERE reservation_id = $2 RETURNING *', [status, id]);
+      const isStage = ['preparing', 'ready', 'completed'].includes(status);
+      const query = isStage
+        ? 'UPDATE reservations SET order_stage = $1 WHERE reservation_id = $2 RETURNING *'
+        : 'UPDATE reservations SET status = $1 WHERE reservation_id = $2 RETURNING *';
+      const result = await pool.query(query, [status, id]);
       return res.json(result.rows[0]);
     } catch (err) { console.error(err); }
   }
 
   const resIndex = mockReservations.findIndex(r => r.reservation_id === parseInt(id));
   if (resIndex !== -1) {
-    mockReservations[resIndex].status = status;
+    if (['preparing', 'ready', 'completed'].includes(status)) {
+      mockReservations[resIndex].order_stage = status;
+    } else {
+      mockReservations[resIndex].status = status;
+    }
     return res.json(mockReservations[resIndex]);
   }
   res.status(404).json({ error: 'Reservation not found' });
@@ -528,13 +892,13 @@ app.patch('/api/reservations/:id/status', async (req, res) => {
 app.get('/api/admin/stats', async (req, res) => {
   let totalRevenue = mockReservations.reduce((sum, r) => sum + (r.status !== 'cancelled' ? r.total_amount : 0), 0);
   let totalBookings = mockReservations.length;
-  let reservedCount = mockTables.filter(t => t.status === 'reserved').length;
+  let readyCount = mockReservations.filter(r => r.order_stage === 'ready' || r.order_stage === 'completed').length;
 
   res.json({
     totalRevenue,
     totalBookings,
-    tableOccupancyRate: Math.round((reservedCount / mockTables.length) * 100),
-    popularDish: 'Prime Ribeye Steak'
+    tableOccupancyRate: totalBookings > 0 ? Math.round((readyCount / totalBookings) * 100) : 92,
+    popularDish: 'แกงเขียวหวานไก่'
   });
 });
 
