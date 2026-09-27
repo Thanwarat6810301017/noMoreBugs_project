@@ -61,6 +61,15 @@ export const deleteMenuItem = async (id) => {
   return await res.json();
 };
 
+export const updateMenuItemStock = async (id, stock_quantity) => {
+  const res = await fetch(`${API_BASE}/menu/${id}/stock`, {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ stock_quantity })
+  });
+  return await res.json();
+};
+
 export const fetchTables = async () => {
   const res = await fetch(`${API_BASE}/tables`);
   return await res.json();
@@ -124,4 +133,27 @@ export const fetchPromotions = async () => {
   } catch {
     return [];
   }
+};
+
+export const fetchUsers = async () => {
+  try {
+    const res = await fetch(`${API_BASE}/users`);
+    return await res.json();
+  } catch {
+    return [];
+  }
+};
+
+export const updateUserRole = async (userId, data) => {
+  const res = await fetch(`${API_BASE}/users/${userId}/role`, {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data)
+  });
+  return await res.json();
+};
+
+export const deleteUser = async (userId) => {
+  const res = await fetch(`${API_BASE}/users/${userId}`, { method: 'DELETE' });
+  return await res.json();
 };

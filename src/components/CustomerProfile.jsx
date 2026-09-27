@@ -3,7 +3,7 @@ import { User, Award, Calendar, CheckCircle, Clock, ShoppingBag, QrCode } from '
 import { fetchUserReservations } from '../services/api';
 import GrabOrderTracker from './GrabOrderTracker';
 
-export default function CustomerProfile({ user, onSelectVoucher }) {
+export default function CustomerProfile({ user, onSelectVoucher, onGoToMenu }) {
   const [history, setHistory] = useState([]);
 
   useEffect(() => {
@@ -23,6 +23,24 @@ export default function CustomerProfile({ user, onSelectVoucher }) {
 
   return (
     <div style={{ padding: '3rem', maxWidth: '1100px', margin: '0 auto' }}>
+      {/* Return to menu button */}
+      {onGoToMenu && (
+        <div style={{ marginBottom: '1.5rem' }}>
+          <button 
+            onClick={onGoToMenu}
+            style={{
+              background: 'linear-gradient(135deg, var(--accent-gold), var(--accent-orange))',
+              border: 'none', color: '#0b0c10', fontWeight: 800, padding: '0.65rem 1.4rem',
+              borderRadius: '30px', cursor: 'pointer', fontSize: '0.9rem',
+              display: 'inline-flex', alignItems: 'center', gap: '0.5rem',
+              boxShadow: '0 4px 15px rgba(229,168,83,0.3)'
+            }}
+          >
+            🍲 ไปหน้าเลือกสั่งอาหารหน้าร้าน (30 เมนูสูตรเด็ด)
+          </button>
+        </div>
+      )}
+
       {/* Profile Header Banner */}
       <div style={{ background: 'linear-gradient(135deg, rgba(229,168,83,0.15), rgba(255,94,54,0.1))', border: '1px solid var(--border-active)', borderRadius: 'var(--radius-lg)', padding: '2rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem', flexWrap: 'wrap', gap: '1.5rem' }}>
         <div>

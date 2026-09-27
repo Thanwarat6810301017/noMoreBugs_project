@@ -35,10 +35,13 @@ let isDbConnected = false;
 
 // Mock Memory Users & Data v2.0
 let mockUsers = [
-  { user_id: 1, name: 'คุณสมชาย ใจดี (ลูกค้า VIP)', email: 'customer@email.com', password: 'password123', phone: '081-234-5678', role: 'customer', reward_points: 450, membership_tier: 'Gold Membership', avatar_url: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80' },
-  { user_id: 2, name: 'คุณพิมลวรรณ สุขเสริฐ (Diamond VIP)', email: 'pimonwan@luxedining.com', password: 'password123', phone: '089-987-6543', role: 'customer', reward_points: 1850, membership_tier: 'Diamond VIP', avatar_url: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=200&q=80' },
-  { user_id: 3, name: 'พนักงานแก้ไขข้อมูล (Staff Editor)', email: 'staff@luxedining.com', password: 'admin123', phone: '02-123-4567', role: 'staff', reward_points: 0, membership_tier: 'Staff Executive', avatar_url: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=200&q=80' },
-  { user_id: 4, name: 'ผู้บริหารระบบ (Admin)', email: 'admin@luxedining.com', password: 'admin123', phone: '02-999-9999', role: 'admin', reward_points: 0, membership_tier: 'Admin Director', avatar_url: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=200&q=80' }
+  { user_id: 1, name: 'คุณสมชาย ใจดี', email: 'customer@email.com', password: 'password123', phone: '081-234-5678', role: 'customer', reward_points: 450, membership_tier: 'Gold VIP', avatar_url: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80' },
+  { user_id: 2, name: 'คุณพิมลวรรณ สุขเสริฐ', email: 'pimonwan@luxedining.com', password: 'password123', phone: '089-987-6543', role: 'customer', reward_points: 1850, membership_tier: 'Diamond VIP', avatar_url: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=200&q=80' },
+  { user_id: 3, name: 'คุณกิตติศักดิ์ ช่างปรุง (เชฟ/พนักงาน)', email: 'staff@luxedining.com', password: 'admin123', phone: '02-123-4567', role: 'staff', reward_points: 0, membership_tier: 'Staff Executive', avatar_url: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=200&q=80' },
+  { user_id: 4, name: 'ผู้บริหารระบบสูงสุด (Admin)', email: 'admin@luxedining.com', password: 'admin123', phone: '02-999-9999', role: 'admin', reward_points: 0, membership_tier: 'Admin Director', avatar_url: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=200&q=80' },
+  { user_id: 5, name: 'คุณอานนท์ ภักดีไพศาล', email: 'arnon@gmail.com', password: 'password123', phone: '085-111-2233', role: 'customer', reward_points: 80, membership_tier: 'ลูกค้าทั่วไป (General Member)', avatar_url: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=200&q=80' },
+  { user_id: 6, name: 'คุณมณีรัตน์ วงศ์สว่าง (พนักงานแคชเชียร์)', email: 'manirat@luxedining.com', password: 'staff123', phone: '082-333-4455', role: 'staff', reward_points: 0, membership_tier: 'Staff Executive', avatar_url: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=200&q=80' },
+  { user_id: 7, name: 'คุณธนกร เลิศวิจิตร', email: 'thanakorn@hotmail.com', password: 'password123', phone: '086-777-8899', role: 'customer', reward_points: 320, membership_tier: 'Silver Member', avatar_url: 'https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?auto=format&fit=crop&w=200&q=80' }
 ];
 
 let mockCategories = [
@@ -63,7 +66,8 @@ let mockMenuItems = [
     is_halal: true,
     calories: 180,
     allergens: 'กะปิ/กุ้ง, น้ำปลา/ปลา',
-    wine_pairing: 'None'
+    wine_pairing: 'None',
+    stock_quantity: 25
   },
   {
     item_id: 2,
@@ -79,7 +83,8 @@ let mockMenuItems = [
     is_halal: false,
     calories: 220,
     allergens: 'กะปิ/กุ้ง, น้ำปลา/ปลา, ถั่วลิสง',
-    wine_pairing: 'None'
+    wine_pairing: 'None',
+    stock_quantity: 18
   },
   {
     item_id: 3,
@@ -95,7 +100,8 @@ let mockMenuItems = [
     is_halal: true,
     calories: 260,
     allergens: 'ถั่วลิสง, กะปิ/กุ้ง, น้ำปลา/ปลา',
-    wine_pairing: 'None'
+    wine_pairing: 'None',
+    stock_quantity: 12
   },
   {
     item_id: 4,
@@ -111,7 +117,8 @@ let mockMenuItems = [
     is_halal: true,
     calories: 140,
     allergens: 'กุ้ง, นม, น้ำพริกเผา (กุ้ง/กะปิ), น้ำปลา',
-    wine_pairing: 'None'
+    wine_pairing: 'None',
+    stock_quantity: 8
   },
   {
     item_id: 5,
@@ -127,7 +134,8 @@ let mockMenuItems = [
     is_halal: true,
     calories: 150,
     allergens: 'ถั่วเหลือง, แป้งสาลี/กลูเตน',
-    wine_pairing: 'None'
+    wine_pairing: 'None',
+    stock_quantity: 30
   },
   {
     item_id: 6,
@@ -143,7 +151,8 @@ let mockMenuItems = [
     is_halal: true,
     calories: 170,
     allergens: 'ปลา, กะปิ/กุ้ง, ถั่วเหลือง',
-    wine_pairing: 'None'
+    wine_pairing: 'None',
+    stock_quantity: 3
   },
   {
     item_id: 7,
@@ -159,7 +168,8 @@ let mockMenuItems = [
     is_halal: false,
     calories: 90,
     allergens: 'ถั่วเหลือง, ขึ้นฉ่าย',
-    wine_pairing: 'None'
+    wine_pairing: 'None',
+    stock_quantity: 20
   },
   {
     item_id: 8,
@@ -175,7 +185,8 @@ let mockMenuItems = [
     is_halal: false,
     calories: 250,
     allergens: 'ไข่, ถั่วเหลือง, แป้งสาลี/กลูเตน, ผักชี/ขึ้นฉ่าย',
-    wine_pairing: 'None'
+    wine_pairing: 'None',
+    stock_quantity: 0
   },
   {
     item_id: 9,
@@ -191,7 +202,8 @@ let mockMenuItems = [
     is_halal: false,
     calories: 220,
     allergens: 'กะปิ/กุ้ง, น้ำปลา/ปลา',
-    wine_pairing: 'None'
+    wine_pairing: 'None',
+    stock_quantity: 15
   },
   {
     item_id: 10,
@@ -207,7 +219,8 @@ let mockMenuItems = [
     is_halal: true,
     calories: 90,
     allergens: 'ปลา (ไตปลา), กะปิ/กุ้ง, เม็ดมะม่วงหิมพานต์',
-    wine_pairing: 'None'
+    wine_pairing: 'None',
+    stock_quantity: 5
   },
   {
     item_id: 11,
@@ -223,7 +236,8 @@ let mockMenuItems = [
     is_halal: false,
     calories: 190,
     allergens: 'กะปิ/กุ้ง, ถั่วเหลือง, แป้งสาลี/กลูเตน',
-    wine_pairing: 'None'
+    wine_pairing: 'None',
+    stock_quantity: 22
   },
   {
     item_id: 12,
@@ -239,7 +253,8 @@ let mockMenuItems = [
     is_halal: true,
     calories: 120,
     allergens: 'กุ้ง, ถั่วเหลือง, แป้งสาลี/กลูเตน',
-    wine_pairing: 'None'
+    wine_pairing: 'None',
+    stock_quantity: 10
   },
   {
     item_id: 13,
@@ -255,7 +270,8 @@ let mockMenuItems = [
     is_halal: true,
     calories: 130,
     allergens: 'ถั่วเหลือง, แป้งสาลี/กลูเตน',
-    wine_pairing: 'None'
+    wine_pairing: 'None',
+    stock_quantity: 28
   },
   {
     item_id: 14,
@@ -271,7 +287,8 @@ let mockMenuItems = [
     is_halal: true,
     calories: 140,
     allergens: 'กะปิ/กุ้ง, น้ำปลา/ปลา',
-    wine_pairing: 'None'
+    wine_pairing: 'None',
+    stock_quantity: 4
   },
   {
     item_id: 15,
@@ -287,7 +304,8 @@ let mockMenuItems = [
     is_halal: true,
     calories: 160,
     allergens: 'น้ำปลา/ปลา',
-    wine_pairing: 'None'
+    wine_pairing: 'None',
+    stock_quantity: 16
   },
   {
     item_id: 16,
@@ -303,7 +321,8 @@ let mockMenuItems = [
     is_halal: false,
     calories: 130,
     allergens: 'น้ำปลา/ปลา',
-    wine_pairing: 'None'
+    wine_pairing: 'None',
+    stock_quantity: 0
   },
   {
     item_id: 17,
@@ -319,7 +338,8 @@ let mockMenuItems = [
     is_halal: true,
     calories: 190,
     allergens: 'เม็ดมะม่วงหิมพานต์, ถั่วเหลือง, แป้งสาลี/กลูเตน',
-    wine_pairing: 'None'
+    wine_pairing: 'None',
+    stock_quantity: 14
   },
   {
     item_id: 18,
@@ -335,7 +355,8 @@ let mockMenuItems = [
     is_halal: false,
     calories: 230,
     allergens: 'ถั่วเหลือง, แป้งสาลี/กลูเตน',
-    wine_pairing: 'None'
+    wine_pairing: 'None',
+    stock_quantity: 2
   },
   {
     item_id: 19,
@@ -351,7 +372,8 @@ let mockMenuItems = [
     is_halal: true,
     calories: 140,
     allergens: 'กุ้ง, ไข่, กะปิ/กุ้ง, น้ำปลา/ปลา',
-    wine_pairing: 'None'
+    wine_pairing: 'None',
+    stock_quantity: 20
   },
   {
     item_id: 20,
@@ -367,7 +389,8 @@ let mockMenuItems = [
     is_halal: false,
     calories: 190,
     allergens: 'กะปิ/กุ้ง, น้ำปลา/ปลา, ถั่วเหลือง',
-    wine_pairing: 'None'
+    wine_pairing: 'None',
+    stock_quantity: 18
   },
   {
     item_id: 21,
@@ -383,7 +406,8 @@ let mockMenuItems = [
     is_halal: false,
     calories: 280,
     allergens: 'ถั่วเหลือง, ไข่',
-    wine_pairing: 'None'
+    wine_pairing: 'None',
+    stock_quantity: 6
   },
   {
     item_id: 22,
@@ -399,7 +423,8 @@ let mockMenuItems = [
     is_halal: true,
     calories: 150,
     allergens: 'ปลา, น้ำปลา/ปลา',
-    wine_pairing: 'None'
+    wine_pairing: 'None',
+    stock_quantity: 7
   },
   {
     item_id: 23,
@@ -415,7 +440,8 @@ let mockMenuItems = [
     is_halal: true,
     calories: 60,
     allergens: 'กะปิ/กุ้ง, น้ำปลา/ปลา',
-    wine_pairing: 'None'
+    wine_pairing: 'None',
+    stock_quantity: 15
   },
   {
     item_id: 24,
@@ -431,7 +457,110 @@ let mockMenuItems = [
     is_halal: false,
     calories: 160,
     allergens: 'ไข่, น้ำปลา/ปลา',
-    wine_pairing: 'None'
+    wine_pairing: 'None',
+    stock_quantity: 25
+  },
+  {
+    item_id: 25,
+    category_id: 1,
+    name: 'ต้มแซ่บกระดูกหมูอ่อน',
+    description: 'กระดูกหมูอ่อนเคี่ยวนุ่มกรุบ รสแซ่บจี๊ดจ๊าดด้วยพริกขี้หนูสวนสด น้ำมะนาวแท้ และข้าวคั่วหอม',
+    price: 70.00,
+    image_url: '/images/steak.jpg',
+    is_popular: true,
+    prep_time_mins: 10,
+    is_available: true,
+    dietary_tag: '❌ ไม่ฮาลาล',
+    is_halal: false,
+    calories: 180,
+    allergens: 'น้ำปลา/ปลา',
+    wine_pairing: 'None',
+    stock_quantity: 16
+  },
+  {
+    item_id: 26,
+    category_id: 2,
+    name: 'ผัดฉ่าทะเลรวมมิตร',
+    description: 'กุ้งสด ปลาหมึก และหอยแมลงภู่ ผัดฉ่าสมุนไพรสด พริกไทยอ่อน กระชาย พริกชี้ฟ้า หอมฉุยเผ็ดร้อน',
+    price: 85.00,
+    image_url: '/images/sushi.jpg',
+    is_popular: true,
+    prep_time_mins: 10,
+    is_available: true,
+    dietary_tag: 'Halal',
+    is_halal: true,
+    calories: 160,
+    allergens: 'กุ้ง, หอย, หมึก, น้ำปลา/ปลา, ถั่วเหลือง',
+    wine_pairing: 'None',
+    stock_quantity: 8
+  },
+  {
+    item_id: 27,
+    category_id: 1,
+    name: 'แกงคั่วหอยขมใบชะพลู',
+    description: 'แกงคั่วกะทิเข้มข้นถึงเครื่องแกงใต้ ใส่เนื้อหอยขมแกะสดและใบชะพลูหอมละมุนสูตรโบราณ',
+    price: 75.00,
+    image_url: '/images/pasta.jpg',
+    is_popular: true,
+    prep_time_mins: 12,
+    is_available: true,
+    dietary_tag: 'Halal',
+    is_halal: true,
+    calories: 210,
+    allergens: 'หอย, กะปิ/กุ้ง, น้ำปลา/ปลา',
+    wine_pairing: 'None',
+    stock_quantity: 10
+  },
+  {
+    item_id: 28,
+    category_id: 2,
+    name: 'ปีกไก่ทอดน้ำปลาโบราณ',
+    description: 'ปีกไก่หมักน้ำปลาแท้สูตรคุณยาย ทอดจนหนังกรอบสีทอง เนื้อในชุ่มฉ่ำ ทานคู่กับข้าวสวยร้อนๆ',
+    price: 65.00,
+    image_url: '/images/steak.jpg',
+    is_popular: true,
+    prep_time_mins: 8,
+    is_available: true,
+    dietary_tag: 'Halal',
+    is_halal: true,
+    calories: 240,
+    allergens: 'น้ำปลา/ปลา, ถั่วเหลือง, แป้งสาลี/กลูเตน',
+    wine_pairing: 'None',
+    stock_quantity: 20
+  },
+  {
+    item_id: 29,
+    category_id: 3,
+    name: 'เต้าหู้ทรงเครื่องเห็ดหอม (มังสวิรัติ)',
+    description: 'เต้าหู้ไข่นุ่มทอดพอตึง นึ่งราดซอสเห็ดหอม แครอท ข้าวโพดอ่อน รสชาติกลมกล่อมดีต่อสุขภาพ',
+    price: 55.00,
+    image_url: '/images/pasta.jpg',
+    is_popular: false,
+    prep_time_mins: 8,
+    is_available: true,
+    dietary_tag: 'Vegetarian',
+    is_halal: true,
+    calories: 120,
+    allergens: 'ถั่วเหลือง, เห็ด',
+    wine_pairing: 'None',
+    stock_quantity: 14
+  },
+  {
+    item_id: 30,
+    category_id: 4,
+    name: 'น้ำพริกอ่องหมูสับ + ผักสด',
+    description: 'น้ำพริกอ่องสูตรเมืองเหนือ มะเขือเทศฉ่ำผัดหมูสับและพริกแกง รสชาติหวานเปรี้ยวกลมกล่อม',
+    price: 50.00,
+    image_url: '/images/steak.jpg',
+    is_popular: false,
+    prep_time_mins: 6,
+    is_available: true,
+    dietary_tag: '❌ ไม่ฮาลาล',
+    is_halal: false,
+    calories: 140,
+    allergens: 'ถั่วเหลือง, กะปิ/กุ้ง',
+    wine_pairing: 'None',
+    stock_quantity: 12
   }
 ];
 
@@ -581,14 +710,73 @@ app.post('/api/auth/register', async (req, res) => {
   res.json({ success: true, user: newUser });
 });
 
-// MENU MANAGEMENT ENDPOINTS (STAFF / MANAGER EDITING)
-app.post('/api/menu', async (req, res) => {
-  const { category_id, name, description, price, image_url, is_popular } = req.body;
+// USER & ROLE MANAGEMENT ENDPOINTS (ADMIN ONLY)
+app.get('/api/users', async (req, res) => {
+  if (isDbConnected) {
+    try {
+      const result = await pool.query('SELECT user_id, name, email, phone, role, reward_points, membership_tier, avatar_url, created_at FROM users ORDER BY user_id ASC');
+      return res.json(result.rows);
+    } catch (err) { console.error(err); }
+  }
+  // Return mock users without exposing password
+  const safeUsers = mockUsers.map(({ password, ...u }) => u);
+  res.json(safeUsers);
+});
+
+app.patch('/api/users/:id/role', async (req, res) => {
+  const { id } = req.params;
+  const { role, membership_tier, reward_points } = req.body;
+
   if (isDbConnected) {
     try {
       const result = await pool.query(
-        'INSERT INTO menu_items (category_id, name, description, price, image_url, is_popular) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *',
-        [category_id || 1, name, description, price, image_url || '/images/steak.jpg', is_popular || false]
+        'UPDATE users SET role = COALESCE($1, role), membership_tier = COALESCE($2, membership_tier), reward_points = COALESCE($3, reward_points) WHERE user_id = $4 RETURNING user_id, name, email, phone, role, reward_points, membership_tier, avatar_url',
+        [role, membership_tier, reward_points !== undefined ? parseInt(reward_points) : null, id]
+      );
+      return res.json({ success: true, user: result.rows[0] });
+    } catch (err) { console.error(err); }
+  }
+
+  const user = mockUsers.find(u => u.user_id === parseInt(id));
+  if (user) {
+    if (role !== undefined) user.role = role;
+    if (membership_tier !== undefined) user.membership_tier = membership_tier;
+    if (reward_points !== undefined) user.reward_points = parseInt(reward_points);
+    const { password, ...safeUser } = user;
+    return res.json({ success: true, user: safeUser });
+  }
+  res.status(404).json({ error: 'User not found' });
+});
+
+app.delete('/api/users/:id', async (req, res) => {
+  const { id } = req.params;
+  const userId = parseInt(id);
+  // Protect primary admin
+  if (userId === 4) {
+    return res.status(400).json({ error: 'ไม่สามารถลบบัญชีแอดมินหลักของระบบได้' });
+  }
+
+  if (isDbConnected) {
+    try {
+      await pool.query('DELETE FROM users WHERE user_id = $1', [userId]);
+      return res.json({ success: true });
+    } catch (err) { console.error(err); }
+  }
+
+  mockUsers = mockUsers.filter(u => u.user_id !== userId);
+  res.json({ success: true });
+});
+
+// MENU MANAGEMENT ENDPOINTS (STAFF / MANAGER EDITING)
+app.post('/api/menu', async (req, res) => {
+  const { category_id, name, description, price, image_url, is_popular, stock_quantity } = req.body;
+  const parsedStock = parseInt(stock_quantity ?? 20);
+
+  if (isDbConnected) {
+    try {
+      const result = await pool.query(
+        'INSERT INTO menu_items (category_id, name, description, price, image_url, is_popular, stock_quantity) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *',
+        [category_id || 1, name, description, price, image_url || '/images/steak.jpg', is_popular || false, parsedStock]
       );
       return res.status(201).json(result.rows[0]);
     } catch (err) { console.error(err); }
@@ -602,7 +790,8 @@ app.post('/api/menu', async (req, res) => {
     price: parseFloat(price),
     image_url: image_url || '/images/steak.jpg',
     is_popular: !!is_popular,
-    is_available: true
+    is_available: true,
+    stock_quantity: parsedStock
   };
   mockMenuItems.push(newItem);
   res.status(201).json(newItem);
@@ -610,13 +799,14 @@ app.post('/api/menu', async (req, res) => {
 
 app.put('/api/menu/:id', async (req, res) => {
   const { id } = req.params;
-  const { name, description, price, image_url, is_popular, is_available } = req.body;
+  const { name, description, price, image_url, is_popular, is_available, stock_quantity } = req.body;
+  const parsedStock = stock_quantity !== undefined ? parseInt(stock_quantity) : undefined;
 
   if (isDbConnected) {
     try {
       const result = await pool.query(
-        'UPDATE menu_items SET name = $1, description = $2, price = $3, image_url = $4, is_popular = $5, is_available = $6 WHERE item_id = $7 RETURNING *',
-        [name, description, price, image_url, is_popular, is_available, id]
+        'UPDATE menu_items SET name = $1, description = $2, price = $3, image_url = $4, is_popular = $5, is_available = $6, stock_quantity = COALESCE($7, stock_quantity) WHERE item_id = $8 RETURNING *',
+        [name, description, price, image_url, is_popular, is_available, parsedStock, id]
       );
       return res.json(result.rows[0]);
     } catch (err) { console.error(err); }
@@ -624,8 +814,41 @@ app.put('/api/menu/:id', async (req, res) => {
 
   const itemIndex = mockMenuItems.findIndex(i => i.item_id === parseInt(id));
   if (itemIndex !== -1) {
-    mockMenuItems[itemIndex] = { ...mockMenuItems[itemIndex], name, description, price: parseFloat(price), image_url, is_popular, is_available };
+    mockMenuItems[itemIndex] = { 
+      ...mockMenuItems[itemIndex], 
+      name, 
+      description, 
+      price: parseFloat(price), 
+      image_url, 
+      is_popular, 
+      is_available,
+      stock_quantity: parsedStock !== undefined ? parsedStock : mockMenuItems[itemIndex].stock_quantity
+    };
     return res.json(mockMenuItems[itemIndex]);
+  }
+  res.status(404).json({ error: 'Item not found' });
+});
+
+// Quick Stock Adjustment Endpoint
+app.patch('/api/menu/:id/stock', async (req, res) => {
+  const { id } = req.params;
+  const { stock_quantity } = req.body;
+  const parsedStock = Math.max(0, parseInt(stock_quantity || 0));
+
+  if (isDbConnected) {
+    try {
+      const result = await pool.query(
+        'UPDATE menu_items SET stock_quantity = $1 WHERE item_id = $2 RETURNING *',
+        [parsedStock, id]
+      );
+      return res.json({ success: true, item: result.rows[0] });
+    } catch (err) { console.error(err); }
+  }
+
+  const item = mockMenuItems.find(i => i.item_id === parseInt(id));
+  if (item) {
+    item.stock_quantity = parsedStock;
+    return res.json({ success: true, item });
   }
   res.status(404).json({ error: 'Item not found' });
 });

@@ -25,6 +25,7 @@ export default function App() {
   const [reservations, setReservations] = useState([]);
   const [reviews, setReviews] = useState([]);
   const [promotions, setPromotions] = useState([]);
+  const [users, setUsers] = useState([]);
   const [adminStats, setAdminStats] = useState({ totalRevenue: 0, totalBookings: 0, tableOccupancyRate: 0, popularDish: '-' });
 
   // Auth state
@@ -33,14 +34,34 @@ export default function App() {
 
   // Box Set Builder Modal State
   const [isBoxBuilderOpen, setIsBoxBuilderOpen] = useState(false);
+  const [customizerInitialDish, setCustomizerInitialDish] = useState(null);
 
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [selectedDietary, setSelectedDietary] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [sortBy, setSortBy] = useState('popular');
 
-  // Cart & Modal state
-  const [cart, setCart] = useState([]);
+  // Cart & Modal state — pre-populated with realistic demo boxes so user sees floating cart immediately
+  const [cart, setCart] = useState([
+    {
+      item_id: 'box_demo_init_1',
+      name: 'กล่องกับข้าว 2 อย่าง (ข้าวสวยธรรมดา)',
+      price: 55,
+      quantity: 1,
+      image_url: '/images/steak.jpg',
+      custom_options: 'กับข้าว: แกงเขียวหวานไก่, ผัดกะเพราไก่ / เนื้อ | ท็อปปิ้ง: ไข่ดาว (กรอบ) | หมายเหตุ: ขอพริกน้ำปลาเพิ่ม 2 ซอง',
+      category: 'box_set'
+    },
+    {
+      item_id: 'box_demo_init_2',
+      name: 'กล่องกับข้าว 3 อย่าง (ข้าวไรซ์เบอร์รี่)',
+      price: 85,
+      quantity: 1,
+      image_url: '/images/sushi.jpg',
+      custom_options: 'กับข้าว: มัสมั่นเนื้อ, ต้มยำกุ้ง (น้ำข้น), ไก่ผัดเม็ดมะม่วง | ท็อปปิ้ง: ปลาทูทอด 1 ตัว | หมายเหตุ: แยกน้ำแกงใส่ถุง',
+      category: 'box_set'
+    }
+  ]);
   const [isBookingOpen, setIsBookingOpen] = useState(false);
   const [isPaymentOpen, setIsPaymentOpen] = useState(false);
   const [bookingSuccess, setBookingSuccess] = useState(null);
@@ -79,14 +100,15 @@ export default function App() {
 
   const loadData = async () => {
     try {
-      const [cats, items, tbls, resv, stats, revs, promos] = await Promise.all([
+      const [cats, items, tbls, resv, stats, revs, promos, userList] = await Promise.all([
         api.fetchCategories(),
         api.fetchMenuItems(),
         api.fetchTables(),
         api.fetchReservations(),
         api.fetchAdminStats(),
         api.fetchReviews(),
-        api.fetchPromotions()
+        api.fetchPromotions(),
+        api.fetchUsers()
       ]);
       setCategories(cats);
       setMenuItems(items);
@@ -95,6 +117,7 @@ export default function App() {
       setAdminStats(stats);
       setReviews(revs || []);
       setPromotions(promos || []);
+      setUsers(userList || []);
     } catch (err) {
       console.error('Failed to load application data:', err);
     }
@@ -109,6 +132,7 @@ export default function App() {
       customer_email: user.email || '',
       customer_phone: user.phone || ''
     }));
+    setActiveTab('menu');
   };
 
   const handleLogout = () => {
@@ -117,9 +141,35 @@ export default function App() {
     setActiveTab('menu');
   };
 
-  // Open Box Set Builder (item-agnostic — user picks dishes inside the modal)
-  const handleOpenCustomizer = () => {
+  // Open Box Set Builder with optional initial selected dish
+  const handleOpenCustomizer = (initialDish = null) => {
+    setCustomizerInitialDish(initialDish);
     setIsBoxBuilderOpen(true);
+  };
+
+  // Add sample demo box sets directly into cart
+  const handleAddDemoFood = () => {
+    const newDemoItems = [
+      {
+        item_id: `box_demo_${Date.now()}_1`,
+        name: 'กล่องกับข้าว 2 อย่าง (ข้าวสวยธรรมดา)',
+        price: 55,
+        quantity: 1,
+        image_url: '/images/steak.jpg',
+        custom_options: 'กับข้าว: แกงเขียวหวานไก่, ผัดกะเพราไก่ / เนื้อ | ท็อปปิ้ง: ไข่ดาว (กรอบ) | หมายเหตุ: ขอพริกน้ำปลาเพิ่ม 2 ซอง',
+        category: 'box_set'
+      },
+      {
+        item_id: `box_demo_${Date.now()}_2`,
+        name: 'กล่องกับข้าว 3 อย่าง (ข้าวไรซ์เบอร์รี่)',
+        price: 85,
+        quantity: 1,
+        image_url: '/images/sushi.jpg',
+        custom_options: 'กับข้าว: มัสมั่นเนื้อ, ต้มยำกุ้ง (น้ำข้น), ไก่ผัดเม็ดมะม่วง | ท็อปปิ้ง: ปลาทูทอด 1 ตัว | หมายเหตุ: แยกน้ำแกงใส่ถุง',
+        category: 'box_set'
+      }
+    ];
+    setCart(prev => [...prev, ...newDemoItems]);
   };
 
   const handleAddToCartWithOptions = (customizedItem) => {
@@ -127,6 +177,20 @@ export default function App() {
       // Box sets are always unique per order (keyed by item_id timestamp), just append
       return [...prev, { ...customizedItem, quantity: 1 }];
     });
+  };
+
+  const handleRemoveFromCart = (itemId) => {
+    setCart(prev => prev.filter(item => item.item_id !== itemId));
+  };
+
+  const handleUpdateQuantity = (itemId, delta) => {
+    setCart(prev => prev.map(item => {
+      if (item.item_id === itemId) {
+        const newQty = Math.max(1, item.quantity + delta);
+        return { ...item, quantity: newQty };
+      }
+      return item;
+    }));
   };
 
   const rawCartTotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
@@ -250,6 +314,8 @@ export default function App() {
             selectedDietary={selectedDietary}
             setSelectedDietary={setSelectedDietary}
             onQuickOrder={() => setIsBookingOpen(true)}
+            onOpenCustomizer={() => handleOpenCustomizer(null)}
+            onAddDemoFood={handleAddDemoFood}
             promotions={promotions}
             sortBy={sortBy}
             setSortBy={setSortBy}
@@ -272,6 +338,7 @@ export default function App() {
         <CustomerProfile
           user={currentUser}
           onSelectVoucher={(reservation) => setBookingSuccess(reservation)}
+          onGoToMenu={() => setActiveTab('menu')}
         />
       )}
 
@@ -282,9 +349,11 @@ export default function App() {
           reservations={reservations}
           menuItems={menuItems}
           tables={tables}
+          users={users}
           onRefreshData={loadData}
           onStatusUpdate={handleStatusUpdate}
           onOpenAuth={() => setIsAuthOpen(true)}
+          onGoToMenu={() => setActiveTab('menu')}
         />
       )}
 
@@ -332,6 +401,7 @@ export default function App() {
         onClose={() => setIsBoxBuilderOpen(false)}
         onAddToCartWithOptions={handleAddToCartWithOptions}
         menuItems={menuItems}
+        initialDish={customizerInitialDish}
       />
 
       {/* Floating Sticky Cart Bar */}
@@ -339,6 +409,8 @@ export default function App() {
         cart={cart}
         cartTotal={rawCartTotal}
         onOpenBooking={() => setIsBookingOpen(true)}
+        onRemoveFromCart={handleRemoveFromCart}
+        onUpdateQuantity={handleUpdateQuantity}
       />
 
       <Footer />
