@@ -4,9 +4,10 @@ import Hero from './components/Hero';
 import MenuGrid from './components/MenuGrid';
 import PickupStepsGuide from './components/PickupStepsGuide';
 import CustomerReviews from './components/CustomerReviews';
+import DiningPolicies from './components/DiningPolicies';
+import StickyCartBar from './components/StickyCartBar'; // 👈 เพิ่มบรรทัดนี้กลับเข้ามา
 import TakeawayOrderModal from './components/TakeawayOrderModal';
 import PaymentModal from './components/PaymentModal';
-import DiningPolicies from './components/DiningPolicies';
 import EVoucherModal from './components/EVoucherModal';
 import AdminDashboard from './components/AdminDashboard';
 import CustomerProfile from './components/CustomerProfile';
@@ -39,7 +40,7 @@ export default function App() {
   const [searchQuery, setSearchQuery] = useState('');
   const [sortBy, setSortBy] = useState('popular');
 
-  // Cart & Modal state — pre-populated with realistic demo boxes so user sees floating cart immediately
+  // Cart & Modal state
   const [cart, setCart] = useState([
     {
       item_id: 'box_demo_init_1',
@@ -139,13 +140,11 @@ export default function App() {
     setActiveTab('menu');
   };
 
-  // Open Box Set Builder with optional initial selected dish
   const handleOpenCustomizer = (initialDish = null) => {
     setCustomizerInitialDish(initialDish);
     setIsBoxBuilderOpen(true);
   };
 
-  // Add sample demo box sets directly into cart
   const handleAddDemoFood = () => {
     const newDemoItems = [
       {
@@ -171,10 +170,7 @@ export default function App() {
   };
 
   const handleAddToCartWithOptions = (customizedItem) => {
-    setCart(prev => {
-      // Box sets are always unique per order (keyed by item_id timestamp), just append
-      return [...prev, { ...customizedItem, quantity: 1 }];
-    });
+    setCart(prev => [...prev, { ...customizedItem, quantity: 1 }]);
   };
 
   const handleRemoveFromCart = (itemId) => {
@@ -354,7 +350,6 @@ export default function App() {
         />
       )}
 
-      {/* Takeaway Order & Pickup Time Selection Modal */}
       <TakeawayOrderModal
         isOpen={isBookingOpen}
         onClose={() => setIsBookingOpen(false)}
@@ -365,7 +360,6 @@ export default function App() {
         onSubmitBooking={handleOpenPayment}
       />
 
-      {/* Payment Modal */}
       <PaymentModal
         isOpen={isPaymentOpen}
         onClose={() => setIsPaymentOpen(false)}
@@ -379,20 +373,17 @@ export default function App() {
         formData={formData}
       />
 
-      {/* E-Voucher Modal */}
       <EVoucherModal
         bookingSuccess={bookingSuccess}
         onClose={() => setBookingSuccess(null)}
       />
 
-      {/* Auth Modal */}
       <AuthModal
         isOpen={isAuthOpen}
         onClose={() => setIsAuthOpen(false)}
         onLoginSuccess={handleLoginSuccess}
       />
 
-      {/* Box Set Builder Modal */}
       <FoodCustomizerModal
         isOpen={isBoxBuilderOpen}
         onClose={() => setIsBoxBuilderOpen(false)}
@@ -401,7 +392,6 @@ export default function App() {
         initialDish={customizerInitialDish}
       />
 
-      {/* Floating Sticky Cart Bar */}
       <StickyCartBar
         cart={cart}
         cartTotal={rawCartTotal}
