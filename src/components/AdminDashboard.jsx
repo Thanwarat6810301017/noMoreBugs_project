@@ -9,7 +9,8 @@ export default function AdminDashboard({
   menuItems, 
   tables, 
   onRefreshData,
-  onOpenAuth
+  onOpenAuth,
+  onGoToMenu
 }) {
   const [activeAdminTab, setActiveAdminTab] = useState('reservations');
   
@@ -149,25 +150,66 @@ export default function AdminDashboard({
         </div>
       </div>
 
+      {/* Quick Jump to Customer Menu Banner */}
+      <div style={{
+        display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+        background: 'linear-gradient(135deg, rgba(229,168,83,0.15), rgba(255,94,54,0.1))',
+        border: '1.5px solid var(--accent-gold)', borderRadius: 'var(--radius-lg)',
+        padding: '1rem 1.6rem', marginBottom: '1.8rem', flexWrap: 'wrap', gap: '1rem'
+      }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.8rem' }}>
+          <div style={{ background: 'rgba(229,168,83,0.2)', color: 'var(--accent-gold)', width: '42px', height: '42px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <Utensils size={22} />
+          </div>
+          <div>
+            <div style={{ fontWeight: 800, color: '#fff', fontSize: '1.05rem' }}>
+              🍲 มีรายการอาหารพร้อมให้บริการทั้งหมด {menuItems.length} เมนู
+            </div>
+            <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>
+              คุณสามารถแก้ไข/เพิ่มอาหารที่แท็บด้านล่าง หรือกดดูหน้าเว็บจริงของลูกค้าได้ทันที
+            </div>
+          </div>
+        </div>
+        {onGoToMenu && (
+          <button
+            onClick={onGoToMenu}
+            style={{
+              background: 'linear-gradient(135deg, var(--accent-gold), var(--accent-orange))',
+              border: 'none', color: '#0b0c10', fontWeight: 800, padding: '0.65rem 1.4rem',
+              borderRadius: '30px', cursor: 'pointer', fontSize: '0.9rem',
+              boxShadow: '0 4px 15px rgba(229,168,83,0.35)', display: 'flex', alignItems: 'center', gap: '0.5rem'
+            }}
+          >
+            🍲 ไปหน้าเมนูสั่งอาหารหน้าร้าน ({menuItems.length} เมนู)
+          </button>
+        )}
+      </div>
+
       {/* Sub Navigation Tabs */}
-      <div style={{ display: 'flex', gap: '1rem', marginBottom: '1.5rem', borderBottom: '1px solid var(--border-color)', paddingBottom: '0.8rem' }}>
-        <button 
-          className={`nav-btn ${activeAdminTab === 'reservations' ? 'active' : ''}`}
-          onClick={() => setActiveAdminTab('reservations')}
-        >
-          จัดการออเดอร์สั่งล่วงหน้า ({reservations.length})
-        </button>
+      <div style={{ display: 'flex', gap: '1rem', marginBottom: '1.5rem', borderBottom: '1px solid var(--border-color)', paddingBottom: '0.8rem', flexWrap: 'wrap' }}>
         <button 
           className={`nav-btn ${activeAdminTab === 'menu_editor' ? 'active' : ''}`}
           onClick={() => setActiveAdminTab('menu_editor')}
+          style={{ fontWeight: 700, display: 'flex', alignItems: 'center', gap: '0.4rem' }}
         >
-          จัดการแก้ไขเมนูอาหาร (Menu CRUD)
+          🍲 จัดการแก้ไขเมนูอาหาร
+          <span style={{ background: 'var(--accent-gold)', color: '#0b0c10', padding: '0.1rem 0.5rem', borderRadius: '10px', fontSize: '0.75rem', fontWeight: 800 }}>
+            {menuItems.length} เมนู
+          </span>
+        </button>
+        <button 
+          className={`nav-btn ${activeAdminTab === 'reservations' ? 'active' : ''}`}
+          onClick={() => setActiveAdminTab('reservations')}
+          style={{ fontWeight: 700, display: 'flex', alignItems: 'center', gap: '0.4rem' }}
+        >
+          📋 จัดการออเดอร์สั่งล่วงหน้า ({reservations.length})
         </button>
         <button 
           className={`nav-btn ${activeAdminTab === 'table_editor' ? 'active' : ''}`}
           onClick={() => setActiveAdminTab('table_editor')}
+          style={{ fontWeight: 700, display: 'flex', alignItems: 'center', gap: '0.4rem' }}
         >
-          จุดบริการรับอาหารหน้าร้าน (Pickup Counters)
+          🏪 จุดบริการรับอาหารหน้าร้าน ({tables.length})
         </button>
       </div>
 

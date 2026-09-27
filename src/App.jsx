@@ -129,6 +129,7 @@ export default function App() {
       customer_email: user.email || '',
       customer_phone: user.phone || ''
     }));
+    setActiveTab('menu');
   };
 
   const handleLogout = () => {
@@ -334,6 +335,7 @@ export default function App() {
         <CustomerProfile
           user={currentUser}
           onSelectVoucher={(reservation) => setBookingSuccess(reservation)}
+          onGoToMenu={() => setActiveTab('menu')}
         />
       )}
 
@@ -347,6 +349,7 @@ export default function App() {
           onRefreshData={loadData}
           onStatusUpdate={handleStatusUpdate}
           onOpenAuth={() => setIsAuthOpen(true)}
+          onGoToMenu={() => setActiveTab('menu')}
         />
       )}
 

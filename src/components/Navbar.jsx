@@ -46,7 +46,7 @@ export default function Navbar({
         </a>
 
         {/* In-page Anchor Links (Visible when in menu tab) */}
-        {activeTab === 'menu' && (
+        {activeTab === 'menu' ? (
           <div style={{ display: 'flex', gap: '0.4rem', alignItems: 'center' }}>
             <button className="nav-btn" onClick={() => scrollToSection('menu-section')}>
               🍲 เมนูข้าวแกง
@@ -54,12 +54,31 @@ export default function Navbar({
             <button className="nav-btn" onClick={() => scrollToSection('pickup-guide')}>
               🛍️ วิธีสั่งรับหน้าร้าน
             </button>
-
             <button className="nav-btn" onClick={() => scrollToSection('customer-reviews')}>
               ⭐ รีวิวจากลูกค้า
             </button>
             <button className="nav-btn" onClick={() => scrollToSection('dining-policies')}>
               📋 ข้อมูลการรับอาหาร
+            </button>
+          </div>
+        ) : (
+          <div style={{ display: 'flex', gap: '0.6rem', alignItems: 'center' }}>
+            <button 
+              className="nav-btn" 
+              onClick={() => setActiveTab('menu')}
+              style={{ 
+                background: 'linear-gradient(135deg, rgba(229,168,83,0.25), rgba(255,94,54,0.2))',
+                border: '1.5px solid var(--accent-gold)',
+                color: 'var(--accent-gold)',
+                fontWeight: 700,
+                borderRadius: '20px',
+                padding: '0.45rem 1.2rem',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.4rem'
+              }}
+            >
+              🍲 หน้าร้าน / สั่งอาหาร (30 เมนู)
             </button>
           </div>
         )}
