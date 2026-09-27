@@ -1,19 +1,19 @@
 import React from 'react';
 import { Sparkles, Search, Clock, ShoppingBag, Zap, ShieldCheck, ArrowRight, Flame } from 'lucide-react';
 
-export default function Hero({ 
-  searchQuery, 
-  setSearchQuery, 
-  categories, 
-  selectedCategory, 
-  setSelectedCategory, 
-  totalItemsCount, 
-  selectedDietary, 
-  setSelectedDietary, 
+export default function Hero({
+  searchQuery,
+  setSearchQuery,
+  categories,
+  selectedCategory,
+  setSelectedCategory,
+  totalItemsCount,
+  selectedDietary,
+  setSelectedDietary,
   onQuickOrder,
-  promotions = [], 
-  sortBy = 'popular', 
-  setSortBy 
+  promotions = [],
+  sortBy = 'popular',
+  setSortBy
 }) {
   return (
     <section id="menu-section" className="hero">
@@ -61,7 +61,7 @@ export default function Hero({
           </div>
           <div>
             <div style={{ fontWeight: 'bold', fontSize: '0.85rem', color: '#fff' }}>ปรุงสดใหม่ทุกเช้า</div>
-            <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>ร้อนๆ หอมกรุ่นจากหม้อ</div>
+            <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>อาหารไม่มีค้างคืน</div>
           </div>
         </div>
 
@@ -71,7 +71,7 @@ export default function Hero({
           </div>
           <div>
             <div style={{ fontWeight: 'bold', fontSize: '0.85rem', color: '#fff' }}>ระบุเวลารับตามใจ</div>
-            <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>เช้า / เที่ยง / บ่าย / เย็น</div>
+            <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>เช้า / เที่ยง</div>
           </div>
         </div>
 
@@ -91,8 +91,8 @@ export default function Hero({
         <div className="search-container" style={{ margin: 0, flex: 1 }}>
           <div className="search-input-wrapper">
             <Search className="search-icon" size={20} />
-            <input 
-              type="text" 
+            <input
+              type="text"
               placeholder="ค้นหาเมนูข้าวแกง เช่น แกงเขียวหวาน, พะแนง, ผัดกะเพรา, ไข่พะโล้, แกงส้ม..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
@@ -100,7 +100,7 @@ export default function Hero({
           </div>
         </div>
 
-        <select 
+        <select
           className="form-select"
           value={sortBy}
           onChange={(e) => setSortBy(e.target.value)}
@@ -122,10 +122,10 @@ export default function Hero({
           { key: '❌ ไม่ฮาลาล', label: '🥩 เมนูหมู (ไม่ฮาลาล)' },
 
         ].map(tag => (
-          <button 
+          <button
             key={tag.key}
             onClick={() => setSelectedDietary(tag.key === 'all' ? null : tag.key)}
-            style={{ 
+            style={{
               background: (selectedDietary === tag.key || (tag.key === 'all' && !selectedDietary)) ? 'rgba(229,168,83,0.2)' : 'rgba(255,255,255,0.03)',
               border: `1px solid ${(selectedDietary === tag.key || (tag.key === 'all' && !selectedDietary)) ? 'var(--accent-gold)' : 'var(--border-color)'}`,
               color: (selectedDietary === tag.key || (tag.key === 'all' && !selectedDietary)) ? 'var(--accent-gold)' : 'var(--text-muted)',
@@ -140,14 +140,14 @@ export default function Hero({
 
       {/* Category Filter Pills */}
       <div className="category-tabs">
-        <button 
+        <button
           className={`category-pill ${selectedCategory === null ? 'active' : ''}`}
           onClick={() => setSelectedCategory(null)}
         >
           ทั้งหมด ({totalItemsCount})
         </button>
         {categories.map(cat => (
-          <button 
+          <button
             key={cat.category_id}
             className={`category-pill ${selectedCategory === cat.category_id ? 'active' : ''}`}
             onClick={() => setSelectedCategory(cat.category_id)}
