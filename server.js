@@ -63,7 +63,8 @@ let mockMenuItems = [
     is_halal: true,
     calories: 180,
     allergens: 'กะปิ/กุ้ง, น้ำปลา/ปลา',
-    wine_pairing: 'None'
+    wine_pairing: 'None',
+    stock_quantity: 25
   },
   {
     item_id: 2,
@@ -79,7 +80,8 @@ let mockMenuItems = [
     is_halal: false,
     calories: 220,
     allergens: 'กะปิ/กุ้ง, น้ำปลา/ปลา, ถั่วลิสง',
-    wine_pairing: 'None'
+    wine_pairing: 'None',
+    stock_quantity: 18
   },
   {
     item_id: 3,
@@ -95,7 +97,8 @@ let mockMenuItems = [
     is_halal: true,
     calories: 260,
     allergens: 'ถั่วลิสง, กะปิ/กุ้ง, น้ำปลา/ปลา',
-    wine_pairing: 'None'
+    wine_pairing: 'None',
+    stock_quantity: 12
   },
   {
     item_id: 4,
@@ -111,7 +114,8 @@ let mockMenuItems = [
     is_halal: true,
     calories: 140,
     allergens: 'กุ้ง, นม, น้ำพริกเผา (กุ้ง/กะปิ), น้ำปลา',
-    wine_pairing: 'None'
+    wine_pairing: 'None',
+    stock_quantity: 8
   },
   {
     item_id: 5,
@@ -127,7 +131,8 @@ let mockMenuItems = [
     is_halal: true,
     calories: 150,
     allergens: 'ถั่วเหลือง, แป้งสาลี/กลูเตน',
-    wine_pairing: 'None'
+    wine_pairing: 'None',
+    stock_quantity: 30
   },
   {
     item_id: 6,
@@ -143,7 +148,8 @@ let mockMenuItems = [
     is_halal: true,
     calories: 170,
     allergens: 'ปลา, กะปิ/กุ้ง, ถั่วเหลือง',
-    wine_pairing: 'None'
+    wine_pairing: 'None',
+    stock_quantity: 3
   },
   {
     item_id: 7,
@@ -159,7 +165,8 @@ let mockMenuItems = [
     is_halal: false,
     calories: 90,
     allergens: 'ถั่วเหลือง, ขึ้นฉ่าย',
-    wine_pairing: 'None'
+    wine_pairing: 'None',
+    stock_quantity: 20
   },
   {
     item_id: 8,
@@ -175,7 +182,8 @@ let mockMenuItems = [
     is_halal: false,
     calories: 250,
     allergens: 'ไข่, ถั่วเหลือง, แป้งสาลี/กลูเตน, ผักชี/ขึ้นฉ่าย',
-    wine_pairing: 'None'
+    wine_pairing: 'None',
+    stock_quantity: 0
   },
   {
     item_id: 9,
@@ -191,7 +199,8 @@ let mockMenuItems = [
     is_halal: false,
     calories: 220,
     allergens: 'กะปิ/กุ้ง, น้ำปลา/ปลา',
-    wine_pairing: 'None'
+    wine_pairing: 'None',
+    stock_quantity: 15
   },
   {
     item_id: 10,
@@ -207,7 +216,8 @@ let mockMenuItems = [
     is_halal: true,
     calories: 90,
     allergens: 'ปลา (ไตปลา), กะปิ/กุ้ง, เม็ดมะม่วงหิมพานต์',
-    wine_pairing: 'None'
+    wine_pairing: 'None',
+    stock_quantity: 5
   },
   {
     item_id: 11,
@@ -223,7 +233,8 @@ let mockMenuItems = [
     is_halal: false,
     calories: 190,
     allergens: 'กะปิ/กุ้ง, ถั่วเหลือง, แป้งสาลี/กลูเตน',
-    wine_pairing: 'None'
+    wine_pairing: 'None',
+    stock_quantity: 22
   },
   {
     item_id: 12,
@@ -239,7 +250,8 @@ let mockMenuItems = [
     is_halal: true,
     calories: 120,
     allergens: 'กุ้ง, ถั่วเหลือง, แป้งสาลี/กลูเตน',
-    wine_pairing: 'None'
+    wine_pairing: 'None',
+    stock_quantity: 10
   },
   {
     item_id: 13,
@@ -255,7 +267,8 @@ let mockMenuItems = [
     is_halal: true,
     calories: 130,
     allergens: 'ถั่วเหลือง, แป้งสาลี/กลูเตน',
-    wine_pairing: 'None'
+    wine_pairing: 'None',
+    stock_quantity: 28
   },
   {
     item_id: 14,
@@ -271,7 +284,8 @@ let mockMenuItems = [
     is_halal: true,
     calories: 140,
     allergens: 'กะปิ/กุ้ง, น้ำปลา/ปลา',
-    wine_pairing: 'None'
+    wine_pairing: 'None',
+    stock_quantity: 4
   },
   {
     item_id: 15,
@@ -287,7 +301,8 @@ let mockMenuItems = [
     is_halal: true,
     calories: 160,
     allergens: 'น้ำปลา/ปลา',
-    wine_pairing: 'None'
+    wine_pairing: 'None',
+    stock_quantity: 16
   },
   {
     item_id: 16,
@@ -303,7 +318,8 @@ let mockMenuItems = [
     is_halal: false,
     calories: 130,
     allergens: 'น้ำปลา/ปลา',
-    wine_pairing: 'None'
+    wine_pairing: 'None',
+    stock_quantity: 0
   },
   {
     item_id: 17,
@@ -319,7 +335,8 @@ let mockMenuItems = [
     is_halal: true,
     calories: 190,
     allergens: 'เม็ดมะม่วงหิมพานต์, ถั่วเหลือง, แป้งสาลี/กลูเตน',
-    wine_pairing: 'None'
+    wine_pairing: 'None',
+    stock_quantity: 14
   },
   {
     item_id: 18,
@@ -335,7 +352,8 @@ let mockMenuItems = [
     is_halal: false,
     calories: 230,
     allergens: 'ถั่วเหลือง, แป้งสาลี/กลูเตน',
-    wine_pairing: 'None'
+    wine_pairing: 'None',
+    stock_quantity: 2
   },
   {
     item_id: 19,
@@ -351,7 +369,8 @@ let mockMenuItems = [
     is_halal: true,
     calories: 140,
     allergens: 'กุ้ง, ไข่, กะปิ/กุ้ง, น้ำปลา/ปลา',
-    wine_pairing: 'None'
+    wine_pairing: 'None',
+    stock_quantity: 20
   },
   {
     item_id: 20,
@@ -367,7 +386,8 @@ let mockMenuItems = [
     is_halal: false,
     calories: 190,
     allergens: 'กะปิ/กุ้ง, น้ำปลา/ปลา, ถั่วเหลือง',
-    wine_pairing: 'None'
+    wine_pairing: 'None',
+    stock_quantity: 18
   },
   {
     item_id: 21,
@@ -383,7 +403,8 @@ let mockMenuItems = [
     is_halal: false,
     calories: 280,
     allergens: 'ถั่วเหลือง, ไข่',
-    wine_pairing: 'None'
+    wine_pairing: 'None',
+    stock_quantity: 6
   },
   {
     item_id: 22,
@@ -399,7 +420,8 @@ let mockMenuItems = [
     is_halal: true,
     calories: 150,
     allergens: 'ปลา, น้ำปลา/ปลา',
-    wine_pairing: 'None'
+    wine_pairing: 'None',
+    stock_quantity: 7
   },
   {
     item_id: 23,
@@ -415,7 +437,8 @@ let mockMenuItems = [
     is_halal: true,
     calories: 60,
     allergens: 'กะปิ/กุ้ง, น้ำปลา/ปลา',
-    wine_pairing: 'None'
+    wine_pairing: 'None',
+    stock_quantity: 15
   },
   {
     item_id: 24,
@@ -431,7 +454,110 @@ let mockMenuItems = [
     is_halal: false,
     calories: 160,
     allergens: 'ไข่, น้ำปลา/ปลา',
-    wine_pairing: 'None'
+    wine_pairing: 'None',
+    stock_quantity: 25
+  },
+  {
+    item_id: 25,
+    category_id: 1,
+    name: 'ต้มแซ่บกระดูกหมูอ่อน',
+    description: 'กระดูกหมูอ่อนเคี่ยวนุ่มกรุบ รสแซ่บจี๊ดจ๊าดด้วยพริกขี้หนูสวนสด น้ำมะนาวแท้ และข้าวคั่วหอม',
+    price: 70.00,
+    image_url: '/images/steak.jpg',
+    is_popular: true,
+    prep_time_mins: 10,
+    is_available: true,
+    dietary_tag: '❌ ไม่ฮาลาล',
+    is_halal: false,
+    calories: 180,
+    allergens: 'น้ำปลา/ปลา',
+    wine_pairing: 'None',
+    stock_quantity: 16
+  },
+  {
+    item_id: 26,
+    category_id: 2,
+    name: 'ผัดฉ่าทะเลรวมมิตร',
+    description: 'กุ้งสด ปลาหมึก และหอยแมลงภู่ ผัดฉ่าสมุนไพรสด พริกไทยอ่อน กระชาย พริกชี้ฟ้า หอมฉุยเผ็ดร้อน',
+    price: 85.00,
+    image_url: '/images/sushi.jpg',
+    is_popular: true,
+    prep_time_mins: 10,
+    is_available: true,
+    dietary_tag: 'Halal',
+    is_halal: true,
+    calories: 160,
+    allergens: 'กุ้ง, หอย, หมึก, น้ำปลา/ปลา, ถั่วเหลือง',
+    wine_pairing: 'None',
+    stock_quantity: 8
+  },
+  {
+    item_id: 27,
+    category_id: 1,
+    name: 'แกงคั่วหอยขมใบชะพลู',
+    description: 'แกงคั่วกะทิเข้มข้นถึงเครื่องแกงใต้ ใส่เนื้อหอยขมแกะสดและใบชะพลูหอมละมุนสูตรโบราณ',
+    price: 75.00,
+    image_url: '/images/pasta.jpg',
+    is_popular: true,
+    prep_time_mins: 12,
+    is_available: true,
+    dietary_tag: 'Halal',
+    is_halal: true,
+    calories: 210,
+    allergens: 'หอย, กะปิ/กุ้ง, น้ำปลา/ปลา',
+    wine_pairing: 'None',
+    stock_quantity: 10
+  },
+  {
+    item_id: 28,
+    category_id: 2,
+    name: 'ปีกไก่ทอดน้ำปลาโบราณ',
+    description: 'ปีกไก่หมักน้ำปลาแท้สูตรคุณยาย ทอดจนหนังกรอบสีทอง เนื้อในชุ่มฉ่ำ ทานคู่กับข้าวสวยร้อนๆ',
+    price: 65.00,
+    image_url: '/images/steak.jpg',
+    is_popular: true,
+    prep_time_mins: 8,
+    is_available: true,
+    dietary_tag: 'Halal',
+    is_halal: true,
+    calories: 240,
+    allergens: 'น้ำปลา/ปลา, ถั่วเหลือง, แป้งสาลี/กลูเตน',
+    wine_pairing: 'None',
+    stock_quantity: 20
+  },
+  {
+    item_id: 29,
+    category_id: 3,
+    name: 'เต้าหู้ทรงเครื่องเห็ดหอม (มังสวิรัติ)',
+    description: 'เต้าหู้ไข่นุ่มทอดพอตึง นึ่งราดซอสเห็ดหอม แครอท ข้าวโพดอ่อน รสชาติกลมกล่อมดีต่อสุขภาพ',
+    price: 55.00,
+    image_url: '/images/pasta.jpg',
+    is_popular: false,
+    prep_time_mins: 8,
+    is_available: true,
+    dietary_tag: 'Vegetarian',
+    is_halal: true,
+    calories: 120,
+    allergens: 'ถั่วเหลือง, เห็ด',
+    wine_pairing: 'None',
+    stock_quantity: 14
+  },
+  {
+    item_id: 30,
+    category_id: 4,
+    name: 'น้ำพริกอ่องหมูสับ + ผักสด',
+    description: 'น้ำพริกอ่องสูตรเมืองเหนือ มะเขือเทศฉ่ำผัดหมูสับและพริกแกง รสชาติหวานเปรี้ยวกลมกล่อม',
+    price: 50.00,
+    image_url: '/images/steak.jpg',
+    is_popular: false,
+    prep_time_mins: 6,
+    is_available: true,
+    dietary_tag: '❌ ไม่ฮาลาล',
+    is_halal: false,
+    calories: 140,
+    allergens: 'ถั่วเหลือง, กะปิ/กุ้ง',
+    wine_pairing: 'None',
+    stock_quantity: 12
   }
 ];
 

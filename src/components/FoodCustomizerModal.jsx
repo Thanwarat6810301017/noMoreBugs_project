@@ -73,7 +73,7 @@ function SelectCard({ selected, onClick, children }) {
 }
 
 /* ─── Main Modal ─────────────────────────────────────────────────────── */
-export default function FoodCustomizerModal({ isOpen, onClose, onAddToCartWithOptions, menuItems = [] }) {
+export default function FoodCustomizerModal({ isOpen, onClose, onAddToCartWithOptions, menuItems = [], initialDish = null }) {
   const [step, setStep] = useState(0);
   const [selectedBox, setSelectedBox] = useState(null);    // BOX_SETS item
   const [selectedRice, setSelectedRice] = useState(RICE_OPTIONS[0]);
@@ -81,17 +81,38 @@ export default function FoodCustomizerModal({ isOpen, onClose, onAddToCartWithOp
   const [selectedToppings, setSelectedToppings] = useState([]);
   const [specialNote, setSpecialNote] = useState('');
 
-  // Reset on open
+  // Reset or initialize on open
   useEffect(() => {
     if (isOpen) {
-      setStep(0);
-      setSelectedBox(null);
-      setSelectedRice(RICE_OPTIONS[0]);
-      setSelectedDishes([]);
-      setSelectedToppings([]);
-      setSpecialNote('');
+      if (initialDish) {
+        setSelectedBox(BOX_SETS[1]); // default to 2 dishes box
+        setSelectedRice(RICE_OPTIONS[0]);
+        setSelectedDishes([initialDish]);
+        setSelectedToppings([]);
+        setSpecialNote('');
+        setStep(2); // Jump straight to dish selection so they can pick second dish
+      } else {
+        setStep(0);
+        setSelectedBox(null);
+        setSelectedRice(RICE_OPTIONS[0]);
+        setSelectedDishes([]);
+        setSelectedToppings([]);
+        setSpecialNote('');
+      }
     }
-  }, [isOpen]);
+  }, [isOpen, initialDish]);
+
+  const handleQuickDemoFill = () => {
+    const available = menuItems.filter(m => (m.stock_quantity ?? 99) > 0);
+    const dish1 = initialDish || available[0] || { item_id: 1, name: 'แกงเขียวหวานไก่' };
+    const dish2 = available.find(d => d.item_id !== dish1.item_id) || available[1] || { item_id: 5, name: 'ผัดกะเพราไก่ / เนื้อ' };
+    setSelectedBox(BOX_SETS[1]);
+    setSelectedRice(RICE_OPTIONS[0]);
+    setSelectedDishes([dish1, dish2]);
+    setSelectedToppings([TOPPINGS[0]]); // ไข่ดาวกรอบ
+    setSpecialNote('ขอพริกน้ำปลาเพิ่ม 2 ซอง (ชุดตัวอย่าง Demo)');
+    setStep(3); // Go to review/toppings step
+  };
 
   if (!isOpen) return null;
 
@@ -189,9 +210,30 @@ export default function FoodCustomizerModal({ isOpen, onClose, onAddToCartWithOp
             <h3 style={{ color: 'var(--accent-gold)', fontSize: '0.95rem', marginBottom: '0.8rem', fontWeight: 700 }}>
               🍱 เลือกชุดกล่องข้าวแกงแยกช่อง
             </h3>
-            <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginBottom: '1rem' }}>
-              กล่องพลาสติกแยกช่องอาหาร ป้องกันน้ำแกงซึม เหมาะสำหรับรับกลับบ้าน
-            </p>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem', flexWrap: 'wrap', gap: '0.5rem' }}>
+              <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)', margin: 0 }}>
+                กล่องพลาสติกแยกช่องอาหาร ป้องกันน้ำแกงซึม เหมาะสำหรับรับกลับบ้าน
+              </p>
+              <button 
+                type="button"
+                onClick={handleQuickDemoFill}
+                style={{
+                  background: 'rgba(229,168,83,0.15)',
+                  border: '1px solid var(--accent-gold)',
+                  color: 'var(--accent-gold)',
+                  borderRadius: '20px',
+                  padding: '0.35rem 0.8rem',
+                  fontSize: '0.78rem',
+                  fontWeight: 700,
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.3rem'
+                }}
+              >
+                ✨ ทดลองจัดชุดด่วน (Demo)
+              </button>
+            </div>
             {BOX_SETS.map(box => (
               <SelectCard key={box.id} selected={selectedBox?.id === box.id} onClick={() => setSelectedBox(box)}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.8rem' }}>
@@ -265,24 +307,48 @@ export default function FoodCustomizerModal({ isOpen, onClose, onAddToCartWithOp
             <div style={{ maxHeight: '280px', overflowY: 'auto', paddingRight: '4px' }}>
               {menuItems.filter(m => m.is_available !== false).map(dish => {
                 const isSelected = selectedDishes.some(d => d.item_id === dish.item_id);
+                const stock = dish.stock_quantity ?? 99;
+                const isSoldOut = stock <= 0;
+                const isLowStock = stock > 0 && stock <= 5;
                 return (
-                  <div key={dish.item_id} onClick={() => handleToggleDish(dish)} style={{
+                  <div key={dish.item_id} onClick={() => !isSoldOut && handleToggleDish(dish)} style={{
                     display: 'flex', alignItems: 'center', gap: '0.75rem',
-                    padding: '0.7rem 0.9rem', borderRadius: 'var(--radius-md)', cursor: 'pointer', marginBottom: '0.4rem',
-                    background: isSelected ? 'rgba(229,168,83,0.12)' : 'rgba(255,255,255,0.03)',
-                    border: `1.5px solid ${isSelected ? 'var(--accent-gold)' : 'rgba(255,255,255,0.08)'}`,
-                    transition: 'all 0.2s ease'
+                    padding: '0.7rem 0.9rem', borderRadius: 'var(--radius-md)',
+                    cursor: isSoldOut ? 'not-allowed' : 'pointer', marginBottom: '0.4rem',
+                    background: isSoldOut ? 'rgba(239,68,68,0.05)' : isSelected ? 'rgba(229,168,83,0.12)' : 'rgba(255,255,255,0.03)',
+                    border: `1.5px solid ${isSoldOut ? 'rgba(239,68,68,0.2)' : isSelected ? 'var(--accent-gold)' : 'rgba(255,255,255,0.08)'}`,
+                    transition: 'all 0.2s ease',
+                    opacity: isSoldOut ? 0.5 : 1
                   }}>
-                    <img src={dish.image_url} alt={dish.name} style={{ width: 44, height: 40, objectFit: 'cover', borderRadius: '8px', flexShrink: 0 }} />
+                    <img src={dish.image_url} alt={dish.name} style={{ width: 44, height: 40, objectFit: 'cover', borderRadius: '8px', flexShrink: 0, filter: isSoldOut ? 'grayscale(80%)' : 'none' }} />
                     <div style={{ flex: 1, minWidth: 0 }}>
-                      <div style={{ fontWeight: 600, color: isSelected ? '#fff' : 'var(--text-main)', fontSize: '0.88rem', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                      <div style={{ fontWeight: 600, color: isSoldOut ? 'var(--text-muted)' : isSelected ? '#fff' : 'var(--text-main)', fontSize: '0.88rem', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                         {dish.dietary_tag === 'Halal' && <span style={{ fontSize: '0.65rem', background: 'rgba(52,211,153,0.15)', color: '#34d399', padding: '1px 5px', borderRadius: '4px', marginRight: '5px' }}>🌙</span>}
                         {dish.name}
                       </div>
-                      <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)', marginTop: '1px' }}>{dish.description?.slice(0, 42)}…</div>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '2px' }}>
+                        <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>{dish.description?.slice(0, 30)}…</span>
+                        {isSoldOut && (
+                          <span style={{ fontSize: '0.65rem', background: 'rgba(239,68,68,0.15)', color: '#f87171', padding: '1px 6px', borderRadius: '8px', fontWeight: 700 }}>
+                            หมด
+                          </span>
+                        )}
+                        {isLowStock && (
+                          <span style={{ fontSize: '0.65rem', background: 'rgba(251,146,60,0.15)', color: '#fb923c', padding: '1px 6px', borderRadius: '8px', fontWeight: 700 }}>
+                            เหลือ {stock}
+                          </span>
+                        )}
+                        {!isSoldOut && !isLowStock && (
+                          <span style={{ fontSize: '0.65rem', background: 'rgba(52,211,153,0.1)', color: '#34d399', padding: '1px 6px', borderRadius: '8px', fontWeight: 600 }}>
+                            {stock} จาน
+                          </span>
+                        )}
+                      </div>
                     </div>
                     <div style={{ flexShrink: 0, textAlign: 'right' }}>
-                      {isSelected
+                      {isSoldOut
+                        ? <X size={18} style={{ color: '#f87171' }} />
+                        : isSelected
                         ? <Check size={18} style={{ color: 'var(--accent-gold)' }} />
                         : <Plus size={18} style={{ color: 'var(--text-muted)' }} />}
                     </div>
