@@ -6,6 +6,7 @@ import PickupStepsGuide from './components/PickupStepsGuide';
 import CustomerReviews from './components/CustomerReviews';
 import TakeawayOrderModal from './components/TakeawayOrderModal';
 import PaymentModal from './components/PaymentModal';
+import DiningPolicies from './components/DiningPolicies';
 import EVoucherModal from './components/EVoucherModal';
 import AdminDashboard from './components/AdminDashboard';
 import CustomerProfile from './components/CustomerProfile';
