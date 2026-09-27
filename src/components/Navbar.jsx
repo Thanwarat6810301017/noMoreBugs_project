@@ -32,9 +32,6 @@ export default function Navbar({
           <span style={{ color: 'var(--text-muted)' }}>สั่งอาหารล่วงหน้า แวะรับที่หน้าร้านได้ทันที สะดวกรวดเร็ว ไม่ต้องยืนรอคิว</span>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: '1.2rem' }}>
-          <span style={{ color: 'var(--accent-gold)', background: 'rgba(229,168,83,0.15)', padding: '0.15rem 0.6rem', borderRadius: '10px', fontWeight: 'bold' }}>
-            🏷️ ใช้โค้ด: LUXE2026 ลด 10%
-          </span>
           <a href="tel:029999999" style={{ color: 'var(--text-main)', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
             <Phone size={13} color="var(--accent-gold)" /> 02-999-9999
           </a>
@@ -57,9 +54,7 @@ export default function Navbar({
             <button className="nav-btn" onClick={() => scrollToSection('pickup-guide')}>
               🛍️ วิธีสั่งรับหน้าร้าน
             </button>
-            <button className="nav-btn" onClick={() => scrollToSection('chef-story')}>
-              👨‍🍳 สูตรเด็ดต้นตำรับ
-            </button>
+
             <button className="nav-btn" onClick={() => scrollToSection('customer-reviews')}>
               ⭐ รีวิวจากลูกค้า
             </button>

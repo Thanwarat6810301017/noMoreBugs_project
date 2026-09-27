@@ -29,17 +29,7 @@ export default function Hero({
         เลือกเมนูกับข้าวสูตรเด็ด ปรุงสดใหม่จากหม้อทุกเช้า กดสั่งและระบุเวลานัดรับล่วงหน้า อาหารแพ็คกล่องร้อนๆ พร้อมรับทันทีที่จุดบริการ Express Pickup หน้าร้าน สะดวก รวดเร็ว ประหยัดเวลา
       </p>
 
-      {/* Active Promotions & Discount Badges */}
-      {promotions.length > 0 && (
-        <div style={{ display: 'flex', justifyContent: 'center', gap: '0.8rem', flexWrap: 'wrap', marginBottom: '1.5rem' }}>
-          {promotions.map(p => (
-            <div key={p.promo_id || p.code} style={{ background: 'rgba(229,168,83,0.12)', border: `1px solid ${p.badge_color || 'var(--accent-gold)'}`, borderRadius: '30px', padding: '0.4rem 1.2rem', fontSize: '0.82rem', color: '#fff', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-              <span style={{ fontWeight: 'bold', color: p.badge_color || 'var(--accent-gold)' }}>🏷️ {p.code}</span>
-              <span>{p.title}</span>
-            </div>
-          ))}
-        </div>
-      )}
+
 
       {/* Takeaway Pre-order Core Highlights Bar */}
       <div style={{
@@ -130,8 +120,7 @@ export default function Hero({
           { key: 'all', label: 'เมนูทั้งหมด' },
           { key: 'Halal', label: '🌙 ฮาลาล (Halal)' },
           { key: '❌ ไม่ฮาลาล', label: '🥩 เมนูหมู (ไม่ฮาลาล)' },
-          { key: 'Chef Signature', label: '🌟 เมนูเด็ดประจำร้าน' },
-          { key: 'Vegetarian', label: '🌱 มังสวิรัติ' }
+
         ].map(tag => (
           <button 
             key={tag.key}

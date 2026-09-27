@@ -20,7 +20,7 @@ export default function VipClubBanner() {
         </div>
         
         <h2 style={{ fontSize: '2.2rem', color: '#fff', marginBottom: '0.8rem' }}>
-          รับสิทธิพิเศษ ส่วนลด 15% ในเดือนเกิด และสะสมแต้มแลกกับข้าวฟรี
+          รับสิทธิพิเศษ สะสมแต้มแลกกับข้าวฟรี
         </h2>
         
         <p style={{ color: 'var(--text-muted)', fontSize: '0.95rem', maxWidth: '600px', margin: '0 auto 2rem auto', lineHeight: 1.6 }}>

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Clock, ShieldCheck, ShoppingBag, Car, PackageCheck, Phone, MapPin, Sparkles } from 'lucide-react';
+import { Clock, ShieldCheck, ShoppingBag, PackageCheck, Phone, MapPin, Sparkles } from 'lucide-react';
 
 export default function DiningPolicies() {
   const policies = [
@@ -27,12 +27,7 @@ export default function DiningPolicies() {
       highlight: 'อาหารร้อนพร้อมรับตามเวลาที่คุณระบุ',
       desc: 'ทางร้านจะจัดเตรียมอาหารเสร็จพอดีกับเวลาที่คุณนัดรับ แนะนำให้มารับตามเวลาที่กำหนดเพื่อรสชาติที่ดีที่สุดจากเตา'
     },
-    {
-      icon: Car,
-      title: 'ที่จอดรถชั่วคราว (Quick 15-Min Parking)',
-      highlight: 'ช่องจอดด่วนรับอาหารหน้าร้านฟรี',
-      desc: 'มีช่องจอดรถชั่วคราวบริเวณหน้าร้านสำหรับลูกค้าที่แวะมารับอาหารโดยเฉพาะ สะดวก รวดเร็ว ไม่เสียเวลาหาที่จอด'
-    },
+
     {
       icon: Phone,
       title: 'การติดต่อหรือแจ้งเลื่อนเวลา (Customer Support)',
