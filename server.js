@@ -571,31 +571,6 @@ let mockReviews = [
   { review_id: 4, customer_name: 'คุณณิชาภา ม.', rating: 5, comment: 'ชอบระบบเลือกโซนผังโต๊ะอาหารมากค่ะ ได้มุม Garden Glasshouse บรรยากาศโรแมนติก เหมาะกับการฉลองวันเกิดมากค่ะ', dish_recommendation: 'French Fine de Claire Oysters' }
 ];
 
-let mockTables = [
-  // Zone 1: Indoor Main Dining
-  { table_id: 1, table_number: 'T-01', zone: 'Indoor Main Dining', capacity: 2, status: 'available', pos_x: 1, pos_y: 1 },
-  { table_id: 2, table_number: 'T-02', zone: 'Indoor Main Dining', capacity: 4, status: 'reserved', pos_x: 1, pos_y: 2 },
-  { table_id: 3, table_number: 'T-03', zone: 'Indoor Main Dining', capacity: 6, status: 'available', pos_x: 1, pos_y: 3 },
-  { table_id: 4, table_number: 'T-04', zone: 'Indoor Main Dining', capacity: 4, status: 'available', pos_x: 1, pos_y: 4 },
-
-  // Zone 2: Garden Glasshouse Terrace
-  { table_id: 5, table_number: 'G-01', zone: 'Garden Glasshouse Terrace', capacity: 4, status: 'available', pos_x: 2, pos_y: 1 },
-  { table_id: 6, table_number: 'G-02', zone: 'Garden Glasshouse Terrace', capacity: 2, status: 'available', pos_x: 2, pos_y: 2 },
-  { table_id: 7, table_number: 'G-03', zone: 'Garden Glasshouse Terrace', capacity: 6, status: 'reserved', pos_x: 2, pos_y: 3 },
-
-  // Zone 3: Chef Counter Live Kitchen
-  { table_id: 8, table_number: 'C-01', zone: 'Chef Counter Live Kitchen', capacity: 2, status: 'available', pos_x: 3, pos_y: 1 },
-  { table_id: 9, table_number: 'C-02', zone: 'Chef Counter Live Kitchen', capacity: 2, status: 'available', pos_x: 3, pos_y: 2 },
-
-  // Zone 4: VIP Presidential Suite
-  { table_id: 10, table_number: 'V-01', zone: 'VIP Presidential Suite', capacity: 8, status: 'available', pos_x: 4, pos_y: 1 },
-  { table_id: 11, table_number: 'V-02', zone: 'VIP Presidential Suite', capacity: 10, status: 'reserved', pos_x: 4, pos_y: 2 },
-
-  // Zone 5: Rooftop Sky Bar
-  { table_id: 12, table_number: 'R-01', zone: 'Rooftop Sky Bar', capacity: 2, status: 'available', pos_x: 5, pos_y: 1 },
-  { table_id: 13, table_number: 'R-02', zone: 'Rooftop Sky Bar', capacity: 4, status: 'available', pos_x: 5, pos_y: 2 }
-];
-
 let mockReservations = [
   {
     reservation_id: 1,
@@ -606,10 +581,7 @@ let mockReservations = [
     customer_phone: '081-234-5678',
     reservation_date: '2026-09-27',
     reservation_time: '12:00',
-    guest_count: 1,
-    table_id: null,
-    table_number: 'หน้าร้าน',
-    zone: 'เคาน์เตอร์ Express Pickup หน้าร้าน',
+    pickup_type: 'หน้าร้าน (Takeaway)',
     special_request: 'แยกน้ำแกงใส่ถุง ขอพริกน้ำปลาเพิ่ม',
     total_amount: 185.00,
     earned_points: 18,
@@ -916,44 +888,10 @@ app.get('/api/reviews', async (req, res) => {
   res.json(mockReviews);
 });
 
-app.get('/api/tables', async (req, res) => {
-  if (isDbConnected) {
-    try {
-      const result = await pool.query('SELECT * FROM restaurant_tables ORDER BY zone, table_number');
-      return res.json(result.rows);
-    } catch (err) { console.error(err); }
-  }
-  res.json(mockTables);
-});
-
-// Update Table Status (Staff Editor)
-app.patch('/api/tables/:id/status', async (req, res) => {
-  const { id } = req.params;
-  const { status } = req.body;
-  if (isDbConnected) {
-    try {
-      const result = await pool.query('UPDATE restaurant_tables SET status = $1 WHERE table_id = $2 RETURNING *', [status, id]);
-      return res.json(result.rows[0]);
-    } catch (err) { console.error(err); }
-  }
-
-  const tbl = mockTables.find(t => t.table_id === parseInt(id));
-  if (tbl) {
-    tbl.status = status;
-    return res.json(tbl);
-  }
-  res.status(404).json({ error: 'Table not found' });
-});
-
 app.get('/api/reservations', async (req, res) => {
   if (isDbConnected) {
     try {
-      const result = await pool.query(`
-        SELECT r.*, t.table_number, t.zone 
-        FROM reservations r 
-        LEFT JOIN restaurant_tables t ON r.table_id = t.table_id 
-        ORDER BY r.created_at DESC
-      `);
+      const result = await pool.query('SELECT * FROM reservations ORDER BY created_at DESC');
       return res.json(result.rows);
     } catch (err) { console.error(err); }
   }
@@ -965,7 +903,7 @@ app.get('/api/user/reservations', async (req, res) => {
   const userId = req.query.user_id;
   if (isDbConnected) {
     try {
-      const result = await pool.query('SELECT r.*, t.table_number, t.zone FROM reservations r LEFT JOIN restaurant_tables t ON r.table_id = t.table_id WHERE r.user_id = $1 ORDER BY r.created_at DESC', [userId]);
+      const result = await pool.query('SELECT * FROM reservations WHERE user_id = $1 ORDER BY created_at DESC', [userId]);
       return res.json(result.rows);
     } catch (err) { console.error(err); }
   }
@@ -994,10 +932,10 @@ app.post('/api/reservations', async (req, res) => {
       await client.query('BEGIN');
       const resResult = await client.query(
         `INSERT INTO reservations 
-        (booking_code, user_id, customer_name, customer_email, customer_phone, reservation_date, reservation_time, guest_count, table_id, special_request, total_amount, earned_points, payment_status, status) 
-        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, 'paid', 'confirmed') 
+        (booking_code, user_id, customer_name, customer_email, customer_phone, reservation_date, reservation_time, pickup_type, special_request, total_amount, earned_points, payment_status, status) 
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, 'paid', 'confirmed') 
         RETURNING *`,
-        [booking_code, user_id || null, customer_name, customer_email, customer_phone, reservation_date, reservation_time, guest_count, table_id || null, special_request || '', total_amount, earned_points]
+        [booking_code, user_id || null, customer_name, customer_email, customer_phone, reservation_date, reservation_time, 'หน้าร้าน (Takeaway)', special_request || '', total_amount, earned_points]
       );
       
       const newRes = resResult.rows[0];
@@ -1016,10 +954,6 @@ app.post('/api/reservations', async (req, res) => {
         await client.query('UPDATE users SET reward_points = reward_points + $1 WHERE user_id = $2', [earned_points, user_id]);
       }
 
-      if (table_id) {
-        await client.query("UPDATE restaurant_tables SET status = 'reserved' WHERE table_id = $1", [table_id]);
-      }
-
       await client.query('COMMIT');
       client.release();
       return res.status(201).json({ success: true, reservation: newRes, earned_points });
@@ -1029,11 +963,6 @@ app.post('/api/reservations', async (req, res) => {
       console.error(err);
       return res.status(500).json({ error: 'Database reservation failed' });
     }
-  }
-
-  const foundTable = mockTables.find(t => t.table_id === parseInt(table_id));
-  if (foundTable) {
-    foundTable.status = 'reserved';
   }
 
   if (user_id) {
@@ -1050,10 +979,7 @@ app.post('/api/reservations', async (req, res) => {
     customer_phone,
     reservation_date,
     reservation_time,
-    guest_count: guest_count || 1,
-    table_id: table_id || null,
-    table_number: foundTable ? foundTable.table_number : 'หน้าร้าน (Takeaway)',
-    zone: foundTable ? foundTable.zone : 'เคาน์เตอร์ Express Pickup หน้าร้าน',
+    pickup_type: 'หน้าร้าน (Takeaway)',
     special_request,
     total_amount,
     earned_points,
@@ -1103,8 +1029,7 @@ app.get('/api/admin/stats', async (req, res) => {
 
   res.json({
     totalRevenue,
-    totalBookings,
-    tableOccupancyRate: totalBookings > 0 ? Math.round((readyCount / totalBookings) * 100) : 92,
+    readyCount,
     popularDish: 'แกงเขียวหวานไก่'
   });
 });

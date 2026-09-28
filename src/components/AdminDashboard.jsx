@@ -5,7 +5,7 @@ import {
   Users, Crown, Shield, UserCheck, Star, Search, RefreshCw, Check
 } from 'lucide-react';
 import { 
-  createMenuItem, updateMenuItem, deleteMenuItem, updateTableStatus, 
+  createMenuItem, updateMenuItem, deleteMenuItem, 
   updateReservationStatus, updateMenuItemStock, updateUserRole, deleteUser 
 } from '../services/api';
 
@@ -14,7 +14,6 @@ export default function AdminDashboard({
   adminStats, 
   reservations, 
   menuItems, 
-  tables, 
   users = [],
   onRefreshData,
   onOpenAuth,
@@ -222,12 +221,6 @@ export default function AdminDashboard({
     }
   };
 
-  const handleToggleTableStatus = async (tableId, currentStatus) => {
-    const newStatus = currentStatus === 'available' ? 'reserved' : 'available';
-    await updateTableStatus(tableId, newStatus);
-    onRefreshData();
-  };
-
   const handleUpdateOrderStage = async (id, stage) => {
     await updateReservationStatus(id, stage);
     onRefreshData();
@@ -262,9 +255,9 @@ export default function AdminDashboard({
 
         <div className="stat-card">
           <span className="stat-label" style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-            <PieChart size={16} color="var(--accent-orange)" /> อัตราพร้อมรับหน้าร้าน
+            <PieChart size={16} color="var(--accent-orange)" /> ออเดอร์พร้อมรับหน้าร้าน
           </span>
-          <span className="stat-value" style={{ color: 'var(--accent-orange)' }}>{adminStats.tableOccupancyRate}%</span>
+          <span className="stat-value" style={{ color: 'var(--accent-orange)' }}>{adminStats.readyCount || 1} ออเดอร์</span>
         </div>
 
         <div className="stat-card">
@@ -330,13 +323,6 @@ export default function AdminDashboard({
           style={{ fontWeight: 700, display: 'flex', alignItems: 'center', gap: '0.4rem' }}
         >
           📋 จัดการออเดอร์สั่งล่วงหน้า ({reservations.length})
-        </button>
-        <button 
-          className={`nav-btn ${activeAdminTab === 'table_editor' ? 'active' : ''}`}
-          onClick={() => setActiveAdminTab('table_editor')}
-          style={{ fontWeight: 700, display: 'flex', alignItems: 'center', gap: '0.4rem' }}
-        >
-          🏪 จุดบริการรับอาหารหน้าร้าน ({tables.length})
         </button>
         <button 
           className={`nav-btn ${activeAdminTab === 'user_editor' ? 'active' : ''}`}
@@ -591,32 +577,6 @@ export default function AdminDashboard({
               })}
               </tbody>
             </table>
-          </div>
-        </div>
-      )}
-
-      {/* 3. PICKUP COUNTER EDITOR */}
-      {activeAdminTab === 'table_editor' && (
-        <div>
-          <h3 style={{ fontSize: '1.3rem', color: '#fff', marginBottom: '1.2rem' }}>สถานะเคาน์เตอร์จุดบริการรับอาหารหน้าร้าน (Pickup Counters)</h3>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: '1rem' }}>
-            {tables.map(tbl => (
-              <div key={tbl.table_id} style={{ background: 'var(--bg-card)', border: '1px solid var(--border-color)', borderRadius: 'var(--radius-md)', padding: '1.2rem', textAlign: 'center' }}>
-                <h4 style={{ fontSize: '1.2rem', color: '#fff' }}>เคาน์เตอร์ {tbl.table_number}</h4>
-                <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>ช่องบริการด่วน Express Pickup</p>
-                <div style={{ margin: '0.8rem 0' }}>
-                  <span style={{ padding: '0.2rem 0.8rem', borderRadius: '12px', fontSize: '0.8rem', fontWeight: 'bold', background: tbl.status === 'available' ? 'rgba(16,185,129,0.2)' : 'rgba(239,68,68,0.2)', color: tbl.status === 'available' ? '#34d399' : '#f87171' }}>
-                    {tbl.status === 'available' ? 'พร้อมให้บริการ' : 'ปิดชั่วคราว'}
-                  </span>
-                </div>
-                <button 
-                  onClick={() => handleToggleTableStatus(tbl.table_id, tbl.status)}
-                  style={{ width: '100%', background: 'var(--bg-glass)', border: '1px solid var(--border-color)', color: '#fff', padding: '0.4rem', borderRadius: '6px', fontSize: '0.8rem', cursor: 'pointer' }}
-                >
-                  สลับสถานะเคาน์เตอร์
-                </button>
-              </div>
-            ))}
           </div>
         </div>
       )}

@@ -70,20 +70,6 @@ export const updateMenuItemStock = async (id, stock_quantity) => {
   return await res.json();
 };
 
-export const fetchTables = async () => {
-  const res = await fetch(`${API_BASE}/tables`);
-  return await res.json();
-};
-
-export const updateTableStatus = async (id, status) => {
-  const res = await fetch(`${API_BASE}/tables/${id}/status`, {
-    method: 'PATCH',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ status })
-  });
-  return await res.json();
-};
-
 export const fetchReservations = async () => {
   const res = await fetch(`${API_BASE}/reservations`);
   return await res.json();

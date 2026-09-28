@@ -20,7 +20,6 @@ export default function App() {
   const [activeTab, setActiveTab] = useState('menu');
   const [categories, setCategories] = useState([]);
   const [menuItems, setMenuItems] = useState([]);
-  const [tables, setTables] = useState([]);
   const [reservations, setReservations] = useState([]);
   const [reviews, setReviews] = useState([]);
   const [promotions, setPromotions] = useState([]);
@@ -99,23 +98,19 @@ export default function App() {
 
   const loadData = async () => {
     try {
-      const [cats, items, tbls, resv, stats, revs, promos, userList] = await Promise.all([
+      const [cats, items, resv, stats, revs, userList] = await Promise.all([
         api.fetchCategories(),
         api.fetchMenuItems(),
-        api.fetchTables(),
         api.fetchReservations(),
         api.fetchAdminStats(),
         api.fetchReviews(),
-        api.fetchPromotions(),
         api.fetchUsers()
       ]);
       setCategories(cats);
       setMenuItems(items);
-      setTables(tbls);
       setReservations(resv);
       setAdminStats(stats);
       setReviews(revs || []);
-      setPromotions(promos || []);
       setUsers(userList || []);
     } catch (err) {
       console.error('Failed to load application data:', err);
@@ -341,7 +336,6 @@ export default function App() {
           adminStats={adminStats}
           reservations={reservations}
           menuItems={menuItems}
-          tables={tables}
           users={users}
           onRefreshData={loadData}
           onStatusUpdate={handleStatusUpdate}
