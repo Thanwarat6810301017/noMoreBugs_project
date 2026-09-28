@@ -1,7 +1,7 @@
 # 🍽️ LUXE DINING - Food Booking & Table Reservation System
 
 > 🌐 **ลิงก์เข้าใช้งานเว็บไซต์ออนไลน์ (Live Demo URL)**: 
-> ## 🔗 👉 [https://view-xml-namespace-missile.trycloudflare.com](https://view-xml-namespace-missile.trycloudflare.com)
+> ## 🔗 👉 [https://festival-approximately-developmental-unity.trycloudflare.com](https://festival-approximately-developmental-unity.trycloudflare.com)
 > *(สามารถเข้าใช้งานได้ทันทีทั้งบนคอมพิวเตอร์และมือถือ 24 ชั่วโมง)*
 
 ---
