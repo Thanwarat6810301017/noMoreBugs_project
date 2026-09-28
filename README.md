@@ -35,11 +35,7 @@
 
 ```text
 food-booking-app/
-├── database/                    # 🗄️ สคริปต์ฐานข้อมูล PostgreSQL (Schema, Seed, Views)
-│   ├── schema.sql               # โครงสร้างตาราง (Tables, Indexes & Constraints)
-│   ├── seed.sql                 # ข้อมูลเริ่มต้น 20+ เมนู, 16 โต๊ะ 5 โซน, คูปอง และรีวิว
-│   └── views.sql                # SQL Views สำหรับรายงานสถิติ
-│
+├── database.sql                 # 🗄️ สคริปต์ฐานข้อมูล PostgreSQL ไฟล์เดียวจบ (8 ตารางจริง + ข้อมูลเริ่มต้น)
 ├── public/                      # 🖼️ ไฟล์ Static Images
 │   └── images/                  # รูปภาพอาหารความละเอียดสูง
 │
