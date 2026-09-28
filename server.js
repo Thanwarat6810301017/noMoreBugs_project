@@ -565,10 +565,34 @@ let mockMenuItems = [
 ];
 
 let mockReviews = [
-  { review_id: 1, customer_name: 'คุณภาณุวัฒน์ ก.', rating: 5, comment: 'สเต๊กเนื้อริบอายซอสทรัฟเฟิลและวากิว A5 อร่อยระดับมิชลินจริงๆ ครับ บรรยากาศโซน VIP หรูหราและเป็นส่วนตัวมาก ประทับใจมากครับ', dish_recommendation: 'Prime Ribeye Steak with Truffle Butter' },
-  { review_id: 2, customer_name: 'คุณพิมลวรรณ สุขเสริฐ', rating: 5, comment: 'จองโต๊ะผ่านระบบ LUXE DINING สะดวกมาก ได้รับ E-Voucher บัตรคิวทันที มีการแสดงสถานะการปรุงอาหารแบบเรียลไทม์เหมือน GrabFood เลยค่ะ', dish_recommendation: '7-Course Michelin Signature Grand Tasting Menu' },
-  { review_id: 3, customer_name: 'Mr. David Miller (Food Critic)', rating: 5, comment: 'Exquisite fine dining experience in Bangkok! The truffle fettuccine was divine, scallops perfectly seared, and service was impeccable.', dish_recommendation: 'Creamy Truffle Fettuccine Pasta' },
-  { review_id: 4, customer_name: 'คุณณิชาภา ม.', rating: 5, comment: 'ชอบระบบเลือกโซนผังโต๊ะอาหารมากค่ะ ได้มุม Garden Glasshouse บรรยากาศโรแมนติก เหมาะกับการฉลองวันเกิดมากค่ะ', dish_recommendation: 'French Fine de Claire Oysters' }
+  { 
+    review_id: 1, 
+    customer_name: 'คุณภาณุวัฒน์ ก.', 
+    rating: 5, 
+    comment: 'สั่งแกงเขียวหวานไก่กับพะแนงหมูไว้ล่วงหน้าตอน 11:30 น. ขับรถมาถึงหน้าร้านตอนเที่ยง โชว์ QR บัตรคิวที่เคาน์เตอร์รับอาหารร้อนๆ ได้ทันที ไม่ต้องยืนรอคิว ประหยัดเวลาพักเที่ยงไปได้เยอะมากครับ!', 
+    dish_recommendation: 'แกงเขียวหวานไก่ + พะแนงหมู' 
+  },
+  { 
+    review_id: 2, 
+    customer_name: 'คุณพิมลวรรณ สุขเสริฐ', 
+    rating: 5, 
+    comment: 'กับข้าวอร่อยเข้มข้นถึงเครื่องแกงมากค่ะ กะเพราคั่วพริกแห้งหอมกลิ่นกระทะ สั่งเพิ่มไข่ดาวกรอบและระบุแยกน้ำแกง ทางร้านแพ็คกล่องมาอย่างประณีต ซีลฝามิดชิด สะอาดมากค่ะ', 
+    dish_recommendation: 'ผัดกะเพราไก่ + ไข่ดาวกรอบ' 
+  },
+  { 
+    review_id: 3, 
+    customer_name: 'Mr. David Miller', 
+    rating: 5, 
+    comment: 'Excellent takeaway pre-order experience! Ordered the Massaman Beef and Tom Yum Goong. Food was packed fresh and hot right on my pickup schedule. Highly recommended!', 
+    dish_recommendation: 'มัสมั่นเนื้อตุ๋นสูตรโบราณ' 
+  },
+  { 
+    review_id: 4, 
+    customer_name: 'คุณณิชาภา ม.', 
+    rating: 5, 
+    comment: 'แกงส้มชะอมกุ้งกับคั่วกลิ้งรสชาติปักษ์ใต้แท้จัดจ้านสะใจมากค่ะ สั่งผ่านเว็บล่วงหน้าง่ายมาก มีเวลานัดรับชัดเจน พอแวะมาถึงหน้าร้านแจ้งรหัสคิวรับอาหารกลับได้ทันที สะดวกสุดๆ', 
+    dish_recommendation: 'แกงส้มชะอมกุ้ง + คั่วกลิ้ง' 
+  }
 ];
 
 let mockReservations = [
