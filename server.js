@@ -571,12 +571,6 @@ let mockReviews = [
   { review_id: 4, customer_name: 'คุณณิชาภา ม.', rating: 5, comment: 'ชอบระบบเลือกโซนผังโต๊ะอาหารมากค่ะ ได้มุม Garden Glasshouse บรรยากาศโรแมนติก เหมาะกับการฉลองวันเกิดมากค่ะ', dish_recommendation: 'French Fine de Claire Oysters' }
 ];
 
-let mockPromotions = [
-  { promo_id: 1, code: 'LUXE2026', title: 'ส่วนลดต้อนรับ 10%', discount_percent: 10, min_spend: 500, description: 'รับส่วนลด 10% สำหรับมื้ออาหารและโต๊ะจองทุกประเภท', badge_color: '#e5a853' },
-  { promo_id: 2, code: 'VIPGOLD', title: 'ส่วนลดสมาชิก VIP Gold 15%', discount_percent: 15, min_spend: 1200, description: 'สิทธิพิเศษเฉพาะสมาชิก Gold ขึ้นไป รับส่วนลด 15%', badge_color: '#3b82f6' },
-  { promo_id: 3, code: 'MICHELIN500', title: 'ส่วนลด Michelin Set ฿500', discount_percent: 20, min_spend: 2500, description: 'รับส่วนลด ฿500 เมื่อจองคอร์ส Michelin Tasting Menu', badge_color: '#10b981' }
-];
-
 let mockTables = [
   // Zone 1: Indoor Main Dining
   { table_id: 1, table_number: 'T-01', zone: 'Indoor Main Dining', capacity: 2, status: 'available', pos_x: 1, pos_y: 1 },
@@ -920,16 +914,6 @@ app.get('/api/reviews', async (req, res) => {
     } catch (err) { console.error(err); }
   }
   res.json(mockReviews);
-});
-
-app.get('/api/promotions', async (req, res) => {
-  if (isDbConnected) {
-    try {
-      const result = await pool.query('SELECT * FROM promotions WHERE is_active = TRUE ORDER BY promo_id');
-      return res.json(result.rows);
-    } catch (err) { console.error(err); }
-  }
-  res.json(mockPromotions);
 });
 
 app.get('/api/tables', async (req, res) => {

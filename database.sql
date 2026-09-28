@@ -2,14 +2,13 @@
 -- LUXE DINING - SINGLE COMPREHENSIVE DATABASE SCRIPT
 -- Database Name: food_booking_db
 -- PostgreSQL Version: 12+
--- Description: รวบรวม 8 ตารางหลักที่เว็บไซต์เรียกใช้งานจริง ครบทั้ง Schema และ Seed Data
+-- Description: รวบรวม 7 ตารางหลักที่เว็บไซต์เรียกใช้งานจริง ครบทั้ง Schema และ Seed Data
 -- ============================================================
 
 -- ลบตารางเดิมตามลำดับความสัมพันธ์ (Foreign Keys)
 DROP TABLE IF EXISTS reviews CASCADE;
 DROP TABLE IF EXISTS reservation_items CASCADE;
 DROP TABLE IF EXISTS reservations CASCADE;
-DROP TABLE IF EXISTS promotions CASCADE;
 DROP TABLE IF EXISTS restaurant_tables CASCADE;
 DROP TABLE IF EXISTS menu_items CASCADE;
 DROP TABLE IF EXISTS categories CASCADE;
@@ -79,22 +78,7 @@ CREATE TABLE restaurant_tables (
 );
 
 -- ============================================================
--- 5. ตาราง promotions (คูปองโค้ดส่วนลด)
--- ============================================================
-CREATE TABLE promotions (
-    promo_id SERIAL PRIMARY KEY,
-    code VARCHAR(50) UNIQUE NOT NULL,
-    title VARCHAR(150) NOT NULL,
-    discount_percent INT DEFAULT 10,
-    min_spend DECIMAL(10, 2) DEFAULT 0.00,
-    description TEXT,
-    badge_color VARCHAR(30) DEFAULT '#e5a853',
-    is_active BOOLEAN DEFAULT TRUE,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-
--- ============================================================
--- 6. ตาราง reservations (ข้อมูลการจองโต๊ะและสั่งอาหาร)
+-- 5. ตาราง reservations (ข้อมูลการจองโต๊ะและสั่งอาหาร)
 -- ============================================================
 CREATE TABLE reservations (
     reservation_id SERIAL PRIMARY KEY,
@@ -119,7 +103,7 @@ CREATE TABLE reservations (
 );
 
 -- ============================================================
--- 7. ตาราง reservation_items (รายการอาหารที่สั่งในแต่ละใบจอง)
+-- 6. ตาราง reservation_items (รายการอาหารที่สั่งในแต่ละใบจอง)
 -- ============================================================
 CREATE TABLE reservation_items (
     item_detail_id SERIAL PRIMARY KEY,
@@ -131,7 +115,7 @@ CREATE TABLE reservation_items (
 );
 
 -- ============================================================
--- 8. ตาราง reviews (รีวิวและคะแนนความประทับใจของลูกค้า)
+-- 7. ตาราง reviews (รีวิวและคะแนนความประทับใจของลูกค้า)
 -- ============================================================
 CREATE TABLE reviews (
     review_id SERIAL PRIMARY KEY,
@@ -220,23 +204,17 @@ INSERT INTO restaurant_tables (table_id, table_number, zone, capacity, pos_x, po
 (12, 'R-01', 'Rooftop Sky Bar', 2, 5, 1, 'available'),
 (13, 'R-02', 'Rooftop Sky Bar', 4, 5, 2, 'available');
 
--- 5. เพิ่มข้อมูล Promotions (คูปองส่วนลด 3 รายการ)
-INSERT INTO promotions (promo_id, code, title, discount_percent, min_spend, description, badge_color) VALUES
-(1, 'LUXE2026', 'ส่วนลดต้อนรับ 10%', 10, 500.00, 'รับส่วนลด 10% สำหรับมื้ออาหารและโต๊ะจองทุกประเภท', '#e5a853'),
-(2, 'VIPGOLD', 'ส่วนลดสมาชิก VIP Gold 15%', 15, 1200.00, 'สิทธิพิเศษเฉพาะสมาชิก Gold ขึ้นไป รับส่วนลด 15%', '#3b82f6'),
-(3, 'MICHELIN500', 'ส่วนลด Michelin Set ฿500', 20, 2500.00, 'รับส่วนลด ฿500 เมื่อจองคอร์ส Michelin Tasting Menu', '#10b981');
-
--- 6. เพิ่มข้อมูล Reservations ตัวอย่าง 1 ใบจองจริง
+-- 5. เพิ่มข้อมูล Reservations ตัวอย่าง 1 ใบจองจริง
 INSERT INTO reservations (reservation_id, booking_code, user_id, customer_name, customer_email, customer_phone, reservation_date, reservation_time, guest_count, table_id, special_request, total_amount, earned_points, payment_status, payment_method, order_stage, status) VALUES
 (1, 'LX-84920', 1, 'คุณสมชาย ใจดี (ลูกค้า)', 'customer@email.com', '081-234-5678', CURRENT_DATE + INTERVAL '1 day', '12:00:00', 1, NULL, 'แยกน้ำแกงใส่ถุง ขอพริกน้ำปลาเพิ่ม', 185.00, 18, 'paid', 'PromptPay QR', 'ready', 'confirmed');
 
--- 7. เพิ่มข้อมูล Reservation Items ในใบจอง
+-- 6. เพิ่มข้อมูล Reservation Items ในใบจอง
 INSERT INTO reservation_items (item_detail_id, reservation_id, item_id, quantity, unit_price, options) VALUES
 (1, 1, 1, 1, 60.00, 'แกงเขียวหวานไก่'),
 (2, 1, 2, 1, 65.00, 'พะแนงหมู'),
 (3, 1, 18, 1, 60.00, 'หมูทอดกระเทียม');
 
--- 8. เพิ่มข้อมูล Reviews ความประทับใจลูกค้า (4 รายการ)
+-- 7. เพิ่มข้อมูล Reviews ความประทับใจลูกค้า (4 รายการ)
 INSERT INTO reviews (review_id, customer_name, rating, comment, dish_recommendation) VALUES
 (1, 'คุณภาณุวัฒน์ ก.', 5, 'แกงเขียวหวานไก่และพะแนงหมูรสชาติถึงเครื่องแกงไทยแท้ๆ บรรยากาศร้านสะอาด บริการดีมากครับ', 'แกงเขียวหวานไก่'),
 (2, 'คุณพิมลวรรณ สุขเสริฐ', 5, 'จองโต๊ะและสั่งอาหารล่วงหน้าสะดวกมาก ได้รับ E-Voucher บัตรคิวทันที มีการแสดงสถานะการปรุงอาหารแบบเรียลไทม์เหมือน GrabFood เลยค่ะ', 'ต้มยำกุ้ง (น้ำข้น)'),
@@ -248,7 +226,6 @@ SELECT setval('users_user_id_seq', (SELECT MAX(user_id) FROM users));
 SELECT setval('categories_category_id_seq', (SELECT MAX(category_id) FROM categories));
 SELECT setval('menu_items_item_id_seq', (SELECT MAX(item_id) FROM menu_items));
 SELECT setval('restaurant_tables_table_id_seq', (SELECT MAX(table_id) FROM restaurant_tables));
-SELECT setval('promotions_promo_id_seq', (SELECT MAX(promo_id) FROM promotions));
 SELECT setval('reservations_reservation_id_seq', (SELECT MAX(reservation_id) FROM reservations));
 SELECT setval('reservation_items_item_detail_id_seq', (SELECT MAX(item_detail_id) FROM reservation_items));
 SELECT setval('reviews_review_id_seq', (SELECT MAX(review_id) FROM reviews));

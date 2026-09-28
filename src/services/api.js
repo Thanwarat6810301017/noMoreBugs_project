@@ -126,14 +126,7 @@ export const fetchReviews = async () => {
   }
 };
 
-export const fetchPromotions = async () => {
-  try {
-    const res = await fetch(`${API_BASE}/promotions`);
-    return await res.json();
-  } catch {
-    return [];
-  }
-};
+export const fetchPromotions = async () => [];
 
 export const fetchUsers = async () => {
   try {
