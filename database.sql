@@ -49,7 +49,7 @@ CREATE TABLE menu_items (
     name VARCHAR(150) NOT NULL,
     description TEXT,
     price DECIMAL(10, 2) NOT NULL CHECK (price >= 0),
-    image_url TEXT DEFAULT '/images/steak.jpg',
+    image_url TEXT DEFAULT '/images/dishes/dish_1.jpg',
     is_available BOOLEAN DEFAULT TRUE,
     is_popular BOOLEAN DEFAULT FALSE,
     dietary_tag VARCHAR(50) DEFAULT 'Halal',

@@ -766,7 +766,7 @@ app.post('/api/menu', async (req, res) => {
     try {
       const result = await pool.query(
         'INSERT INTO menu_items (category_id, name, description, price, image_url, is_popular, stock_quantity) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *',
-        [category_id || 1, name, description, price, image_url || '/images/steak.jpg', is_popular || false, parsedStock]
+        [category_id || 1, name, description, price, image_url || '/images/dishes/dish_1.jpg', is_popular || false, parsedStock]
       );
       return res.status(201).json(result.rows[0]);
     } catch (err) { console.error(err); }
@@ -778,7 +778,7 @@ app.post('/api/menu', async (req, res) => {
     name,
     description,
     price: parseFloat(price),
-    image_url: image_url || '/images/steak.jpg',
+    image_url: image_url || '/images/dishes/dish_1.jpg',
     is_popular: !!is_popular,
     is_available: true,
     stock_quantity: parsedStock
@@ -966,10 +966,24 @@ app.post('/api/reservations', async (req, res) => {
 
       if (items && items.length > 0) {
         for (const item of items) {
+          // ตรวจสอบว่า item_id เป็นตัวเลขจริงหรือไม่ (ถ้าเป็นกล่องข้าว Box Set หรือ demo item จะเป็น string ให้ใช้ null)
+          const isNumericId = typeof item.item_id === 'number' || (typeof item.item_id === 'string' && /^\d+$/.test(item.item_id.trim()));
+          const candidateId = isNumericId ? parseInt(item.item_id, 10) : null;
+          let finalItemId = null;
+          if (candidateId !== null) {
+            const checkDish = await client.query('SELECT item_id FROM menu_items WHERE item_id = $1', [candidateId]);
+            if (checkDish.rows.length > 0) {
+              finalItemId = candidateId;
+            }
+          }
+          const optionsText = item.custom_options 
+            ? `${item.name ? item.name + ' | ' : ''}${item.custom_options}` 
+            : (item.name || item.options || 'ชุดอาหาร');
+
           await client.query(
-            `INSERT INTO reservation_items (reservation_id, item_id, quantity, unit_price) 
-            VALUES ($1, $2, $3, $4)`,
-            [newRes.reservation_id, item.item_id, item.quantity, item.price]
+            `INSERT INTO reservation_items (reservation_id, item_id, quantity, unit_price, options) 
+            VALUES ($1, $2, $3, $4, $5)`,
+            [newRes.reservation_id, finalItemId, item.quantity || 1, item.price || 0, optionsText]
           );
         }
       }

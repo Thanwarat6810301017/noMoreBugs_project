@@ -170,7 +170,7 @@ export default function FoodCustomizerModal({ isOpen, onClose, onAddToCartWithOp
       item_id: `box_${Date.now()}`,  // unique cart key
       name: label,
       price: calcTotal(),
-      image_url: '/images/steak.jpg',
+      image_url: selectedDishes[0]?.image_url || '/images/dishes/dish_1.jpg',
       custom_options: customNote,
       category: 'box_set',
     });

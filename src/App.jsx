@@ -46,7 +46,7 @@ export default function App() {
       name: 'กล่องกับข้าว 2 อย่าง (ข้าวสวยธรรมดา)',
       price: 55,
       quantity: 1,
-      image_url: '/images/steak.jpg',
+      image_url: '/images/dishes/dish_1.jpg',
       custom_options: 'กับข้าว: แกงเขียวหวานไก่, ผัดกะเพราไก่ / เนื้อ | ท็อปปิ้ง: ไข่ดาว (กรอบ) | หมายเหตุ: ขอพริกน้ำปลาเพิ่ม 2 ซอง',
       category: 'box_set'
     },
@@ -55,7 +55,7 @@ export default function App() {
       name: 'กล่องกับข้าว 3 อย่าง (ข้าวไรซ์เบอร์รี่)',
       price: 85,
       quantity: 1,
-      image_url: '/images/sushi.jpg',
+      image_url: '/images/dishes/dish_3.jpg',
       custom_options: 'กับข้าว: มัสมั่นเนื้อ, ต้มยำกุ้ง (น้ำข้น), ไก่ผัดเม็ดมะม่วง | ท็อปปิ้ง: ปลาทูทอด 1 ตัว | หมายเหตุ: แยกน้ำแกงใส่ถุง',
       category: 'box_set'
     }
@@ -147,7 +147,7 @@ export default function App() {
         name: 'กล่องกับข้าว 2 อย่าง (ข้าวสวยธรรมดา)',
         price: 55,
         quantity: 1,
-        image_url: '/images/steak.jpg',
+        image_url: '/images/dishes/dish_1.jpg',
         custom_options: 'กับข้าว: แกงเขียวหวานไก่, ผัดกะเพราไก่ / เนื้อ | ท็อปปิ้ง: ไข่ดาว (กรอบ) | หมายเหตุ: ขอพริกน้ำปลาเพิ่ม 2 ซอง',
         category: 'box_set'
       },
@@ -156,7 +156,7 @@ export default function App() {
         name: 'กล่องกับข้าว 3 อย่าง (ข้าวไรซ์เบอร์รี่)',
         price: 85,
         quantity: 1,
-        image_url: '/images/sushi.jpg',
+        image_url: '/images/dishes/dish_3.jpg',
         custom_options: 'กับข้าว: มัสมั่นเนื้อ, ต้มยำกุ้ง (น้ำข้น), ไก่ผัดเม็ดมะม่วง | ท็อปปิ้ง: ปลาทูทอด 1 ตัว | หมายเหตุ: แยกน้ำแกงใส่ถุง',
         category: 'box_set'
       }
